@@ -1,0 +1,110 @@
+{
+  "name": "foxpanel",
+  "productName": "FoxPanel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "可拔插的桌面组件平台，VR 键盘、VRChat 联动等功能都由组件提供",
+  "author": "yanuo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/konkon-lab/FoxPanel.git"
+  },
+  "type": "module",
+  "main": "dist/main.js",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "prepare": "node scripts/prepare.ts",
+    "build": "node scripts/build.ts",
+    "vendor:rime": "node scripts/vendor-rime.ts",
+    "prestart": "npm run build",
+    "start": "electron .",
+    "pack": "npm run build && node scripts/preinstalled-check.ts && electron-builder --win --x64 --publish never",
+    "typecheck": "vue-tsc --noEmit --pretty false",
+    "lint": "eslint src components dev sdk test scripts .githooks vite.config.ts",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "test:coverage": "node -e \"require('fs').mkdirSync('coverage',{recursive:true})\" && node --test --experimental-test-coverage --test-coverage-exclude=\"test/**\" --test-reporter=dot --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info \"test/**/*.test.ts\"",
+    "check": "npm run typecheck && npm run lint && npm test",
+    "smoke": "npm run build && node scripts/smoke.ts",
+    "pack:component": "node scripts/pack-component.ts",
+    "check:preinstalled": "node scripts/preinstalled-check.ts",
+    "build:sdk": "node scripts/build-sdk.ts"
+  },
+  "dependencies": {
+    "bonjour-service": "1.4.4",
+    "cordis": "4.0.0-rc.12",
+    "electron-updater": "6.8.12",
+    "koffi": "3.3.4",
+    "node-osc": "11.7.1"
+  },
+  "devDependencies": {
+    "@lucide/vue": "1.62.0",
+    "@types/node": "24.19.2",
+    "@vitejs/plugin-vue": "6.0.10",
+    "electron": "45.0.0",
+    "electron-builder": "26.18.1",
+    "esbuild": "0.28.2",
+    "eslint": "10.13.0",
+    "eslint-plugin-vue": "10.12.0",
+    "globals": "17.13.0",
+    "icon-gen": "5.0.0",
+    "naive-ui": "2.45.3",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vite": "8.3.5",
+    "vue": "3.5.44",
+    "vue-eslint-parser": "10.4.1",
+    "vue-tsc": "3.3.13"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "koffi@3.3.4": true,
+    "sharp@0.33.5": true,
+    "electron-winstaller": false
+  },
+  "build": {
+    "appId": "yanuo.foxpanel.app",
+    "productName": "FoxPanel",
+    "publish": {
+      "provider": "github",
+      "owner": "konkon-lab",
+      "repo": "FoxPanel"
+    },
+    "generateUpdatesFilesForAllChannels": true,
+    "directories": {
+      "output": "release"
+    },
+    "asar": false,
+    "electronLanguages": [
+      "zh-CN",
+      "zh-TW",
+      "ja",
+      "ko",
+      "en-US"
+    ],
+    "files": [
+      "package.json",
+      "LICENSE",
+      "OPEN_SOURCE_LICENSES.md",
+      "dist/**/*",
+      "!dist/**/*.map",
+      "!dist/dev/**",
+      "resources/**/*",
+      "vendor/**/*",
+      "!vendor/**/*.h"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "dist/icons/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "FoxPanel",
+      "artifactName": "FoxPanel-Setup-${version}.exe"
+    }
+  }
+}
