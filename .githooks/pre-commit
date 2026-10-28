@@ -1,0 +1,6 @@
+#!/bin/sh
+# 提交前跑类型检查、lint 和单元测试
+npm run --silent check || {
+    echo "pre-commit: npm run check 没通过" >&2
+    exit 1
+}
