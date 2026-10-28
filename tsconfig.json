@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node", "vite/client"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "paths": { "@konkon-lab/foxpanel-sdk": ["./sdk/index.ts"], "@konkon-lab/foxpanel-window": ["./src/renderer/window-api.ts"] }
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "components/**/*.ts", "components/**/*.vue", "dev/**/*.ts", "sdk/**/*.ts", "test/**/*.ts", "scripts/**/*.ts", ".githooks/**/*.ts", "vite.config.ts"]
+}
