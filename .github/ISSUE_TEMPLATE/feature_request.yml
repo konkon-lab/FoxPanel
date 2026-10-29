@@ -1,0 +1,44 @@
+name: 功能建议
+description: 想要的新功能或改进
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: 功能建议请先讨论，达成一致后再开始写代码，见贡献指南的「提交功能建议」。
+  - type: textarea
+    id: what
+    attributes:
+      label: 想要什么
+      description: 这个功能做什么
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: 使用场景
+      description: 在什么情况下会用到，现在为什么做不到或不方便
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: 能不能写成组件
+      description: 能写成组件的功能，不用改核心，自己发布到 npm 就行
+      options:
+        - 能写成组件，想讨论做法
+        - 需要核心提供新的能力
+        - 不确定
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: 可能的做法
+      description: 有想法的话写一下，没有可以留空
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 确认
+      options:
+        - label: 我搜索过已有的 Issue，没有重复
+          required: true
