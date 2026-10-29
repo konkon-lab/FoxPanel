@@ -1,0 +1,107 @@
+# 推送 v<版本> 的 tag 时发版。版本号带 - 的(如 v0.2.0-beta.1)是测试版，不带的是正式版。
+# 测试版：发成预发布，开了「接收测试版」的程序才会收到；任何分支上的提交都能发，不用审批。
+# 正式版：tag 指向的提交必须在 master 上，必须有 changelog/<版本>.md，在 production 环境里等审批通过后才打包发布。
+# 仓库变量 PUBLISH_SDK 是 true 时，同时把组件 SDK 类型包发到 npm(正式版标 latest，测试版标 beta)；
+# 用 npm 的可信发布(OIDC)认证，不用令牌，包的设置里要登记本仓库的 release.yml(环境留空，允许 npm publish)。
+name: Release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  # 核对版本、分支和更新日志，生成发布说明
+  prepare:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    outputs:
+      version: ${{ steps.kind.outputs.version }}
+      prerelease: ${{ steps.kind.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - id: kind
+        name: 测试版还是正式版
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [[ "$version" == *-* ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
+      - name: 正式版只从 master 发
+        if: steps.kind.outputs.prerelease == 'false'
+        run: |
+          git fetch origin master
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/master; then
+            echo "正式版的 tag 必须指向 master 上的提交" >&2
+            exit 1
+          fi
+      - name: 发布说明
+        run: node scripts/release-notes.ts "$GITHUB_REF_NAME" notes.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: notes
+          path: notes.md
+
+  # 打包并建 release；正式版在 production 环境里等审批
+  release:
+    needs: prepare
+    runs-on: windows-latest
+    environment: ${{ needs.prepare.outputs.prerelease == 'true' && 'testing' || 'production' }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+      PRERELEASE: ${{ needs.prepare.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4
+        with:
+          name: notes
+      - run: npm ci
+      - run: npm run vendor:rime
+      - run: npm run check
+      - run: npm run pack
+      - name: 每个更新通道都有更新信息文件
+        # 正式版的程序找 latest.yml，测试版的程序找 beta.yml；两个都传，开没开「接收测试版」都能找到
+        run: |
+          cd release
+          if [ ! -f latest.yml ]; then cp "$(ls *.yml | grep -v builder | head -n1)" latest.yml; fi
+          if [ ! -f beta.yml ]; then cp latest.yml beta.yml; fi
+          ls *.yml
+      - name: 建 release 并上传
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          exe="release/FoxPanel-Setup-$VERSION.exe"
+          printf '\n安装包 SHA256：`%s`\n' "$(sha256sum "$exe" | cut -d' ' -f1)" >> notes.md
+          files=("$exe" "$exe.blockmap")
+          for f in release/*.yml; do [[ "$f" == *builder* ]] || files+=("$f"); done
+          if [ "$PRERELEASE" = "true" ]; then
+            flags=(--prerelease --latest=false --title "FoxPanel $VERSION(测试版)")
+          else
+            flags=(--latest --title "FoxPanel $VERSION")
+          fi
+          gh release create "$GITHUB_REF_NAME" "${files[@]}" --notes-file notes.md "${flags[@]}"
+      - name: 发组件 SDK 到 npm
+        if: vars.PUBLISH_SDK == 'true'
+        run: |
+          npm --version
+          npm run build:sdk
+          cd release/sdk
+          if [ "$PRERELEASE" = "true" ]; then tag=beta; else tag=latest; fi
+          npm publish --tag "$tag"
