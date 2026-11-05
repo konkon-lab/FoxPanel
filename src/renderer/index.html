@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <!-- 从 fox://host/window/ 加载；Naive UI 运行时注入 <style>，style-src 需要 'unsafe-inline'；每日一言取自 hitokoto -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' fox:; script-src 'self' fox:; style-src 'self' 'unsafe-inline' fox:; img-src 'self' fox: data:; font-src 'self' fox: data:; connect-src 'self' fox: https://v1.hitokoto.cn">
+  <!-- 宿主和主窗口页面组件共用同一份 Vue、Naive UI、图标库和 Cordis；import map 的内容由 scripts/build.ts 按 src/shared/libs.ts 生成 -->
+  <script type="importmap"></script>
+  <title>FoxPanel</title>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

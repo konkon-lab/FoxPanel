@@ -1,0 +1,163 @@
+/* 全局设计变量(颜色、圆角、字号)、页面底色、滚动条和几个组件共用的类；组件样式在各自的 .vue 里 */
+:root {
+  /* 表面层级：L0 画布 / L1 卡片 */
+  --canvas: #f7f8fa;
+  --surface: #ffffff;
+  --line: #eceef2;                  /* 仪表盘卡片边线和分隔线 */
+  --page-bg: #f5f6f8;               /* 仪表盘页面底色 */
+
+  /* 文字和语义色(白底与画布上均 ≥ 4.8:1) */
+  --text: #1c1d21;
+  --text-secondary: #62666d;
+  --accent: #4f5bd5;
+  --accent-soft: rgba(79, 91, 213, 0.08);
+  --warning-bg: #fff4e5;
+  --warning-line: #f5d9a8;
+  --success: #1f7a47;
+  --warning: #9a5b00;
+
+  --radius: 6px;
+  --radius-card: 6px;
+
+  --text-meta: 12px;
+  --text-secondary-size: 14px;
+
+  /* 控件和小面积填充 */
+  --control-border: #d6d8de;        /* 输入框、普通按钮的边线 */
+  --track: #eef0f3;                 /* 分段切换的底槽 */
+  --accent-tint: rgba(79, 91, 213, 0.1);   /* 选中项的淡强调底 */
+  --hover-bg: rgba(17, 24, 39, 0.04);
+  --press-bg: rgba(17, 24, 39, 0.05);
+  --dot-ok: #8cc49f;
+  --dot-wait: #e0b860;
+  --dot-idle: #c4c7cc;
+
+  color-scheme: light;
+}
+
+/* 夜间：主进程按设置(日间 / 夜间 / 跟随系统)切换 prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #121316;
+    --surface: #1d1f24;
+    --line: #2b2e35;
+    --page-bg: #16171b;
+    --text: #e4e5e8;
+    --text-secondary: #9da1a8;
+    --accent: #7c87f0;
+    --accent-soft: rgba(124, 135, 240, 0.14);
+    --warning-bg: #3a2e18;
+    --warning-line: #5a4520;
+    --success: #6cc191;
+    --warning: #e0b052;
+    --control-border: #3a3d45;
+    --track: #2a2d33;
+    --accent-tint: rgba(124, 135, 240, 0.16);
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --press-bg: rgba(255, 255, 255, 0.07);
+    --dot-ok: #6fb68a;
+    --dot-wait: #d2a847;
+    --dot-idle: #5c6068;
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--text);
+  font: 400 var(--text-secondary-size) / 1.5 "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* 细滚动条 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(17, 24, 39, 0.18);
+  border: 3px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(17, 24, 39, 0.3);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 仪表盘卡片：白底、细边、6px 圆角 */
+.dash-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  min-width: 0;
+}
+.dash-card h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 设置卡里的一行：左边名称，右边控件 */
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  white-space: nowrap;
+}
+.form-row > :last-child {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+/* 卡片标题行：左标题，右操作或说明 */
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+  margin-bottom: 4px;
+}
+/* 方形开关：Naive UI 的开关默认是圆的 */
+.n-switch .n-switch__rail {
+  border-radius: 6px !important;
+}
+.n-switch .n-switch__button {
+  border-radius: 4px !important;
+}
+
+.meta {
+  font-size: var(--text-meta);
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
