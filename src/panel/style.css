@@ -1,0 +1,166 @@
+/* 面板页面的公共样式：颜色变量(浅色 / 深色)、按语言切字体、按钮重置，和组件都能用的 .card / .key / .icon-btn。
+   根组件决定排布；组件只用这些变量和类，换皮肤时改变量即可 */
+html,
+body {
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+/* 显示在普通窗口里时：页面底下垫棋盘格，看得出哪里是透明的 */
+html.fox-preview {
+  background: repeating-conic-gradient(#d9dbe0 0% 25%, #f4f5f7 0% 50%) 0 0 / 24px 24px;
+}
+.fox-theme {
+  --panel: #f5f6f8;
+  --surface: #ffffff;
+  --key: #eef0f3;
+  --key-down: #dcdfe5;
+  --line: #e3e5ea;
+  --edge: #d6d8de;
+  --text: #1c1d21;
+  --sub: #62666d;
+  --accent: #4f5bd5;
+  --accent-soft: rgba(79, 91, 213, 0.1);
+  --track: #eef0f3;
+  --track-on: #ffffff;
+  --switch-off: #c9ccd3;
+  --knob: #ffffff;
+  --gap: 6px;
+  color: var(--text);
+  font-family: 'Noto Sans SC', 'Microsoft YaHei UI', 'Segoe UI', sans-serif;
+  font-size: 14px;
+}
+.fox-panel {
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+/* 弹层里的元素自己写了 lang(输入语言和界面语言不同时)：按它选字体 */
+#overlay [lang='zh-Hans'] {
+  font-family: 'Noto Sans SC', 'Microsoft YaHei UI', 'Segoe UI', sans-serif;
+}
+.fox-theme[lang='zh-Hant'],
+#overlay [lang='zh-Hant'] {
+  font-family: 'Noto Sans TC', 'Microsoft JhengHei UI', 'Segoe UI', sans-serif;
+}
+.fox-theme[lang='ja'],
+.fox-panel [lang='ja'],
+#overlay [lang='ja'] {
+  font-family: 'Noto Sans JP', 'Yu Gothic UI', 'Meiryo UI', 'Microsoft YaHei UI', 'Segoe UI', sans-serif;
+}
+.fox-theme[lang='ko'],
+.fox-panel [lang='ko'],
+#overlay [lang='ko'] {
+  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Microsoft YaHei UI', 'Segoe UI', sans-serif;
+}
+.fox-theme.dark {
+  --panel: #15171c;
+  --surface: #1f2228;
+  --key: #30353d;
+  --key-down: #3d434c;
+  --line: #2f333b;
+  --edge: #14161a;
+  --text: #e8e9ec;
+  --sub: #a3a7b0;
+  --accent: #8b93ff;
+  --accent-soft: rgba(139, 147, 255, 0.16);
+  --track: #15171c;
+  --track-on: #30353d;
+  --switch-off: #454a53;
+  --knob: #e8e9ec;
+}
+.fox-panel button,
+#overlay button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: default;
+}
+.fox-panel .card,
+#overlay .card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.fox-panel .key,
+#overlay .key {
+  border-radius: 6px;
+  background: var(--key);
+  box-shadow: 0 1px 0 var(--edge);
+}
+.fox-panel .key:active,
+#overlay .key:active {
+  background: var(--key-down);
+  box-shadow: none;
+  transform: translateY(1px);
+}
+.fox-panel .icon-btn,
+#overlay .icon-btn {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--text);
+}
+.fox-panel .icon-btn:active,
+#overlay .icon-btn:active {
+  background: var(--key);
+}
+
+/* 宿主给每个部件的元素：填满插槽；侧栏按钮按内容大小 */
+.fox-part {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+.fox-part > * {
+  flex: 1;
+  min-width: 0;
+}
+.fox-part[hidden] {
+  display: none;
+}
+.fox-part.fox-sidebutton {
+  width: auto;
+  height: auto;
+}
+
+/* 弹层容器：跟根元素同一套变量 */
+#overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.fox-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: auto;
+}
+
+.fox-notice {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: 1px dashed var(--edge);
+  border-radius: 6px;
+  color: var(--sub);
+  font-size: 15px;
+  text-align: center;
+}
+.fox-panel > .fox-notice {
+  position: absolute;
+  inset: 0;
+  background: var(--panel);
+  font-size: 20px;
+}
