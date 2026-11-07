@@ -1,0 +1,21 @@
+{
+  "id": "yanuo.shell-classic",
+  "kind": "panel",
+  "name": { "zh-Hans": "经典外壳", "zh-Hant": "經典外殼", "ja": "クラシック", "en": "Classic", "ko": "클래식" },
+  "version": "1.0.3",
+  "author": "yanuo",
+  "license": "MIT",
+  "panel": {
+    "page": "panel.js",
+    "width": 1400,
+    "height": 490,
+    "fps": 60,
+    "meters": 0.8,
+    "minMeters": 0.4,
+    "maxMeters": 1.6,
+    "spawn": "low",
+    "keep": true,
+    "sound": true,
+    "slots": ["candidates", "textfield", "layout", "sidepage", "sidebutton"]
+  }
+}
