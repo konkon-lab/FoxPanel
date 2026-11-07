@@ -1,0 +1,28 @@
+{
+  "id": "yanuo.ime",
+  "kind": "service",
+  "name": {
+    "zh-Hans": "输入法",
+    "zh-Hant": "輸入法",
+    "ja": "入力エンジン",
+    "en": "Input method",
+    "ko": "입력기"
+  },
+  "description": {
+    "zh-Hans": "输入法组件核心底座",
+    "zh-Hant": "輸入法元件核心底座",
+    "ja": "入力システムの中核コンポーネント",
+    "en": "Core of the input method",
+    "ko": "입력기의 핵심 컴포넌트"
+  },
+  "version": "1.0.13",
+  "author": "yanuo",
+  "license": "MIT",
+  "provides": [
+    "keyboard"
+  ],
+  "main": "main.js",
+  "page": "page.js",
+  "window": "window.js",
+  "process": "own"
+}
