@@ -1,0 +1,25 @@
+{
+  "id": "yanuo.chatbox",
+  "kind": "output",
+  "name": {
+    "zh-Hans": "聊天框",
+    "zh-Hant": "聊天框",
+    "ja": "チャット",
+    "en": "Chatbox",
+    "ko": "채팅"
+  },
+  "description": {
+    "zh-Hans": "用 OSC 发到 VRChat 聊天框，显示「原文（译文）」",
+    "zh-Hant": "用 OSC 傳送到 VRChat 聊天框，顯示「原文（譯文）」",
+    "ja": "OSC で VRChat のチャットボックスに送信し、「原文（訳文）」の形で表示します",
+    "en": "Sends to the VRChat chatbox over OSC, shown as “original (translation)”",
+    "ko": "OSC로 VRChat 채팅창에 보내고 「원문(번역문)」 형식으로 표시합니다"
+  },
+  "version": "1.3.4",
+  "author": "yanuo",
+  "license": "MIT",
+  "main": "main.js",
+  "requires": [
+    "osc"
+  ]
+}
