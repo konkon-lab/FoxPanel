@@ -1,0 +1,19 @@
+{
+  "id": "yanuo.lang-en",
+  "kind": "lang",
+  "name": "English",
+  "description": { "zh-Hans": "英文输入法语言包", "zh-Hant": "英文輸入法語言包", "ja": "英語入力の言語パック", "en": "English input language pack", "ko": "영어 입력 언어 팩" },
+  "version": "1.0.1",
+  "author": "yanuo",
+  "license": "MIT",
+  "ime": {
+    "short": "EN",
+    "lang": "en",
+    "schema": "easy_en",
+    "latin": true,
+    "modes": [
+      { "id": "word", "label": { "zh-Hans": "单词", "zh-Hant": "單字", "ja": "単語", "en": "Words", "ko": "단어" } },
+      { "id": "letter", "direct": true, "label": { "zh-Hans": "字母", "zh-Hant": "字母", "ja": "文字", "en": "Letters", "ko": "글자" } }
+    ]
+  }
+}
