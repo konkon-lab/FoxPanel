@@ -1,0 +1,15 @@
+{
+  "id": "yanuo.lang-ko",
+  "kind": "lang",
+  "name": "두벌식",
+  "description": { "zh-Hans": "韩文输入法语言包", "zh-Hant": "韓文輸入法語言包", "ja": "韓国語入力の言語パック", "en": "Korean input language pack", "ko": "한국어 입력 언어 팩" },
+  "version": "1.0.2",
+  "author": "yanuo",
+  "license": "MIT",
+  "ime": {
+    "short": "두",
+    "lang": "ko",
+    "engine": "hangul",
+    "modes": [{ "id": "hangul", "key": "한", "label": "한글" }, { "id": "hanja", "key": "漢", "label": "한자" }]
+  }
+}
