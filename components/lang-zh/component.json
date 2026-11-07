@@ -1,0 +1,18 @@
+{
+  "id": "yanuo.lang-zh",
+  "kind": "lang",
+  "name": "拼音",
+  "description": { "zh-Hans": "拼音输入法语言包", "zh-Hant": "拼音輸入法語言包", "ja": "ピンイン入力の言語パック", "en": "Pinyin input language pack", "ko": "병음 입력 언어 팩" },
+  "version": "1.0.1",
+  "author": "yanuo",
+  "license": "MIT",
+  "ime": {
+    "short": "拼",
+    "lang": "zh-Hans",
+    "schema": "clover",
+    "modes": [
+      { "id": "simplified", "switches": { "zh_simp_s2t": false }, "label": { "zh-Hans": "简体", "zh-Hant": "簡體", "ja": "簡体", "en": "Simplified", "ko": "간체" } },
+      { "id": "traditional", "switches": { "zh_simp_s2t": true }, "lang": "zh-Hant", "label": { "zh-Hans": "繁体", "zh-Hant": "繁體", "ja": "繁体", "en": "Traditional", "ko": "번체" } }
+    ]
+  }
+}
