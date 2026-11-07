@@ -1,0 +1,78 @@
+{
+  "rows": [
+    [
+      {"id": "Backquote", "code": "Backquote", "dual": ["`", "~"]},
+      {"id": "Digit1", "code": "Digit1", "dual": ["1", "!"]},
+      {"id": "Digit2", "code": "Digit2", "dual": ["2", "@"]},
+      {"id": "Digit3", "code": "Digit3", "dual": ["3", "#"]},
+      {"id": "Digit4", "code": "Digit4", "dual": ["4", "$"]},
+      {"id": "Digit5", "code": "Digit5", "dual": ["5", "%"]},
+      {"id": "Digit6", "code": "Digit6", "dual": ["6", "^"]},
+      {"id": "Digit7", "code": "Digit7", "dual": ["7", "&"]},
+      {"id": "Digit8", "code": "Digit8", "dual": ["8", "*"]},
+      {"id": "Digit9", "code": "Digit9", "dual": ["9", "("]},
+      {"id": "Digit0", "code": "Digit0", "dual": ["0", ")"]},
+      {"id": "Minus", "code": "Minus", "dual": ["-", "_"]},
+      {"id": "Equal", "code": "Equal", "dual": ["=", "+"]},
+      {"id": "back", "units": 2, "code": "Backspace", "icon": "back", "repeat": true},
+      {"id": "home", "code": "Home", "label": "Home"}
+    ],
+    [
+      {"id": "tab", "units": 1.5, "code": "Tab", "label": "Tab"},
+      {"id": "q", "code": "KeyQ", "letter": "q"},
+      {"id": "w", "code": "KeyW", "letter": "w"},
+      {"id": "e", "code": "KeyE", "letter": "e"},
+      {"id": "r", "code": "KeyR", "letter": "r"},
+      {"id": "t", "code": "KeyT", "letter": "t"},
+      {"id": "y", "code": "KeyY", "letter": "y"},
+      {"id": "u", "code": "KeyU", "letter": "u"},
+      {"id": "i", "code": "KeyI", "letter": "i"},
+      {"id": "o", "code": "KeyO", "letter": "o"},
+      {"id": "p", "code": "KeyP", "letter": "p"},
+      {"id": "BracketLeft", "code": "BracketLeft", "dual": ["[", "{"]},
+      {"id": "BracketRight", "code": "BracketRight", "dual": ["]", "}"]},
+      {"id": "Backslash", "units": 1.5, "code": "Backslash", "dual": ["\\", "|"]},
+      {"id": "del", "code": "Delete", "label": "Del", "repeat": true}
+    ],
+    [
+      {"id": "caps", "units": 1.75, "fn": "caps", "label": "Caps"},
+      {"id": "a", "code": "KeyA", "letter": "a"},
+      {"id": "s", "code": "KeyS", "letter": "s"},
+      {"id": "d", "code": "KeyD", "letter": "d"},
+      {"id": "f", "code": "KeyF", "letter": "f"},
+      {"id": "g", "code": "KeyG", "letter": "g"},
+      {"id": "h", "code": "KeyH", "letter": "h"},
+      {"id": "j", "code": "KeyJ", "letter": "j"},
+      {"id": "k", "code": "KeyK", "letter": "k"},
+      {"id": "l", "code": "KeyL", "letter": "l"},
+      {"id": "Semicolon", "code": "Semicolon", "dual": [";", ":"]},
+      {"id": "Quote", "code": "Quote", "dual": ["'", "\""]},
+      {"id": "enter", "units": 2.25, "code": "Enter", "label": "Enter"},
+      {"id": "pgup", "fn": "pgup", "label": "PgUp"}
+    ],
+    [
+      {"id": "lshift", "units": 2.25, "fn": "shift", "icon": "shift"},
+      {"id": "z", "code": "KeyZ", "letter": "z"},
+      {"id": "x", "code": "KeyX", "letter": "x"},
+      {"id": "c", "code": "KeyC", "letter": "c"},
+      {"id": "v", "code": "KeyV", "letter": "v"},
+      {"id": "b", "code": "KeyB", "letter": "b"},
+      {"id": "n", "code": "KeyN", "letter": "n"},
+      {"id": "m", "code": "KeyM", "letter": "m"},
+      {"id": "Comma", "code": "Comma", "dual": [",", "<"]},
+      {"id": "Period", "code": "Period", "dual": [".", ">"]},
+      {"id": "Slash", "code": "Slash", "dual": ["/", "?"]},
+      {"id": "rshift", "units": 1.75, "fn": "shift", "icon": "shift"},
+      {"id": "up", "code": "ArrowUp", "label": "↑", "repeat": true},
+      {"id": "pgdn", "fn": "pgdn", "label": "PgDn"}
+    ],
+    [
+      {"id": "lang", "units": 1.25, "fn": "lang"},
+      {"id": "space", "units": 10.75, "code": "Space", "repeat": true},
+      {"id": "mode", "fn": "mode"},
+      {"id": "left", "code": "ArrowLeft", "label": "←", "repeat": true},
+      {"id": "down", "code": "ArrowDown", "label": "↓", "repeat": true},
+      {"id": "right", "code": "ArrowRight", "label": "→", "repeat": true}
+    ]
+  ]
+}

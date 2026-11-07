@@ -1,0 +1,18 @@
+{
+  "id": "yanuo.layout-d68",
+  "kind": "layout",
+  "name": {
+    "zh-Hans": "D68 键盘",
+    "zh-Hant": "D68 鍵盤",
+    "ja": "D68 キーボード",
+    "en": "D68 keyboard",
+    "ko": "D68 키보드"
+  },
+  "version": "1.2.1",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": [
+    "keys"
+  ],
+  "layout": "layout.json"
+}
