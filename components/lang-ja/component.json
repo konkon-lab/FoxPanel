@@ -1,0 +1,20 @@
+{
+  "id": "yanuo.lang-ja",
+  "kind": "lang",
+  "name": "ローマ字",
+  "description": { "zh-Hans": "日文输入法语言包", "zh-Hant": "日文輸入法語言包", "ja": "日本語入力の言語パック", "en": "Japanese input language pack", "ko": "일본어 입력 언어 팩" },
+  "version": "1.0.1",
+  "author": "yanuo",
+  "license": "MIT",
+  "ime": {
+    "short": "ロ",
+    "lang": "ja",
+    "schema": "jaroomaji",
+    "enter": "rime",
+    "modes": [
+      { "id": "kanji", "key": "漢", "label": { "zh-Hans": "汉字", "zh-Hant": "漢字", "ja": "漢字変換", "en": "Kanji", "ko": "한자 변환" } },
+      { "id": "hiragana", "key": "あ", "output": "composition", "label": { "zh-Hans": "平假名", "zh-Hant": "平假名", "ja": "ひらがな", "en": "Hiragana", "ko": "히라가나" } },
+      { "id": "katakana", "key": "ア", "output": "katakana", "label": { "zh-Hans": "片假名", "zh-Hant": "片假名", "ja": "カタカナ", "en": "Katakana", "ko": "가타카나" } }
+    ]
+  }
+}
