@@ -1,0 +1,169 @@
+{
+  "id": "yanuo.osc",
+  "kind": "service",
+  "name": {
+    "zh-Hans": "OSC",
+    "zh-Hant": "OSC",
+    "ja": "OSC",
+    "en": "OSC",
+    "ko": "OSC"
+  },
+  "description": {
+    "zh-Hans": "与VRChat的OSC桥",
+    "zh-Hant": "與VRChat的OSC橋",
+    "ja": "VRChat との OSC ブリッジ",
+    "en": "OSC bridge to VRChat",
+    "ko": "VRChat과의 OSC 브리지"
+  },
+  "version": "1.2.5",
+  "author": "yanuo",
+  "license": "MIT",
+  "main": "main.js",
+  "provides": [
+    "osc"
+  ],
+  "config": {
+    "type": "object",
+    "dict": {
+      "mode": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "oscquery",
+            "meta": {
+              "description": "OSCQuery"
+            }
+          },
+          {
+            "type": "const",
+            "value": "fixed",
+            "meta": {
+              "description": {
+                "zh-Hans": "固定端口",
+                "zh-Hant": "固定連接埠",
+                "ja": "固定ポート",
+                "en": "Fixed port",
+                "ko": "고정 포트"
+              }
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "接收方式",
+            "zh-Hant": "接收方式",
+            "ja": "受信方式",
+            "en": "Receive mode",
+            "ko": "수신 방식"
+          },
+          "hint": {
+            "zh-Hans": "OSCQuery 由 VRChat 自动发现，可与其他 OSC 程序同时使用；固定端口收 VRChat 默认发出的 9001",
+            "zh-Hant": "OSCQuery 由 VRChat 自動探索，可與其他 OSC 程式同時使用；固定連接埠接收 VRChat 預設送出的 9001",
+            "ja": "OSCQuery は VRChat が自動検出し、他の OSC アプリと併用できます。固定ポートは VRChat が既定で送信する 9001 を受信します",
+            "en": "OSCQuery is discovered by VRChat automatically and works alongside other OSC apps. Fixed port receives on 9001, the VRChat default",
+            "ko": "OSCQuery는 VRChat이 자동으로 검색하며 다른 OSC 프로그램과 함께 사용할 수 있습니다. 고정 포트는 VRChat이 기본으로 보내는 9001을 수신합니다"
+          },
+          "default": "oscquery"
+        }
+      },
+      "port": {
+        "type": "number",
+        "meta": {
+          "description": {
+            "zh-Hans": "接收端口",
+            "zh-Hant": "接收連接埠",
+            "ja": "受信ポート",
+            "en": "Receive port",
+            "ko": "수신 포트"
+          },
+          "hint": {
+            "zh-Hans": "固定端口模式下监听的端口",
+            "zh-Hant": "固定連接埠模式下監聽的連接埠",
+            "ja": "固定ポートモードで待ち受けるポート",
+            "en": "Port to listen on in fixed port mode",
+            "ko": "고정 포트 모드에서 수신 대기할 포트"
+          },
+          "default": 9001,
+          "min": 1,
+          "max": 65535,
+          "visible": {
+            "mode": "fixed"
+          }
+        }
+      },
+      "sendPort": {
+        "type": "number",
+        "meta": {
+          "description": {
+            "zh-Hans": "发送端口",
+            "zh-Hant": "傳送連接埠",
+            "ja": "送信ポート",
+            "en": "Send port",
+            "ko": "송신 포트"
+          },
+          "hint": {
+            "zh-Hans": "发往 VRChat 的端口，默认 9000",
+            "zh-Hant": "傳往 VRChat 的連接埠，預設 9000",
+            "ja": "VRChat へ送るポート。既定は 9000",
+            "en": "Port to send to VRChat, 9000 by default",
+            "ko": "VRChat으로 보낼 포트, 기본 9000"
+          },
+          "default": 9000,
+          "min": 1,
+          "max": 65535
+        }
+      },
+      "forward": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "转发",
+            "zh-Hant": "轉送",
+            "ja": "転送",
+            "en": "Forwarding",
+            "ko": "전달"
+          },
+          "hint": {
+            "zh-Hans": "把收到的 VRChat 参数原样复制发给其他 OSC 程序，适合只会监听 9001 的软件",
+            "zh-Hant": "將收到的 VRChat 參數原樣複製並傳給其他 OSC 程式，適用於只會監聽 9001 的軟體",
+            "ja": "受信した VRChat パラメーターをそのまま他の OSC アプリに転送します。9001 のみを待ち受けるソフトウェア向けです",
+            "en": "Copies received VRChat parameters unchanged to other OSC apps. Useful for software that only listens on 9001",
+            "ko": "수신한 VRChat 파라미터를 그대로 복사해 다른 OSC 프로그램으로 보냅니다. 9001만 수신하는 소프트웨어에 적합합니다"
+          },
+          "default": false
+        }
+      },
+      "forwardPorts": {
+        "type": "array",
+        "inner": {
+          "type": "number",
+          "meta": {
+            "min": 1,
+            "max": 65535
+          }
+        },
+        "meta": {
+          "description": {
+            "zh-Hans": "目标端口",
+            "zh-Hant": "目標連接埠",
+            "ja": "転送先ポート",
+            "en": "Target ports",
+            "ko": "대상 포트"
+          },
+          "hint": {
+            "zh-Hans": "每个端口对应一个外部 OSC 程序",
+            "zh-Hant": "每個連接埠對應一個外部 OSC 程式",
+            "ja": "ポートごとに外部 OSC アプリが 1 つ対応します",
+            "en": "Each port corresponds to one external OSC app",
+            "ko": "포트마다 외부 OSC 프로그램 하나에 대응합니다"
+          },
+          "default": [],
+          "visible": {
+            "forward": true
+          }
+        }
+      }
+    }
+  }
+}
