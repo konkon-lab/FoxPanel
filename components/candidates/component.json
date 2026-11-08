@@ -1,0 +1,10 @@
+{
+  "id": "yanuo.candidates",
+  "kind": "candidates",
+  "name": { "zh-Hans": "候选栏", "zh-Hant": "候選欄", "ja": "候補バー", "en": "Candidate bar", "ko": "후보 막대" },
+  "version": "1.0.5",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": ["keyboard"],
+  "page": "page.js"
+}
