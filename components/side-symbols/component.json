@@ -1,0 +1,11 @@
+{
+  "id": "yanuo.side-symbols",
+  "kind": "sidepage",
+  "name": { "zh-Hans": "特殊符号", "zh-Hant": "特殊符號", "ja": "特殊記号", "en": "Symbols", "ko": "특수 기호" },
+  "version": "1.0.2",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": ["keyboard"],
+  "page": "page.js",
+  "icon": "icon.svg"
+}
