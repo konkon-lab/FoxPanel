@@ -1,0 +1,11 @@
+{
+  "id": "yanuo.side-numpad",
+  "kind": "sidepage",
+  "name": { "zh-Hans": "小键盘", "zh-Hant": "數字鍵盤", "ja": "テンキー", "en": "Numpad", "ko": "숫자 키패드" },
+  "version": "1.0.2",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": ["keyboard"],
+  "page": "page.js",
+  "icon": "icon.svg"
+}
