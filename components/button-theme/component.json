@@ -1,0 +1,10 @@
+{
+  "id": "yanuo.button-theme",
+  "kind": "sidebutton",
+  "name": { "zh-Hans": "日夜切换", "zh-Hant": "日夜切換", "ja": "ライト / ダーク", "en": "Light / dark", "ko": "라이트 / 다크" },
+  "version": "1.0.6",
+  "author": "yanuo",
+  "license": "MIT",
+  "page": "page.js",
+  "icon": "icon.svg"
+}
