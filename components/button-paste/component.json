@@ -1,0 +1,11 @@
+{
+  "id": "yanuo.button-paste",
+  "kind": "sidebutton",
+  "name": { "zh-Hans": "粘贴", "zh-Hant": "貼上", "ja": "貼り付け", "en": "Paste", "ko": "붙여넣기" },
+  "version": "1.0.5",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": ["keyboard"],
+  "page": "page.js",
+  "icon": "icon.svg"
+}
