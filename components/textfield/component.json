@@ -1,0 +1,10 @@
+{
+  "id": "yanuo.textfield",
+  "kind": "textfield",
+  "name": { "zh-Hans": "输入框", "zh-Hant": "輸入框", "ja": "入力欄", "en": "Text field", "ko": "입력란" },
+  "version": "1.1.8",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": ["keyboard"],
+  "page": "page.js"
+}
