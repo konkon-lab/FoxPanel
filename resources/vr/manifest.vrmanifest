@@ -1,0 +1,17 @@
+{
+  "source": "builtin",
+  "applications": [
+    {
+      "app_key": "yanuo.foxpanel",
+      "launch_type": "binary",
+      "binary_path_windows": "../../node_modules/electron/dist/electron.exe",
+      "arguments": "../..",
+      "is_dashboard_overlay": true,
+      "action_manifest_path": "actions.json",
+      "strings": {
+        "en_us": { "name": "FoxPanel", "description": "Pluggable VR overlay panel platform; the keyboard and input method come as a preinstalled panel" },
+        "zh_cn": { "name": "FoxPanel", "description": "可拔插的 VR 悬浮面板平台，键盘和输入法是预装的一块面板" }
+      }
+    }
+  ]
+}

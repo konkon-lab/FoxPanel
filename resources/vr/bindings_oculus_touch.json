@@ -1,0 +1,89 @@
+{
+  "action_manifest_version": 2,
+  "controller_type": "oculus_touch",
+  "description": "扳机点击、握把抓住面板(双手抓住缩放)、双击右手 B 收起或恢复面板、双击左手 Y 开关快捷面板 1；指针用手柄指尖",
+  "interaction_profile": "",
+  "name": "FoxPanel 默认",
+  "options": {},
+  "category": "steamvr_input",
+  "alias_info": {},
+  "app_key": "yanuo.foxpanel",
+  "bindings": {
+    "/actions/main": {
+      "sources": [
+        {
+          "path": "/user/hand/right/input/trigger",
+          "mode": "button",
+          "parameters": {
+            "click_activate_threshold": "0.7",
+            "click_deactivate_threshold": "0.55"
+          },
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/overlayinteract"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/trigger",
+          "mode": "button",
+          "parameters": {
+            "click_activate_threshold": "0.7",
+            "click_deactivate_threshold": "0.55"
+          },
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/overlayinteract"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/b",
+          "mode": "button",
+          "inputs": {
+            "double": {
+              "output": "/actions/main/in/overlaytoggle"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/y",
+          "mode": "button",
+          "inputs": {
+            "double": {
+              "output": "/actions/main/in/panelquick1"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/grip",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/overlaygrab"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/grip",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/main/in/overlaygrab"
+            }
+          }
+        }
+      ],
+      "poses": [
+        {
+          "output": "/actions/main/in/pointer",
+          "path": "/user/hand/left/pose/tip"
+        },
+        {
+          "output": "/actions/main/in/pointer",
+          "path": "/user/hand/right/pose/tip"
+        }
+      ]
+    }
+  }
+}

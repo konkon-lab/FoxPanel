@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "minimum_required_version": 1,
+  "default_bindings": [
+    {
+      "controller_type": "knuckles",
+      "binding_url": "bindings_knuckles.json"
+    },
+    {
+      "controller_type": "oculus_touch",
+      "binding_url": "bindings_oculus_touch.json"
+    },
+    {
+      "controller_type": "vive_controller",
+      "binding_url": "bindings_vive_controller.json"
+    }
+  ],
+  "actions": [
+    {
+      "name": "/actions/main/in/OverlayToggle",
+      "requirement": "mandatory",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/main/in/OverlayInteract",
+      "requirement": "mandatory",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/main/in/OverlayGrab",
+      "requirement": "mandatory",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/main/in/PanelQuick1",
+      "requirement": "suggested",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/main/in/PanelQuick2",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/main/in/Pointer",
+      "requirement": "mandatory",
+      "type": "pose"
+    }
+  ],
+  "action_sets": [
+    {
+      "name": "/actions/main",
+      "usage": "leftright"
+    }
+  ],
+  "localization": [
+    {
+      "language_tag": "zh_cn",
+      "/actions/main": "FoxPanel",
+      "/actions/main/in/OverlayToggle": "收起 / 恢复面板",
+      "/actions/main/in/OverlayInteract": "点击",
+      "/actions/main/in/OverlayGrab": "抓住面板",
+      "/actions/main/in/PanelQuick1": "快捷面板 1",
+      "/actions/main/in/PanelQuick2": "快捷面板 2",
+      "/actions/main/in/Pointer": "指针"
+    },
+    {
+      "language_tag": "en_us",
+      "/actions/main": "FoxPanel",
+      "/actions/main/in/OverlayToggle": "Stow / Restore Panels",
+      "/actions/main/in/OverlayInteract": "Click",
+      "/actions/main/in/OverlayGrab": "Grab Panel",
+      "/actions/main/in/PanelQuick1": "Quick Panel 1",
+      "/actions/main/in/PanelQuick2": "Quick Panel 2",
+      "/actions/main/in/Pointer": "Pointer"
+    }
+  ]
+}
