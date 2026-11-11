@@ -1,0 +1,208 @@
+{
+  "id": "yanuo.mt-bailian",
+  "kind": "translator",
+  "name": {
+    "zh-Hans": "翻译",
+    "zh-Hant": "翻譯",
+    "ja": "翻訳",
+    "en": "Translation",
+    "ko": "번역"
+  },
+  "description": {
+    "zh-Hans": "阿里云百炼 Qwen-MT：发送前翻译成目标语言",
+    "zh-Hant": "阿里雲百煉 Qwen-MT：傳送前翻譯成目標語言",
+    "ja": "Alibaba Cloud Bailian Qwen-MT：送信前に翻訳先の言語へ翻訳します",
+    "en": "Alibaba Cloud Bailian Qwen-MT: translates into the target language before sending",
+    "ko": "Alibaba Cloud Bailian Qwen-MT: 보내기 전에 대상 언어로 번역합니다"
+  },
+  "version": "1.6.5",
+  "author": "yanuo",
+  "license": "MIT",
+  "enabled": false,
+  "main": "main.js",
+  "requires": [
+    "aliyun"
+  ],
+  "config": {
+    "type": "object",
+    "dict": {
+      "model": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "qwen-mt-flash",
+            "meta": {
+              "description": "qwen-mt-flash"
+            }
+          },
+          {
+            "type": "const",
+            "value": "qwen-mt-plus",
+            "meta": {
+              "description": "qwen-mt-plus"
+            }
+          },
+          {
+            "type": "const",
+            "value": "qwen-mt-lite",
+            "meta": {
+              "description": "qwen-mt-lite"
+            }
+          },
+          {
+            "type": "const",
+            "value": "qwen-mt-turbo",
+            "meta": {
+              "description": "qwen-mt-turbo"
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "翻译模型",
+            "zh-Hant": "翻譯模型",
+            "ja": "モデル",
+            "en": "Model",
+            "ko": "모델"
+          },
+          "default": "qwen-mt-flash",
+          "custom": true
+        }
+      },
+      "target": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "Japanese",
+            "meta": {
+              "description": "日语"
+            }
+          },
+          {
+            "type": "const",
+            "value": "English",
+            "meta": {
+              "description": "英语"
+            }
+          },
+          {
+            "type": "const",
+            "value": "Chinese",
+            "meta": {
+              "description": "中文"
+            }
+          },
+          {
+            "type": "const",
+            "value": "Korean",
+            "meta": {
+              "description": "韩语"
+            }
+          },
+          {
+            "type": "const",
+            "value": "Traditional Chinese",
+            "meta": {
+              "description": "繁体中文"
+            }
+          },
+          {
+            "type": "const",
+            "value": "Cantonese",
+            "meta": {
+              "description": "粤语"
+            }
+          },
+          {
+            "type": "const",
+            "value": "French",
+            "meta": {
+              "description": "法语"
+            }
+          },
+          {
+            "type": "const",
+            "value": "German",
+            "meta": {
+              "description": "德语"
+            }
+          },
+          {
+            "type": "const",
+            "value": "Spanish",
+            "meta": {
+              "description": "西班牙语"
+            }
+          },
+          {
+            "type": "const",
+            "value": "Russian",
+            "meta": {
+              "description": "俄语"
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "翻译成",
+            "zh-Hant": "翻譯成",
+            "ja": "翻訳先",
+            "en": "Translate to",
+            "ko": "번역할 언어"
+          },
+          "default": "Japanese"
+        }
+      }
+    }
+  },
+  "usage": {
+    "currency": "CNY",
+    "units": {
+      "input": {
+        "zh-Hans": "输入 Token",
+        "zh-Hant": "輸入 Token",
+        "ja": "入力トークン",
+        "en": "input tokens",
+        "ko": "입력 토큰"
+      },
+      "output": {
+        "zh-Hans": "输出 Token",
+        "zh-Hant": "輸出 Token",
+        "ja": "出力トークン",
+        "en": "output tokens",
+        "ko": "출력 토큰"
+      },
+      "calls": {
+        "zh-Hans": "句",
+        "zh-Hant": "句",
+        "ja": "文",
+        "en": "sentences",
+        "ko": "문장"
+      }
+    }
+  },
+  "dashboard": {
+    "title": {
+      "zh-Hans": "翻译",
+      "zh-Hant": "翻譯",
+      "ja": "翻訳",
+      "en": "Translation",
+      "ko": "번역"
+    },
+    "keys": [
+      "target",
+      "model"
+    ],
+    "area": "right",
+    "order": 10,
+    "toggle": {
+      "zh-Hans": "朗读前翻译",
+      "zh-Hant": "朗讀前翻譯",
+      "ja": "読み上げ前に翻訳",
+      "en": "Translate before speaking",
+      "ko": "읽기 전에 번역"
+    }
+  }
+}
