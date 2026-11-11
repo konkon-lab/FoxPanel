@@ -1,0 +1,22 @@
+{
+  "id": "yanuo.window-shell",
+  "kind": "window",
+  "name": {
+    "zh-Hans": "主窗口外壳",
+    "zh-Hant": "主視窗外殼",
+    "ja": "メインウィンドウの外枠",
+    "en": "Main window shell",
+    "ko": "메인 창 셸"
+  },
+  "description": {
+    "zh-Hans": "主窗口的顶栏、侧栏、状态栏和内容区",
+    "zh-Hant": "主視窗的頂欄、側欄、狀態列和內容區",
+    "ja": "メインウィンドウのタイトルバー、サイドバー、ステータスバー、内容領域",
+    "en": "Title bar, sidebar, status bar and content area of the main window",
+    "ko": "메인 창의 제목 표시줄, 사이드바, 상태 표시줄, 내용 영역"
+  },
+  "version": "1.0.6",
+  "author": "yanuo",
+  "license": "MIT",
+  "page": "page.js"
+}
