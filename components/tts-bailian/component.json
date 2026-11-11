@@ -1,0 +1,397 @@
+{
+  "id": "yanuo.tts-bailian",
+  "kind": "output",
+  "name": {
+    "zh-Hans": "语音合成",
+    "zh-Hant": "語音合成",
+    "ja": "音声合成",
+    "en": "Text to speech",
+    "ko": "음성 합성"
+  },
+  "description": {
+    "zh-Hans": "阿里云百炼 CosyVoice：发送时朗读译文，播放到选定设备",
+    "zh-Hant": "阿里雲百煉 CosyVoice：傳送時朗讀譯文，播放到選定的裝置",
+    "ja": "Alibaba Cloud Bailian CosyVoice：送信時に訳文を読み上げ、選択したデバイスで再生します",
+    "en": "Alibaba Cloud Bailian CosyVoice: reads the translation aloud when sending, played on the selected device",
+    "ko": "Alibaba Cloud Bailian CosyVoice: 보낼 때 번역문을 읽어 주고 선택한 장치로 재생합니다"
+  },
+  "version": "1.7.6",
+  "author": "yanuo",
+  "license": "MIT",
+  "enabled": false,
+  "main": "main.js",
+  "page": "page.js",
+  "requires": [
+    "aliyun"
+  ],
+  "config": {
+    "type": "object",
+    "dict": {
+      "model": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "cosyvoice-v3-flash",
+            "meta": {
+              "description": "cosyvoice-v3-flash"
+            }
+          },
+          {
+            "type": "const",
+            "value": "cosyvoice-v3-plus",
+            "meta": {
+              "description": "cosyvoice-v3-plus"
+            }
+          },
+          {
+            "type": "const",
+            "value": "cosyvoice-v3.5-flash",
+            "meta": {
+              "description": "cosyvoice-v3.5-flash"
+            }
+          },
+          {
+            "type": "const",
+            "value": "cosyvoice-v3.5-plus",
+            "meta": {
+              "description": "cosyvoice-v3.5-plus"
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "合成模型",
+            "zh-Hant": "合成模型",
+            "ja": "モデル",
+            "en": "Model",
+            "ko": "모델"
+          },
+          "default": "cosyvoice-v3-flash",
+          "custom": true
+        }
+      },
+      "voice": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "longhuhu_v3",
+            "meta": {
+              "description": "龙呼呼 · 天真烂漫女童"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longling_v3",
+            "meta": {
+              "description": "龙铃 · 稚气呆板女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longxian_v3",
+            "meta": {
+              "description": "龙仙 · 豪放可爱女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longdaiyu_v3",
+            "meta": {
+              "description": "龙黛玉 · 娇率才女音"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longfeifei_v3",
+            "meta": {
+              "description": "龙菲菲 · 甜美娇气女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longhua_v3",
+            "meta": {
+              "description": "龙华 · 元气甜美女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longanhuan_v3",
+            "meta": {
+              "description": "龙安欢 · 欢脱元气女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longantai_v3",
+            "meta": {
+              "description": "龙安台 · 嗲甜台湾女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longanqin_v3",
+            "meta": {
+              "description": "龙安亲 · 亲和活泼女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longanling_v3",
+            "meta": {
+              "description": "龙安灵 · 思维灵动女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longanrou_v3",
+            "meta": {
+              "description": "龙安柔 · 温柔闺蜜女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longxing_v3",
+            "meta": {
+              "description": "龙星 · 温婉邻家女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longwan_v3",
+            "meta": {
+              "description": "龙婉 · 细腻柔声女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longyingxiao_v3",
+            "meta": {
+              "description": "龙应笑 · 清甜推销女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longyumi_v3",
+            "meta": {
+              "description": "YUMI · 正经青年女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longxiaochun_v3",
+            "meta": {
+              "description": "龙小淳 · 知性积极女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "loongriko_v3",
+            "meta": {
+              "description": "Riko · 二次元霓虹女(日语)"
+            }
+          },
+          {
+            "type": "const",
+            "value": "loongyuuna_v3",
+            "meta": {
+              "description": "Yuuna · 日语女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longanhuan",
+            "meta": {
+              "description": "龙安欢 · 欢脱元气女"
+            }
+          },
+          {
+            "type": "const",
+            "value": "longanyang",
+            "meta": {
+              "description": "龙安洋 · 阳光大男孩"
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "音色",
+            "zh-Hant": "音色",
+            "ja": "声",
+            "en": "Voice",
+            "ko": "음색"
+          },
+          "hint": {
+            "zh-Hans": "朗读时用的声音。",
+            "zh-Hant": "朗讀時用的聲音。",
+            "ja": "読み上げに使う声。",
+            "en": "The voice used for reading aloud.",
+            "ko": "읽을 때 쓰는 목소리."
+          },
+          "default": "longhua_v3",
+          "custom": true,
+          "optionsFrom": {
+            "setting": "customVoices",
+            "value": "id",
+            "label": "name",
+            "sub": "model"
+          }
+        }
+      },
+      "customVoices": {
+        "type": "array",
+        "inner": {
+          "type": "object",
+          "dict": {
+            "name": {
+              "type": "string",
+              "meta": {
+                "description": {
+                  "zh-Hans": "名字",
+                  "zh-Hant": "名字",
+                  "ja": "名前",
+                  "en": "Name",
+                  "ko": "이름"
+                }
+              }
+            },
+            "id": {
+              "type": "string",
+              "meta": {
+                "description": {
+                  "zh-Hans": "音色 ID",
+                  "zh-Hant": "音色 ID",
+                  "ja": "音声 ID",
+                  "en": "Voice ID",
+                  "ko": "음색 ID"
+                }
+              }
+            },
+            "model": {
+              "type": "string",
+              "meta": {
+                "description": {
+                  "zh-Hans": "模型(可空)",
+                  "zh-Hant": "模型(可空)",
+                  "ja": "モデル(任意)",
+                  "en": "Model (optional)",
+                  "ko": "모델(선택)"
+                }
+              }
+            }
+          }
+        },
+        "meta": {
+          "description": {
+            "zh-Hans": "自定义音色",
+            "zh-Hant": "自訂音色",
+            "ja": "カスタム音声",
+            "en": "Custom voices",
+            "ko": "사용자 음색"
+          },
+          "hint": {
+            "zh-Hans": "声音复刻得到的音色 ID，填好后出现在音色下拉里。模型留空按音色自动选。",
+            "zh-Hant": "聲音複刻得到的音色 ID，填好後出現在音色下拉裡。模型留空依音色自動選。",
+            "ja": "ボイスクローンで得た音色 ID。入れると音色の一覧に出ます。モデルを空にすると音色に合わせて選びます。",
+            "en": "Voice IDs from voice cloning. They appear in the voice list. Leave the model empty to pick it from the voice.",
+            "ko": "보이스 클로닝으로 얻은 음색 ID. 입력하면 음색 목록에 나옵니다. 모델을 비우면 음색에 맞춰 고릅니다."
+          },
+          "default": []
+        }
+      },
+      "outputDevice": {
+        "type": "string",
+        "meta": {
+          "description": {
+            "zh-Hans": "播放到",
+            "zh-Hant": "播放到",
+            "ja": "再生先",
+            "en": "Play to",
+            "ko": "재생 장치"
+          },
+          "hint": {
+            "zh-Hans": "声音输出设备",
+            "zh-Hant": "聲音輸出裝置",
+            "ja": "音声の出力デバイス",
+            "en": "Audio output device",
+            "ko": "소리 출력 장치"
+          },
+          "role": "audioOutput"
+        }
+      },
+      "monitor": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "本地监听",
+            "zh-Hant": "本機監聽",
+            "ja": "ローカルで聞く",
+            "en": "Monitor locally",
+            "ko": "로컬 모니터"
+          },
+          "hint": {
+            "zh-Hans": "同时在自己的设备上播放一份",
+            "zh-Hant": "同時在自己的裝置上播放一份",
+            "ja": "自分のデバイスでも同時に再生します",
+            "en": "Also play it on your own device",
+            "ko": "내 장치에서도 같이 재생합니다"
+          },
+          "default": true
+        }
+      },
+      "monitorDevice": {
+        "type": "string",
+        "meta": {
+          "description": {
+            "zh-Hans": "监听设备",
+            "zh-Hant": "監聽裝置",
+            "ja": "モニター先",
+            "en": "Monitor device",
+            "ko": "모니터 장치"
+          },
+          "role": "audioOutput"
+        }
+      }
+    }
+  },
+  "usage": {
+    "currency": "CNY",
+    "units": {
+      "chars": {
+        "zh-Hans": "字符",
+        "zh-Hant": "字符",
+        "ja": "文字",
+        "en": "chars",
+        "ko": "자"
+      },
+      "calls": {
+        "zh-Hans": "句",
+        "zh-Hant": "句",
+        "ja": "文",
+        "en": "sentences",
+        "ko": "문장"
+      }
+    }
+  },
+  "dashboard": {
+    "title": {
+      "zh-Hans": "语音",
+      "zh-Hant": "語音",
+      "ja": "音声",
+      "en": "Voice",
+      "ko": "음성"
+    },
+    "keys": [
+      "voice",
+      "outputDevice",
+      "monitor",
+      "monitorDevice"
+    ],
+    "area": "right",
+    "order": 20,
+    "link": true,
+    "grow": true
+  }
+}
