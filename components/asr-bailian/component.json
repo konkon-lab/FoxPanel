@@ -1,0 +1,151 @@
+{
+  "id": "yanuo.asr-bailian",
+  "kind": "input",
+  "name": {
+    "zh-Hans": "语音输入",
+    "zh-Hant": "語音輸入",
+    "ja": "音声入力",
+    "en": "Voice input",
+    "ko": "음성 입력"
+  },
+  "description": {
+    "zh-Hans": "阿里云百炼 Fun-ASR 实时识别",
+    "zh-Hant": "阿里雲百煉 Fun-ASR 即時辨識",
+    "ja": "Alibaba Cloud Bailian Fun-ASR リアルタイム認識",
+    "en": "Alibaba Cloud Bailian Fun-ASR real-time recognition",
+    "ko": "Alibaba Cloud Bailian Fun-ASR 실시간 인식"
+  },
+  "version": "1.6.5",
+  "author": "yanuo",
+  "license": "MIT",
+  "main": "main.js",
+  "page": "page.js",
+  "requires": [
+    "aliyun"
+  ],
+  "uses": [
+    "keyboard"
+  ],
+  "config": {
+    "type": "object",
+    "dict": {
+      "model": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "fun-asr-realtime",
+            "meta": {
+              "description": "fun-asr-realtime"
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "识别模型",
+            "zh-Hant": "辨識模型",
+            "ja": "モデル",
+            "en": "Model",
+            "ko": "모델"
+          },
+          "default": "fun-asr-realtime",
+          "custom": true
+        }
+      },
+      "language": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "zh",
+            "meta": {
+              "description": "中文"
+            }
+          },
+          {
+            "type": "const",
+            "value": "en",
+            "meta": {
+              "description": "英语"
+            }
+          },
+          {
+            "type": "const",
+            "value": "ja",
+            "meta": {
+              "description": "日语"
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "识别语言",
+            "zh-Hant": "辨識語言",
+            "ja": "言語",
+            "en": "Language",
+            "ko": "언어"
+          },
+          "default": "zh"
+        }
+      },
+      "micDevice": {
+        "type": "string",
+        "meta": {
+          "description": {
+            "zh-Hans": "麦克风",
+            "zh-Hant": "麥克風",
+            "ja": "マイク",
+            "en": "Microphone",
+            "ko": "마이크"
+          },
+          "role": "audioInput"
+        }
+      },
+      "followMute": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "跟随 VRChat 静音键",
+            "zh-Hant": "跟隨 VRChat 靜音鍵",
+            "ja": "VRChat のミュートに連動",
+            "en": "Follow VRChat mute",
+            "ko": "VRChat 음소거에 연동"
+          },
+          "default": true
+        }
+      },
+      "sendEach": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "说完一句直接发送",
+            "zh-Hant": "說完一句直接傳送",
+            "ja": "一文ごとに送信",
+            "en": "Send each sentence",
+            "ko": "문장마다 바로 전송"
+          },
+          "default": false
+        }
+      }
+    }
+  },
+  "usage": {
+    "currency": "CNY",
+    "units": {
+      "seconds": {
+        "zh-Hans": "秒",
+        "zh-Hant": "秒",
+        "ja": "秒",
+        "en": "seconds",
+        "ko": "초"
+      },
+      "calls": {
+        "zh-Hans": "次",
+        "zh-Hant": "次",
+        "ja": "回",
+        "en": "times",
+        "ko": "회"
+      }
+    }
+  }
+}
