@@ -1,0 +1,22 @@
+{
+  "id": "yanuo.window-dashboard",
+  "kind": "window",
+  "name": {
+    "zh-Hans": "仪表盘",
+    "zh-Hant": "儀表板",
+    "ja": "ダッシュボード",
+    "en": "Dashboard",
+    "ko": "대시보드"
+  },
+  "description": {
+    "zh-Hans": "费用、翻译和语音的仪表盘",
+    "zh-Hant": "費用、翻譯和語音的儀表板",
+    "ja": "費用・翻訳・音声のダッシュボード",
+    "en": "Costs, translation and voice at a glance",
+    "ko": "비용·번역·음성 대시보드"
+  },
+  "version": "1.2.9",
+  "author": "yanuo",
+  "license": "MIT",
+  "page": "page.js"
+}
