@@ -1,0 +1,50 @@
+{
+  "id": "yanuo.window-components",
+  "kind": "window",
+  "name": {
+    "zh-Hans": "组件管理",
+    "zh-Hant": "元件管理",
+    "ja": "コンポーネント管理",
+    "en": "Components",
+    "ko": "컴포넌트 관리"
+  },
+  "description": {
+    "zh-Hans": "分组、开关、设置组件",
+    "zh-Hant": "分組、開關、設定元件",
+    "ja": "コンポーネントのグループ・オンオフ・設定",
+    "en": "Group, toggle and configure components",
+    "ko": "컴포넌트 그룹·켜기·설정"
+  },
+  "version": "1.9.16",
+  "author": "yanuo",
+  "license": "MIT",
+  "provides": [
+    "components"
+  ],
+  "page": "page.js",
+  "config": {
+    "type": "object",
+    "dict": {
+      "devMode": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "开发者模式",
+            "zh-Hant": "開發者模式",
+            "ja": "開発者モード",
+            "en": "Developer mode",
+            "ko": "개발자 모드"
+          },
+          "hint": {
+            "zh-Hans": "启用组件热更新功能",
+            "zh-Hant": "啟用元件熱更新功能",
+            "ja": "コンポーネントのホットリロードを有効にします",
+            "en": "Enables hot reloading of components",
+            "ko": "컴포넌트 핫 리로드를 켭니다"
+          },
+          "default": false
+        }
+      }
+    }
+  }
+}
