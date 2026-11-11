@@ -1,0 +1,96 @@
+{
+  "id": "yanuo.window-market",
+  "kind": "window",
+  "name": {
+    "zh-Hans": "市场",
+    "zh-Hant": "市集",
+    "ja": "マーケット",
+    "en": "Market",
+    "ko": "마켓"
+  },
+  "description": {
+    "zh-Hans": "从 npm 搜索、安装和更新组件",
+    "zh-Hant": "從 npm 搜尋、安裝和更新元件",
+    "ja": "npm からコンポーネントを検索・インストール・更新",
+    "en": "Search, install and update components from npm",
+    "ko": "npm에서 컴포넌트를 검색·설치·업데이트"
+  },
+  "version": "1.0.9",
+  "author": "yanuo",
+  "license": "MIT",
+  "page": "page.js",
+  "config": {
+    "type": "object",
+    "dict": {
+      "registry": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "https://registry.npmmirror.com",
+            "meta": {
+              "description": {
+                "zh-Hans": "npmmirror(国内镜像)",
+                "zh-Hant": "npmmirror(中國大陸鏡像)",
+                "ja": "npmmirror(中国ミラー)",
+                "en": "npmmirror (China mirror)",
+                "ko": "npmmirror(중국 미러)"
+              }
+            }
+          },
+          {
+            "type": "const",
+            "value": "https://registry.npmjs.org",
+            "meta": {
+              "description": {
+                "zh-Hans": "npm 官方",
+                "zh-Hant": "npm 官方",
+                "ja": "npm 公式",
+                "en": "npm official",
+                "ko": "npm 공식"
+              }
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "组件来源",
+            "zh-Hant": "元件來源",
+            "ja": "コンポーネントの取得元",
+            "en": "Component source",
+            "ko": "컴포넌트 출처"
+          },
+          "hint": {
+            "zh-Hans": "npm 仓库下载组件",
+            "zh-Hant": "npm 倉庫下載元件",
+            "ja": "コンポーネントをダウンロードする npm レジストリ",
+            "en": "npm registry to download components from",
+            "ko": "컴포넌트를 내려받을 npm 저장소"
+          },
+          "default": "https://registry.npmmirror.com",
+          "custom": true
+        }
+      },
+      "scripts": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "允许安装脚本",
+            "zh-Hant": "允許安裝指令碼",
+            "ja": "インストールスクリプトを許可",
+            "en": "Allow install scripts",
+            "ko": "설치 스크립트 허용"
+          },
+          "hint": {
+            "zh-Hans": "装组件时执行包里的 postinstall 等脚本；关着时要编译原生模块的组件装不上",
+            "zh-Hant": "裝元件時執行套件裡的 postinstall 等指令碼；關著時要編譯原生模組的元件裝不上",
+            "ja": "インストール時にパッケージの postinstall などを実行します。オフだとネイティブモジュールのビルドが必要なコンポーネントは入りません",
+            "en": "Run postinstall and other package scripts when installing; when off, components that compile native modules cannot be installed",
+            "ko": "설치할 때 패키지의 postinstall 등 스크립트를 실행합니다. 끄면 네이티브 모듈을 빌드해야 하는 컴포넌트는 설치되지 않습니다"
+          },
+          "default": false
+        }
+      }
+    }
+  }
+}
