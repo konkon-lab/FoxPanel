@@ -1,0 +1,10 @@
+{
+  "id": "yanuo.skin-warm",
+  "kind": "skin",
+  "name": { "zh-Hans": "暖色", "zh-Hant": "暖色", "ja": "ウォーム", "en": "Warm", "ko": "따뜻한 색" },
+  "description": { "zh-Hans": "米色和陶土色，按键圆一些", "en": "Beige and terracotta, rounder keys" },
+  "version": "1.0.0",
+  "author": "yanuo",
+  "license": "MIT",
+  "skin": "skin.css"
+}

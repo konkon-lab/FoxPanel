@@ -1,0 +1,34 @@
+/* 暖色皮肤：米色底、陶土色强调，按键圆一些 */
+.fox-theme {
+  --panel: #f6efe4;
+  --surface: #fffaf2;
+  --key: #efe3d1;
+  --key-down: #e2d2ba;
+  --line: #e6d8c3;
+  --edge: #d6c3a6;
+  --text: #3b2f25;
+  --sub: #8a7461;
+  --accent: #c0632b;
+  --accent-soft: rgba(192, 99, 43, 0.12);
+  --track: #efe3d1;
+  --track-on: #fffaf2;
+  --switch-off: #d8c6ad;
+}
+.fox-theme.dark {
+  --panel: #1e1915;
+  --surface: #29221c;
+  --key: #3a3029;
+  --key-down: #4a3e35;
+  --line: #3a3029;
+  --edge: #15110e;
+  --text: #f1e6d8;
+  --sub: #b9a48f;
+  --accent: #e58a52;
+  --accent-soft: rgba(229, 138, 82, 0.16);
+  --track: #1e1915;
+  --track-on: #3a3029;
+  --switch-off: #5a4c40;
+}
+.fox-theme .key {
+  border-radius: 10px;
+}
