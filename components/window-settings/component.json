@@ -1,0 +1,327 @@
+{
+  "id": "yanuo.window-settings",
+  "kind": "window",
+  "name": {
+    "zh-Hans": "设置",
+    "zh-Hant": "設定",
+    "ja": "設定",
+    "en": "Settings",
+    "ko": "설정"
+  },
+  "description": {
+    "zh-Hans": "设置页：各组件登记的设置分节显示，可以搜索；提供界面语言、关闭窗口时、以管理员身份运行、外观、更新等应用设置",
+    "zh-Hant": "設定頁：各元件登記的設定分節顯示，可以搜尋；提供介面語言、關閉視窗時、以系統管理員身分執行、外觀、更新等應用程式設定",
+    "ja": "設定ページ：各コンポーネントが登録した設定を節ごとに表示、検索できる。表示言語、ウィンドウを閉じるとき、管理者として実行、外観、アップデートなどのアプリ設定を提供",
+    "en": "Settings page: shows the settings each component registers, by section, with search; provides app settings such as language, on window close, run as administrator, appearance and updates",
+    "ko": "설정 페이지: 각 컴포넌트가 등록한 설정을 섹션별로 표시하고 검색; 표시 언어, 창을 닫을 때, 관리자 권한 실행, 외관, 업데이트 등 앱 설정 제공"
+  },
+  "version": "1.1.8",
+  "author": "yanuo",
+  "license": "MIT",
+  "provides": [
+    "settings"
+  ],
+  "page": "page.js",
+  "config": {
+    "type": "object",
+    "dict": {
+      "language": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "system",
+            "meta": {
+              "description": {
+                "zh-Hans": "默认(跟随系统)",
+                "zh-Hant": "預設(跟隨系統)",
+                "ja": "既定（システムに従う）",
+                "en": "Default (system)",
+                "ko": "기본값(시스템 설정)"
+              }
+            }
+          },
+          {
+            "type": "const",
+            "value": "zh-Hans",
+            "meta": {
+              "description": "简体中文"
+            }
+          },
+          {
+            "type": "const",
+            "value": "zh-Hant",
+            "meta": {
+              "description": "繁體中文"
+            }
+          },
+          {
+            "type": "const",
+            "value": "ja",
+            "meta": {
+              "description": "日本語"
+            }
+          },
+          {
+            "type": "const",
+            "value": "en",
+            "meta": {
+              "description": "English"
+            }
+          },
+          {
+            "type": "const",
+            "value": "ko",
+            "meta": {
+              "description": "한국어"
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "界面语言",
+            "zh-Hant": "介面語言",
+            "ja": "表示言語",
+            "en": "Language",
+            "ko": "표시 언어"
+          },
+          "hint": {
+            "zh-Hans": "FoxPanel 主窗口的语言",
+            "zh-Hant": "FoxPanel 主視窗的語言",
+            "ja": "FoxPanel メインウィンドウの言語",
+            "en": "Language of the FoxPanel main window",
+            "ko": "FoxPanel 메인 창의 언어"
+          },
+          "default": "system"
+        }
+      },
+      "closeAction": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "ask",
+            "meta": {
+              "description": {
+                "zh-Hans": "每次询问",
+                "zh-Hant": "每次詢問",
+                "ja": "毎回確認する",
+                "en": "Ask every time",
+                "ko": "매번 묻기"
+              }
+            }
+          },
+          {
+            "type": "const",
+            "value": "tray",
+            "meta": {
+              "description": {
+                "zh-Hans": "最小化到托盘",
+                "zh-Hant": "最小化至系統匣",
+                "ja": "トレイに最小化",
+                "en": "Minimize to tray",
+                "ko": "트레이로 최소화"
+              }
+            }
+          },
+          {
+            "type": "const",
+            "value": "quit",
+            "meta": {
+              "description": {
+                "zh-Hans": "直接退出",
+                "zh-Hant": "直接結束",
+                "ja": "そのまま終了",
+                "en": "Quit",
+                "ko": "바로 종료"
+              }
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "关闭窗口时",
+            "zh-Hant": "關閉視窗時",
+            "ja": "ウィンドウを閉じるとき",
+            "en": "On window close",
+            "ko": "창을 닫을 때"
+          },
+          "hint": {
+            "zh-Hans": "点右上角关闭按钮时的操作",
+            "zh-Hant": "按下右上角關閉按鈕時的動作",
+            "ja": "右上の閉じるボタンを押したときの動作",
+            "en": "Action when the close button at the top right is clicked",
+            "ko": "오른쪽 위 닫기 버튼을 눌렀을 때의 동작"
+          },
+          "default": "ask"
+        }
+      },
+      "admin": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "以管理员身份运行",
+            "zh-Hant": "以系統管理員身分執行",
+            "ja": "管理者として実行",
+            "en": "Run as administrator",
+            "ko": "관리자 권한으로 실행"
+          },
+          "hint": {
+            "zh-Hans": "每次启动都请求管理员权限并显示 UAC 确认，下次启动生效",
+            "zh-Hant": "每次啟動皆要求系統管理員權限並顯示 UAC 確認，下次啟動時生效",
+            "ja": "起動のたびに管理者権限を要求し、UAC の確認を表示します。次回起動時に反映されます",
+            "en": "Requests administrator rights with a UAC prompt on every launch. Takes effect on next launch",
+            "ko": "시작할 때마다 관리자 권한을 요청하고 UAC 확인을 표시합니다. 다음 시작 시 적용됩니다"
+          },
+          "default": false
+        }
+      },
+      "theme": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "light",
+            "meta": {
+              "description": {
+                "zh-Hans": "日间",
+                "zh-Hant": "日間",
+                "ja": "ライト",
+                "en": "Light",
+                "ko": "라이트"
+              }
+            }
+          },
+          {
+            "type": "const",
+            "value": "dark",
+            "meta": {
+              "description": {
+                "zh-Hans": "夜间",
+                "zh-Hant": "夜間",
+                "ja": "ダーク",
+                "en": "Dark",
+                "ko": "다크"
+              }
+            }
+          },
+          {
+            "type": "const",
+            "value": "system",
+            "meta": {
+              "description": {
+                "zh-Hans": "跟随系统",
+                "zh-Hant": "跟隨系統",
+                "ja": "システムに従う",
+                "en": "System",
+                "ko": "시스템 설정"
+              }
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "界面主题",
+            "zh-Hant": "介面主題",
+            "ja": "テーマ",
+            "en": "Theme",
+            "ko": "테마"
+          },
+          "hint": {
+            "zh-Hans": "日间、夜间，或跟随 Windows 的设置",
+            "zh-Hant": "日間、夜間，或跟隨 Windows 的設定",
+            "ja": "ライト、ダーク、または Windows の設定に従う",
+            "en": "Light, dark, or follow the Windows setting",
+            "ko": "라이트, 다크 또는 Windows 설정을 따릅니다"
+          },
+          "default": "system",
+          "role": "radio"
+        }
+      },
+      "zoom": {
+        "type": "number",
+        "meta": {
+          "description": {
+            "zh-Hans": "界面缩放",
+            "zh-Hant": "介面縮放",
+            "ja": "表示倍率",
+            "en": "Zoom",
+            "ko": "화면 배율"
+          },
+          "hint": {
+            "zh-Hans": "主窗口文字和控件的大小，50%–150%",
+            "zh-Hant": "主視窗文字與控制項的大小，50%–150%",
+            "ja": "メインウィンドウの文字とコントロールのサイズ（50%–150%）",
+            "en": "Size of text and controls in the main window, 50%–150%",
+            "ko": "메인 창의 글자와 컨트롤 크기, 50%–150%"
+          },
+          "default": 1,
+          "min": 0.5,
+          "max": 1.5,
+          "step": 0.05,
+          "role": "slider"
+        }
+      },
+      "autoCheck": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "自动检查更新",
+            "zh-Hant": "自動檢查更新",
+            "ja": "更新を自動確認",
+            "en": "Check for updates automatically",
+            "ko": "업데이트 자동 확인"
+          },
+          "hint": {
+            "zh-Hans": "启动时检查新版本",
+            "zh-Hant": "啟動時檢查新版本",
+            "ja": "起動時に新しいバージョンを確認します",
+            "en": "Check for new versions at startup",
+            "ko": "시작할 때 새 버전을 확인합니다"
+          },
+          "default": true
+        }
+      },
+      "autoDownload": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "后台下载更新",
+            "zh-Hant": "背景下載更新",
+            "ja": "バックグラウンドで更新をダウンロード",
+            "en": "Download updates in background",
+            "ko": "백그라운드에서 업데이트 다운로드"
+          },
+          "hint": {
+            "zh-Hans": "发现新版本时在后台下载，完成后询问是否安装",
+            "zh-Hant": "發現新版本時於背景下載，完成後詢問是否安裝",
+            "ja": "新しいバージョンが見つかるとバックグラウンドでダウンロードし、完了後にインストールするか確認します",
+            "en": "Download new versions in the background and ask to install when complete",
+            "ko": "새 버전이 있으면 백그라운드에서 다운로드하고 완료 후 설치 여부를 묻습니다"
+          },
+          "default": true
+        }
+      },
+      "beta": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "接收测试版",
+            "zh-Hant": "接收測試版",
+            "ja": "ベータ版を受け取る",
+            "en": "Receive beta versions",
+            "ko": "베타 버전 받기"
+          },
+          "hint": {
+            "zh-Hans": "也检查测试版更新，可能不稳定",
+            "zh-Hant": "一併檢查測試版更新，可能不穩定",
+            "ja": "ベータ版の更新も確認します。動作が不安定な場合があります",
+            "en": "Also check for beta updates, which may be unstable",
+            "ko": "베타 버전 업데이트도 확인합니다. 불안정할 수 있습니다"
+          },
+          "default": false
+        }
+      }
+    }
+  }
+}
