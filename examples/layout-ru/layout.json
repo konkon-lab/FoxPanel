@@ -1,0 +1,78 @@
+{
+  "rows": [
+    [
+      {"id": "ru-Backquote", "text": ["ё", "Ё"]},
+      {"id": "Digit1", "code": "Digit1", "dual": ["1", "!"]},
+      {"id": "Digit2", "code": "Digit2", "dual": ["2", "@"]},
+      {"id": "Digit3", "code": "Digit3", "dual": ["3", "#"]},
+      {"id": "Digit4", "code": "Digit4", "dual": ["4", "$"]},
+      {"id": "Digit5", "code": "Digit5", "dual": ["5", "%"]},
+      {"id": "Digit6", "code": "Digit6", "dual": ["6", "^"]},
+      {"id": "Digit7", "code": "Digit7", "dual": ["7", "&"]},
+      {"id": "Digit8", "code": "Digit8", "dual": ["8", "*"]},
+      {"id": "Digit9", "code": "Digit9", "dual": ["9", "("]},
+      {"id": "Digit0", "code": "Digit0", "dual": ["0", ")"]},
+      {"id": "Minus", "code": "Minus", "dual": ["-", "_"]},
+      {"id": "Equal", "code": "Equal", "dual": ["=", "+"]},
+      {"id": "back", "units": 2, "code": "Backspace", "icon": "back", "repeat": true},
+      {"id": "home", "code": "Home", "label": "Home"}
+    ],
+    [
+      {"id": "tab", "units": 1.5, "code": "Tab", "label": "Tab"},
+      {"id": "ru-q", "text": ["й", "Й"]},
+      {"id": "ru-w", "text": ["ц", "Ц"]},
+      {"id": "ru-e", "text": ["у", "У"]},
+      {"id": "ru-r", "text": ["к", "К"]},
+      {"id": "ru-t", "text": ["е", "Е"]},
+      {"id": "ru-y", "text": ["н", "Н"]},
+      {"id": "ru-u", "text": ["г", "Г"]},
+      {"id": "ru-i", "text": ["ш", "Ш"]},
+      {"id": "ru-o", "text": ["щ", "Щ"]},
+      {"id": "ru-p", "text": ["з", "З"]},
+      {"id": "ru-BracketLeft", "text": ["х", "Х"]},
+      {"id": "ru-BracketRight", "text": ["ъ", "Ъ"]},
+      {"id": "Backslash", "units": 1.5, "code": "Backslash", "dual": ["\\", "|"]},
+      {"id": "del", "code": "Delete", "label": "Del", "repeat": true}
+    ],
+    [
+      {"id": "caps", "units": 1.75, "fn": "caps", "label": "Caps"},
+      {"id": "ru-a", "text": ["ф", "Ф"]},
+      {"id": "ru-s", "text": ["ы", "Ы"]},
+      {"id": "ru-d", "text": ["в", "В"]},
+      {"id": "ru-f", "text": ["а", "А"]},
+      {"id": "ru-g", "text": ["п", "П"]},
+      {"id": "ru-h", "text": ["р", "Р"]},
+      {"id": "ru-j", "text": ["о", "О"]},
+      {"id": "ru-k", "text": ["л", "Л"]},
+      {"id": "ru-l", "text": ["д", "Д"]},
+      {"id": "ru-Semicolon", "text": ["ж", "Ж"]},
+      {"id": "ru-Quote", "text": ["э", "Э"]},
+      {"id": "enter", "units": 2.25, "code": "Enter", "label": "Enter"},
+      {"id": "pgup", "fn": "pgup", "label": "PgUp"}
+    ],
+    [
+      {"id": "lshift", "units": 2.25, "fn": "shift", "icon": "shift"},
+      {"id": "ru-z", "text": ["я", "Я"]},
+      {"id": "ru-x", "text": ["ч", "Ч"]},
+      {"id": "ru-c", "text": ["с", "С"]},
+      {"id": "ru-v", "text": ["м", "М"]},
+      {"id": "ru-b", "text": ["и", "И"]},
+      {"id": "ru-n", "text": ["т", "Т"]},
+      {"id": "ru-m", "text": ["ь", "Ь"]},
+      {"id": "ru-Comma", "text": ["б", "Б"]},
+      {"id": "ru-Period", "text": ["ю", "Ю"]},
+      {"id": "dot", "text": [".", ","]},
+      {"id": "rshift", "units": 1.75, "fn": "shift", "icon": "shift"},
+      {"id": "up", "code": "ArrowUp", "label": "↑", "repeat": true},
+      {"id": "pgdn", "fn": "pgdn", "label": "PgDn"}
+    ],
+    [
+      {"id": "lang", "units": 1.25, "fn": "lang"},
+      {"id": "space", "units": 10.75, "code": "Space", "repeat": true},
+      {"id": "mode", "fn": "mode"},
+      {"id": "left", "code": "ArrowLeft", "label": "←", "repeat": true},
+      {"id": "down", "code": "ArrowDown", "label": "↓", "repeat": true},
+      {"id": "right", "code": "ArrowRight", "label": "→", "repeat": true}
+    ]
+  ]
+}

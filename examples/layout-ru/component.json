@@ -1,0 +1,22 @@
+{
+  "id": "yanuo.layout-ru",
+  "kind": "layout",
+  "name": {
+    "zh-Hans": "俄文键盘",
+    "zh-Hant": "俄文鍵盤",
+    "ja": "ロシア語キーボード",
+    "en": "Russian keyboard",
+    "ko": "러시아어 키보드"
+  },
+  "description": {
+    "zh-Hans": "ЙЦУКЕН 布局，字母键直接打俄文字母",
+    "en": "ЙЦУКЕН layout; letter keys type Cyrillic directly"
+  },
+  "version": "1.1.0",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": [
+    "keys"
+  ],
+  "layout": "layout.json"
+}
