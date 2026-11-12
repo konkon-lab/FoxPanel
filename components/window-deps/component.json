@@ -1,0 +1,25 @@
+{
+  "id": "yanuo.window-deps",
+  "kind": "window",
+  "name": {
+    "zh-Hans": "依赖图",
+    "zh-Hant": "相依性圖",
+    "ja": "依存グラフ",
+    "en": "Dependency graph",
+    "ko": "의존성 그래프"
+  },
+  "description": {
+    "zh-Hans": "组件和服务的关系图",
+    "zh-Hant": "元件和服務的關係圖",
+    "ja": "コンポーネントとサービスの関係図",
+    "en": "How components and services connect",
+    "ko": "컴포넌트와 서비스 관계도"
+  },
+  "version": "1.4.7",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": [
+    "components"
+  ],
+  "page": "page.js"
+}
