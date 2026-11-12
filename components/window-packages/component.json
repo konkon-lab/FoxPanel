@@ -1,0 +1,25 @@
+{
+  "id": "yanuo.window-packages",
+  "kind": "window",
+  "name": {
+    "zh-Hans": "依赖管理",
+    "zh-Hant": "相依性管理",
+    "ja": "依存関係",
+    "en": "Packages",
+    "ko": "의존성 관리"
+  },
+  "description": {
+    "zh-Hans": "所有组件的版本、来源和依赖",
+    "zh-Hant": "所有元件的版本、來源和相依",
+    "ja": "全コンポーネントのバージョン・入手元・依存",
+    "en": "Versions, sources and dependencies of all components",
+    "ko": "모든 컴포넌트의 버전·출처·의존"
+  },
+  "version": "1.2.9",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": [
+    "components"
+  ],
+  "page": "page.js"
+}
