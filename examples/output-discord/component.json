@@ -1,0 +1,81 @@
+{
+  "id": "yanuo.output-discord",
+  "kind": "output",
+  "name": "Discord",
+  "description": {
+    "zh-Hans": "发送时把文字发到 Discord 频道(webhook)",
+    "en": "Posts sent text to a Discord channel via webhook"
+  },
+  "version": "1.1.0",
+  "author": "yanuo",
+  "license": "MIT",
+  "enabled": false,
+  "main": "main.js",
+  "config": {
+    "type": "object",
+    "dict": {
+      "webhook": {
+        "type": "string",
+        "meta": {
+          "description": {
+            "zh-Hans": "Webhook 地址",
+            "en": "Webhook URL"
+          },
+          "role": "secret"
+        }
+      },
+      "username": {
+        "type": "string",
+        "meta": {
+          "description": {
+            "zh-Hans": "显示名",
+            "en": "Display name"
+          },
+          "default": "FoxPanel"
+        }
+      },
+      "content": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "both",
+            "meta": {
+              "description": {
+                "zh-Hans": "原文（译文）",
+                "en": "Original (translation)"
+              }
+            }
+          },
+          {
+            "type": "const",
+            "value": "text",
+            "meta": {
+              "description": {
+                "zh-Hans": "只发原文",
+                "en": "Original only"
+              }
+            }
+          },
+          {
+            "type": "const",
+            "value": "spoken",
+            "meta": {
+              "description": {
+                "zh-Hans": "只发译文",
+                "en": "Translation only"
+              }
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "发什么",
+            "en": "Send"
+          },
+          "default": "both"
+        }
+      }
+    }
+  }
+}
