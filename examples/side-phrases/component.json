@@ -1,0 +1,84 @@
+{
+  "id": "yanuo.side-phrases",
+  "kind": "sidepage",
+  "name": {
+    "zh-Hans": "常用语",
+    "zh-Hant": "常用語",
+    "ja": "定型文",
+    "en": "Phrases",
+    "ko": "자주 쓰는 말"
+  },
+  "description": {
+    "zh-Hans": "点一下插入一句常用语；在组件设置里编辑",
+    "en": "Tap to insert a saved phrase; edit them in the component settings"
+  },
+  "version": "1.1.1",
+  "author": "yanuo",
+  "license": "MIT",
+  "requires": [
+    "keyboard"
+  ],
+  "page": "page.js",
+  "icon": "icon.svg",
+  "config": {
+    "type": "object",
+    "dict": {
+      "phrases": {
+        "type": "array",
+        "inner": {
+          "type": "object",
+          "dict": {
+            "text": {
+              "type": "string",
+              "meta": {
+                "description": {
+                  "zh-Hans": "文字",
+                  "en": "Text"
+                }
+              }
+            }
+          }
+        },
+        "meta": {
+          "description": {
+            "zh-Hans": "常用语",
+            "zh-Hant": "常用語",
+            "ja": "定型文",
+            "en": "Phrases",
+            "ko": "자주 쓰는 말"
+          },
+          "default": [
+            {
+              "text": "你好！"
+            },
+            {
+              "text": "我先挂机一下，马上回来"
+            },
+            {
+              "text": "谢谢！"
+            },
+            {
+              "text": "晚安～"
+            },
+            {
+              "text": "Nice to meet you!"
+            },
+            {
+              "text": "よろしくお願いします"
+            }
+          ]
+        }
+      },
+      "send": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "插入后直接发送",
+            "en": "Send right away"
+          },
+          "default": false
+        }
+      }
+    }
+  }
+}
