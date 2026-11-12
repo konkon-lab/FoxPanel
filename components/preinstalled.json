@@ -1,0 +1,44 @@
+[
+  { "group": "basic", "ids": [
+    "yanuo.shell-classic",
+    "yanuo.candidates",
+    "yanuo.textfield",
+    "yanuo.keys",
+    "yanuo.layout-d68"
+  ] },
+  { "group": "sidebar", "ids": [
+    "yanuo.side-quick",
+    "yanuo.side-numpad",
+    "yanuo.side-symbols",
+    "yanuo.button-paste",
+    "yanuo.button-theme"
+  ] },
+  { "group": "lang", "ids": [
+    "yanuo.lang-zh",
+    "yanuo.lang-en",
+    "yanuo.lang-ja",
+    "yanuo.lang-ko"
+  ] },
+  { "group": "service", "ids": [
+    "yanuo.ime",
+    "yanuo.steamvr",
+    "yanuo.osc",
+    "yanuo.aliyun"
+  ] },
+  { "group": "output", "ids": [
+    "yanuo.chatbox",
+    "yanuo.tts-bailian",
+    "yanuo.asr-bailian",
+    "yanuo.mt-bailian"
+  ] },
+  { "group": "console", "ids": [
+    "yanuo.window-shell",
+    "yanuo.window-dashboard",
+    "yanuo.window-components",
+    "yanuo.window-market",
+    "yanuo.window-packages",
+    "yanuo.window-deps",
+    "yanuo.window-logs",
+    "yanuo.window-settings"
+  ] }
+]
