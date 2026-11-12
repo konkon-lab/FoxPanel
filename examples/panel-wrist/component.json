@@ -1,0 +1,45 @@
+{
+  "id": "yanuo.panel-wrist",
+  "kind": "panel",
+  "name": {
+    "zh-Hans": "手腕时钟",
+    "zh-Hant": "手腕時鐘",
+    "ja": "手首の時計",
+    "en": "Wrist clock",
+    "ko": "손목 시계"
+  },
+  "description": {
+    "zh-Hans": "附着在左手手柄上的小时钟，抬手看表时才显示",
+    "en": "A small clock on the left controller, shown when you raise your wrist to look at it"
+  },
+  "version": "1.0.0",
+  "author": "yanuo",
+  "license": "MIT",
+  "icon": "icon.svg",
+  "panel": {
+    "page": "panel.js",
+    "width": 240,
+    "height": 120,
+    "meters": 0.12,
+    "anchor": "left",
+    "glance": true
+  },
+  "config": {
+    "type": "object",
+    "dict": {
+      "hour24": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "24 小时制",
+            "zh-Hant": "24 小時制",
+            "ja": "24 時間表示",
+            "en": "24-hour clock",
+            "ko": "24시간 형식"
+          },
+          "default": true
+        }
+      }
+    }
+  }
+}
