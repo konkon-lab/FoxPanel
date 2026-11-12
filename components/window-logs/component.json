@@ -1,0 +1,137 @@
+{
+  "id": "yanuo.window-logs",
+  "kind": "window",
+  "name": {
+    "zh-Hans": "日志",
+    "zh-Hant": "日誌",
+    "ja": "ログ",
+    "en": "Logs",
+    "ko": "로그"
+  },
+  "description": {
+    "zh-Hans": "宿主和组件的运行日志",
+    "zh-Hant": "宿主和元件的執行日誌",
+    "ja": "ホストとコンポーネントの実行ログ",
+    "en": "Runtime logs of the host and components",
+    "ko": "호스트와 컴포넌트 실행 로그"
+  },
+  "version": "1.5.10",
+  "author": "yanuo",
+  "license": "MIT",
+  "page": "page.js",
+  "main": "main.js",
+  "config": {
+    "type": "object",
+    "dict": {
+      "level": {
+        "type": "union",
+        "list": [
+          {
+            "type": "const",
+            "value": "info",
+            "meta": {
+              "description": "INFO"
+            }
+          },
+          {
+            "type": "const",
+            "value": "warn",
+            "meta": {
+              "description": "WARN"
+            }
+          },
+          {
+            "type": "const",
+            "value": "error",
+            "meta": {
+              "description": "ERROR"
+            }
+          }
+        ],
+        "meta": {
+          "description": {
+            "zh-Hans": "记录等级",
+            "zh-Hant": "記錄等級",
+            "ja": "記録レベル",
+            "en": "Log level",
+            "ko": "기록 수준"
+          },
+          "hint": {
+            "zh-Hans": "输出日志的最低等级。",
+            "zh-Hant": "輸出日誌的最低等級。",
+            "ja": "出力するログの最低レベル。",
+            "en": "Lowest level of logs to output.",
+            "ko": "출력할 로그의 최저 수준."
+          },
+          "default": "info"
+        }
+      },
+      "root": {
+        "type": "string",
+        "meta": {
+          "description": {
+            "zh-Hans": "日志目录",
+            "zh-Hant": "日誌目錄",
+            "ja": "ログフォルダー",
+            "en": "Log folder",
+            "ko": "로그 폴더"
+          },
+          "hint": {
+            "zh-Hans": "存放输出日志的本地目录。",
+            "zh-Hant": "存放輸出日誌的本機目錄。",
+            "ja": "ログを保存するローカルフォルダー。",
+            "en": "Local folder for log output.",
+            "ko": "로그를 저장할 로컬 폴더."
+          },
+          "role": "directory",
+          "default": "logs"
+        }
+      },
+      "maxAge": {
+        "type": "number",
+        "meta": {
+          "description": {
+            "zh-Hans": "保存天数",
+            "zh-Hant": "保存天數",
+            "ja": "保存日数",
+            "en": "Days to keep",
+            "ko": "보관 일수"
+          },
+          "hint": {
+            "zh-Hans": "日志文件保存的最大天数。",
+            "zh-Hant": "日誌檔案保存的最大天數。",
+            "ja": "ログファイルを保存する最大日数。",
+            "en": "Maximum days to keep log files.",
+            "ko": "로그 파일을 보관할 최대 일수."
+          },
+          "default": 14,
+          "min": 1,
+          "max": 365,
+          "step": 1
+        }
+      },
+      "maxSize": {
+        "type": "number",
+        "meta": {
+          "description": {
+            "zh-Hans": "单个文件大小",
+            "zh-Hant": "單個檔案大小",
+            "ja": "ファイルサイズ",
+            "en": "File size",
+            "ko": "파일 크기"
+          },
+          "hint": {
+            "zh-Hans": "单个日志文件的最大大小(KB)。",
+            "zh-Hant": "單個日誌檔案的最大大小(KB)。",
+            "ja": "ログファイル 1 つの最大サイズ(KB)。",
+            "en": "Maximum size of one log file (KB).",
+            "ko": "로그 파일 하나의 최대 크기(KB)."
+          },
+          "default": 10240,
+          "min": 1,
+          "step": 1024
+        }
+      }
+    }
+  }
+}
