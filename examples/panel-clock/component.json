@@ -1,0 +1,56 @@
+{
+  "id": "yanuo.panel-clock",
+  "kind": "panel",
+  "name": {
+    "zh-Hans": "时钟",
+    "zh-Hant": "時鐘",
+    "ja": "時計",
+    "en": "Clock",
+    "ko": "시계"
+  },
+  "description": {
+    "zh-Hans": "一块显示时间和日期的面板",
+    "en": "A panel that shows the time and date"
+  },
+  "version": "1.0.0",
+  "author": "yanuo",
+  "license": "MIT",
+  "icon": "icon.svg",
+  "panel": {
+    "page": "panel.js",
+    "width": 480,
+    "height": 200,
+    "meters": 0.3
+  },
+  "config": {
+    "type": "object",
+    "dict": {
+      "hour24": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "24 小时制",
+            "zh-Hant": "24 小時制",
+            "ja": "24 時間表示",
+            "en": "24-hour clock",
+            "ko": "24시간 형식"
+          },
+          "default": true
+        }
+      },
+      "seconds": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "显示秒",
+            "zh-Hant": "顯示秒",
+            "ja": "秒を表示",
+            "en": "Show seconds",
+            "ko": "초 표시"
+          },
+          "default": false
+        }
+      }
+    }
+  }
+}
