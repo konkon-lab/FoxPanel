@@ -1,0 +1,178 @@
+# Rime schema
+# encoding: utf-8
+# 小鹤双拼：词库用内置的四叶草拼音(clover)，拼写规则把全拼换成小鹤双拼的两键。
+# 键位：q iu  w ei  r uan  t ue/ve  y un  u sh  i ch  v zh/ui  o uo  p ie  s ong/iong  d ai  f en  g eng
+#       h ang  j an  k ing/uai  l iang/uang  z ou  x ia/ua  c ao  b in  n iao  m ian
+#       零声母：a→aa  o→oo  e→ee  ang→ah  eng→eg，其余韵母直接打(ai an ao ei en er ou)
+
+schema:
+  schema_id: xiaohe
+  name: 小鹤双拼
+  version: "1.0.0"
+  author:
+    - yanuo
+  description: |
+    小鹤双拼，词库用四叶草拼音。
+  dependencies:
+    - clover
+
+switches:
+  - name: zh_simp_s2t
+    reset: 0
+    states: [ 简, 繁 ]
+  - name: emoji_suggestion
+    reset: 0
+    states: [ "🈚️️︎", "🈶️️️" ]
+  - name: symbol_support
+    reset: 0
+    states: [ "无符", "符" ]
+  - name: ascii_punct
+    reset: 0
+    states: [ 。，, ．， ]
+  - name: full_shape
+    reset: 0
+    states: [ 半, 全 ]
+  - name: ascii_mode
+    reset: 0
+    states: [ 中, 英 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - script_translator
+  filters:
+    - simplifier@emoji_suggestion
+    - simplifier@symbol_support
+    - simplifier
+    - uniquifier
+
+simplifier:
+  option_name: zh_simp_s2t
+  opencc_config: s2t.json
+
+emoji_suggestion:
+  opencc_config: emoji.json
+  option_name: emoji_suggestion
+  tips: all
+
+symbol_support:
+  opencc_config: symbol.json
+  option_name: symbol_support
+  tips: all
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " '"
+  algebra:
+    - erase/^xx$/
+    - derive/^([jqxy])u$/$1v/             # ju = jv
+    - derive/^([aoe])([ioun])$/$1$1$2/    # 零声母也可以重复韵母首字母打
+    - xform/^([aoe])(ng)?$/$1$1$2/        # a → aa, ang → aang(下面再转成 ah)
+    # 韵母：先转成大写，免得后面的规则再匹配到
+    - xform/iu$/Q/
+    - xform/(.)ei$/$1W/
+    - xform/uan$/R/
+    - xform/[uv]e$/T/
+    - xform/un$/Y/
+    - xform/^sh/U/
+    - xform/^ch/I/
+    - xform/^zh/V/
+    - xform/uo$/O/
+    - xform/ie$/P/
+    - xform/i?ong$/S/
+    - xform/ing$|uai$/K/
+    - xform/(.)ai$/$1D/
+    - xform/(.)en$/$1F/
+    - xform/(.)eng$/$1G/
+    - xform/[iu]ang$/L/
+    - xform/(.)ang$/$1H/
+    - xform/ian$/M/
+    - xform/(.)an$/$1J/
+    - xform/(.)ou$/$1Z/
+    - xform/[iu]a$/X/
+    - xform/iao$/N/
+    - xform/(.)ao$/$1C/
+    - xform/ui$/V/
+    - xform/in$/B/
+    - xlit/QWRTYUIOPSDFGHJKLZXCVBNM/qwrtyuiopsdfghjklzxcvbnm/
+    - abbrev/^(.).+$/$1/                  # 只打声母
+
+translator:
+  dictionary: clover
+  prism: xiaohe
+  # 输入串显示成全拼
+  preedit_format:
+    - xform/([bpmfdtnljqx])n/$1iao/
+    - xform/(\w)g/$1eng/
+    - xform/(\w)q/$1iu/
+    - xform/(\w)w/$1ei/
+    - xform/([dtnlgkhjqxyvuirzcs])r/$1uan/
+    - xform/(\w)t/$1ve/
+    - xform/(\w)y/$1un/
+    - xform/([dtnlgkhvuirzcs])o/$1uo/
+    - xform/(\w)p/$1ie/
+    - xform/([jqx])s/$1iong/
+    - xform/(\w)s/$1ong/
+    - xform/(\w)d/$1ai/
+    - xform/(\w)f/$1en/
+    - xform/(\w)h/$1ang/
+    - xform/(\w)j/$1an/
+    - xform/([gkhvuirzcs])k/$1uai/
+    - xform/(\w)k/$1ing/
+    - xform/([jqxnl])l/$1iang/
+    - xform/(\w)l/$1uang/
+    - xform/(\w)z/$1ou/
+    - xform/([gkhvuirzcs])x/$1ua/
+    - xform/(\w)x/$1ia/
+    - xform/(\w)c/$1ao/
+    - xform/([dtgkhvuirzcs])v/$1ui/
+    - xform/(\w)b/$1in/
+    - xform/(\w)m/$1ian/
+    - xform/([aoe])\1(\w)/$1$2/
+    - xform/(^|[ '])([aoe])\2(?=$|[ '])/$1$2/   # 单独的 aa oo ee 显示成 a o e
+    - xform/(^|[ '])v/$1zh/
+    - xform/(^|[ '])i/$1ch/
+    - xform/(^|[ '])u/$1sh/
+    - xform/([jqxy])v/$1u/
+    - xform/([nl])v/$1ü/
+
+# 标点和四叶草拼音一样
+punctuator:
+  __include: clover.schema:/punctuator
+
+key_binder:
+  import_preset: default
+  bindings:
+    __patch:
+      - key_bindings:/emacs_editing
+      - key_bindings:/paging_with_minus_equal
+      - key_bindings:/paging_with_comma_period
+      - key_bindings:/paging_with_brackets
+      - clover.key_bindings:/numbered_mode_switch
+      - clover.key_bindings:/windows_compatible_mode_switch
+      - clover.key_bindings:/kp_enter_is_return
+
+ascii_composer:
+  import_preset: default
+  good_old_caps_lock: true
+  switch_key:
+    Shift_L: commit_code
+    Shift_R: commit_code
+    Control_L: noop
+    Control_R: noop
+    Caps_Lock: noop
+    Eisu_toggle: clear

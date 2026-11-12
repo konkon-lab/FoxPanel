@@ -1,0 +1,18 @@
+{
+  "id": "yanuo.lang-xiaohe",
+  "kind": "lang",
+  "name": "小鹤双拼",
+  "description": { "zh-Hans": "小鹤双拼，词库用四叶草拼音的；输入串显示全拼", "en": "Xiaohe double pinyin, using the Clover dictionary" },
+  "version": "1.0.1",
+  "author": "yanuo",
+  "license": "LGPL-3.0-only",
+  "ime": {
+    "short": "鹤",
+    "lang": "zh-Hans",
+    "schema": "xiaohe",
+    "modes": [
+      { "id": "simplified", "key": "简", "switches": { "zh_simp_s2t": false }, "label": { "zh-Hans": "简体", "zh-Hant": "簡體", "ja": "簡体", "en": "Simplified", "ko": "간체" } },
+      { "id": "traditional", "key": "繁", "switches": { "zh_simp_s2t": true }, "lang": "zh-Hant", "label": { "zh-Hans": "繁体", "zh-Hant": "繁體", "ja": "繁体", "en": "Traditional", "ko": "번체" } }
+    ]
+  }
+}
