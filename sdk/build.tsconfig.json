@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": [
+      "ES2023",
+      "DOM"
+    ],
+    "types": [
+      "node"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "rootDir": "..",
+    "outDir": "../release/sdk/types",
+    "paths": {
+      "@konkon-lab/foxpanel-sdk": [
+        "./index.ts"
+      ]
+    }
+  },
+  "files": [
+    "index.ts",
+    "../src/renderer/window-api.ts",
+    "../src/shared/global.d.ts"
+  ]
+}
