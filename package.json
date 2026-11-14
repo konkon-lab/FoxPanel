@@ -1,7 +1,7 @@
 {
   "name": "foxpanel",
   "productName": "FoxPanel",
-  "version": "0.1.0",
+  "version": "0.1.0-beta.1",
   "private": true,
   "description": "可拔插的桌面组件平台，VR 键盘、VRChat 联动等功能都由组件提供",
   "author": "yanuo",
