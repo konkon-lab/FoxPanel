@@ -3,7 +3,7 @@
 
 **FoxPanel - 一个基于 Cordis の组件化框架**
 
-[![Codecov](https://codecov.io/gh/konkon-lab/FoxPanel/graph/badge.svg)](https://app.codecov.io/gh/konkon-lab/FoxPanel)
+[![Codecov](https://codecov.io/gh/konkon-lab/FoxPanel/branch/master/graph/badge.svg)](https://app.codecov.io/gh/konkon-lab/FoxPanel/tree/master)
 [![License](https://img.shields.io/badge/license-MIT-blue)](../LICENSE)
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078d4)](../docs/guide.md#安装)
 [![SteamVR](https://img.shields.io/badge/SteamVR-overlay-1b2838)](../docs/steamvr.md)
