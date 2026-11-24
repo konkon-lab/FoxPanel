@@ -15,7 +15,7 @@
     "en": "Core of the input method",
     "ko": "입력기의 핵심 컴포넌트"
   },
-  "version": "1.0.13",
+  "version": "1.0.14",
   "author": "yanuo",
   "license": "MIT",
   "provides": [

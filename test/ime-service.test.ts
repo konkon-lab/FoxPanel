@@ -115,6 +115,7 @@ class Rig {
   live = false;                // 有收实时内容的输出
   outputs: KeyboardState['outputs'] = [];   // 装着的输出组件
   readonly switched: [string, boolean][] = [];   // 开关过的组件
+  readonly idle: [string, boolean][] = [];   // 空着时的退格、← → 通知
   cleared = 0;                 // 清除各输出显示内容的次数
   readonly kb: KeyboardService;
   readonly states: KeyboardState[] = [];   // 推出去的状态
@@ -133,6 +134,7 @@ class Rig {
       hasTyping: () => false,
       typing: () => undefined,
       clearOutputs: () => { this.cleared++; },
+      idleKey: (key, repeat) => { this.idle.push([key, repeat]); },
       setOutput: (id, on) => { this.switched.push([id, on]); },
       outputs: () => this.outputs,
       translate: text => Promise.resolve(text),
@@ -675,4 +677,50 @@ test('setMode：前面的操作没做完时连改两种语言的模式，两个�
   assert.equal(r.last.mode.id, 'trad');
   assert.equal(r.last.composition, 'n');
   r.kb.stop();
+});
+
+test('退格：输入框空着才通知，按住时从有字删到空就停，松开再按才通知', async t => {
+  const r = new Rig('en', { en: 'letter' });
+  t.after(() => r.kb.stop());
+  await r.kb.start();
+  const back = (repeat: boolean): Promise<void> => r.kb.act({ kind: 'key', code: 'Backspace', shift: false, repeat });
+  await r.kb.act({ kind: 'text', text: '你好' });
+  await back(false);
+  for (let i = 0; i < 4; i++) await back(true);
+  assert.deepEqual(r.idle, []);
+  await back(false);
+  await back(true);
+  assert.deepEqual(r.idle, [['Backspace', false], ['Backspace', true]]);
+});
+
+test('退格：在拼的输入串不算空，删输入串时不通知', async t => {
+  const r = new Rig('zh');
+  t.after(() => r.kb.stop());
+  await r.kb.start();
+  await r.kb.act({ kind: 'key', code: 'KeyN', shift: false });
+  await r.kb.act({ kind: 'key', code: 'Backspace', shift: false });
+  await r.kb.act({ kind: 'key', code: 'Backspace', shift: false, repeat: true });
+  assert.deepEqual(r.idle, []);
+});
+
+test('方向键：输入框空着才通知，有字时只动输入框的光标', async t => {
+  const r = new Rig('en', { en: 'letter' });
+  t.after(() => r.kb.stop());
+  await r.kb.start();
+  const key = (code: KeyCode, repeat = false): Promise<void> => r.kb.act({ kind: 'key', code, shift: false, repeat });
+  await r.kb.act({ kind: 'text', text: 'ab' });
+  await key('ArrowLeft');
+  await key('ArrowLeft', true);
+  await key('ArrowRight');
+  await key('ArrowUp');
+  await key('ArrowDown');
+  assert.deepEqual(r.idle, []);
+  await r.kb.act({ kind: 'clear' });
+  await key('ArrowLeft');
+  await key('ArrowLeft', true);
+  await key('ArrowRight');
+  await key('ArrowUp');
+  await key('ArrowDown');
+  await key('Home');
+  assert.deepEqual(r.idle, [['ArrowLeft', false], ['ArrowLeft', true], ['ArrowRight', false], ['ArrowUp', false], ['ArrowDown', false]]);
 });

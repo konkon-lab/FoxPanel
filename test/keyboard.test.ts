@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isKeyCode } from '../components/_shared/keyboard.ts';
+import { IDLE_KEY, isIdleKey, isKeyCode, parseIdleKey } from '../components/_shared/keyboard.ts';
 import { keyMeaning } from '../components/ime/src/keys.ts';
 import { TextBuffer } from '../components/ime/src/text.ts';
 import { DEFAULT_KEYBOARD, normalizeKeyboard, parseSettings } from '../components/ime/src/settings.ts';
@@ -76,4 +76,17 @@ test('设置：补丁只留格式对的项，盖在现有设置上', () => {
   assert.deepEqual(parseSettings({ pinMessage: true, lang: '', modes: 'x', autoSend: 'yes', darkMode: true }), { pinMessage: true });
   const now = { ...DEFAULT_KEYBOARD, showTyping: false, lang: 'yanuo.lang-ja' };
   assert.deepEqual(normalizeKeyboard({ autoSend: true, lang: 7 }, now), { ...now, autoSend: true });
+});
+
+test('输入框空着时按键的通知：只有退格和四个方向键，数据要有键和是不是连发', () => {
+  assert.equal(IDLE_KEY, 'yanuo.ime/idle-key');
+  for (const key of ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']) {
+    assert.ok(isIdleKey(key), key);
+    assert.ok(isKeyCode(key), key);
+    assert.deepEqual(parseIdleKey({ key, repeat: true, extra: 1 }), { key, repeat: true });
+  }
+  for (const key of ['Delete', 'Enter', 'KeyA', '', 3, null]) assert.equal(isIdleKey(key), false, String(key));
+  for (const raw of [null, 'Backspace', [], {}, { key: 'Backspace' }, { key: 'Backspace', repeat: 1 }, { key: 'Delete', repeat: false }]) {
+    assert.equal(parseIdleKey(raw), null, JSON.stringify(raw));
+  }
 });

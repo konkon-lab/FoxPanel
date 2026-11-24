@@ -3,8 +3,9 @@
 // 会改输入状态的入口(act、setMode、refresh、dictated、dictationEnded、importSogou、部署前后的切换)排成一队依次执行：
 // 一个键要等 rime 回来才有结果，下一个键得在那之后看状态。私有方法都在队里执行，不能再调这些入口等同一队(会卡死)。
 
-import type { CandidateItem, ImePack, KeyCode, KeyboardAction, KeyboardSettings, KeyboardState, PackMode, UiLang } from '@konkon-lab/foxpanel-sdk';
+import type { CandidateItem, IdleKey, ImePack, KeyCode, KeyboardAction, KeyboardSettings, KeyboardState, PackMode, UiLang } from '@konkon-lab/foxpanel-sdk';
 import { errorText } from '../../_shared/util.ts';
+import { isIdleKey } from '../../_shared/keyboard.ts';
 import type { SogouImport } from './channels.ts';
 import type { ImePort } from './client.ts';
 import { jamoOf } from './hangul.ts';
@@ -36,6 +37,7 @@ export interface KeyboardDeps extends Omit<OutboxDeps, 'text'> {
   save(patch: Partial<KeyboardSettings>): void;
   sogouImported(count: number): void;             // 搜狗词库导入完成，count = 条数
   clearOutputs(): void;                           // 清除各输出显示的内容
+  idleKey(key: IdleKey, repeat: boolean): void;   // 输入框空着时按了退格或方向键；repeat = 按住连发的
   setOutput(id: string, on: boolean): void;       // 开关一个组件；只拿 outputs() 里的 id 调
   outputs(): KeyboardState['outputs'];            // 装着的输出组件
   dictate(on: boolean): void;                     // 开关听写
@@ -70,6 +72,7 @@ export class KeyboardService {
   private candidates: CandidateItem[] = [];
   private dictating = false;
   private dictation = '';
+  private heldOutside = false;                // 这一次按住的退格或方向键 是从输入框空着时开始的
   private ops: Promise<unknown> = Promise.resolve();       // 操作队列的末尾
   private deploys: Promise<void> = Promise.resolve();      // 部署(初始化、重新部署)队列的末尾
 
@@ -357,7 +360,9 @@ export class KeyboardService {
 
   private async handle(a: KeyboardAction): Promise<void> {
     switch (a.kind) {
-      case 'key': return this.key(a.code, a.shift);
+      case 'key':
+        if (isIdleKey(a.code)) this.idlePressed(a.code, a.repeat === true);
+        return this.key(a.code, a.shift);
       case 'text':
         this.outbox.typed();
         await this.commitFirst();
@@ -395,6 +400,13 @@ export class KeyboardService {
       case 'settings': return this.updateSettings(a.patch);
     }
     this.emit();
+  }
+
+  // 输入框空着时的退格、方向键 通知出去。按下时还有字的，这一次按住删空了也不通知
+  private idlePressed(key: IdleKey, repeat: boolean): void {
+    const empty = !this.buf.text && !this.composing && !this.dictation;
+    if (!repeat || !empty) this.heldOutside = empty;
+    if (empty && this.heldOutside) this.deps.idleKey(key, repeat);
   }
 
   private async select(index: number): Promise<void> {

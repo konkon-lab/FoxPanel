@@ -8,7 +8,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { AppInfo, ImePack, KeyboardSettings, MainContext, Manifest } from '@konkon-lab/foxpanel-sdk';
+import type { AppInfo, IdleKeyNotice, ImePack, KeyboardSettings, MainContext, Manifest } from '@konkon-lab/foxpanel-sdk';
+import { IDLE_KEY } from '../../_shared/keyboard.ts';
 import { isObject } from '../../_shared/util.ts';
 import { GET, LANGS, MODE, SOGOU, SOGOU_DONE, type LangsInfo } from './channels.ts';
 import { ImeClient } from './client.ts';
@@ -104,6 +105,7 @@ export default {
       hasTyping: () => info.outputs.some(o => o.on && o.typing),
       typing: on => ctx.output.typing(on),
       clearOutputs: () => ctx.output.clear(),
+      idleKey: (key, repeat) => ctx.bus.send(IDLE_KEY, { key, repeat } satisfies IdleKeyNotice),
       setOutput: (id, on) => ctx.app.setOn(id, on),
       outputs: () => info.outputs.map(({ id, name, on }) => ({ id, name, on })),
       translate: text => ctx.translator.translate(text),

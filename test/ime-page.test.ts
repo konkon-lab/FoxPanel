@@ -206,3 +206,31 @@ test('输入法的页面部分：提示的文字五种界面语言都有，互�
   assert.equal(new Set(words).size, 5);
   assert.ok(words.every(Boolean));
 });
+
+test('输入法的页面部分：同一次按下里再来的退格、方向键标成连发，再按一次是新的', () => {
+  const had = Object.getOwnPropertyDescriptor(globalThis, 'document');
+  const downs: (() => void)[] = [];
+  const fake = { addEventListener: (_type: string, fn: () => void) => { downs.push(fn); }, removeEventListener: () => undefined };
+  Object.defineProperty(globalThis, 'document', { value: fake, configurable: true, writable: true });
+  try {
+    const r = rig();
+    const kb = r.load();
+    const back = (): void => kb.act({ kind: 'key', code: 'Backspace', shift: false });
+    const down = (): void => { for (const fn of downs) fn(); };
+    down();
+    back();
+    back();
+    back();
+    down();
+    back();
+    for (const code of ['ArrowLeft', 'ArrowRight'] as const) {
+      down();
+      kb.act({ kind: 'key', code, shift: false });
+      kb.act({ kind: 'key', code, shift: false });
+    }
+    assert.deepEqual(r.called.map(([, , args]) => (args[0] as { repeat?: boolean }).repeat), [false, true, true, false, false, true, false, true]);
+  } finally {
+    if (had) Object.defineProperty(globalThis, 'document', had);
+    else Reflect.deleteProperty(globalThis, 'document');
+  }
+});

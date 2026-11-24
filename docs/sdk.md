@@ -442,7 +442,7 @@ ctx.on('kb/change', state => { … });
 
 | kind | 字段 | 说明 |
 |---|---|---|
-| `key` | `code`, `shift` | 按一个键(键位同 `KeyboardEvent.code`)，交给当前语言处理 |
+| `key` | `code`, `shift`, `repeat?` | 按一个键(键位同 `KeyboardEvent.code`)，交给当前语言处理。`repeat` 为真 = 按住连发的；页面里的 `ctx.kb.act` 自己给退格、方向键标上，别处发的按键不写就算新按的 |
 | `text` | `text` | 直接插入文字 |
 | `select` | `index` | 选候选 |
 | `caret` | `position` | 放光标 |
@@ -456,6 +456,8 @@ ctx.on('kb/change', state => { … });
 | `settings` | `patch` | 改键盘设置 |
 
 格式不对的操作(`kind` 不认识、字段类型不对)被输入法组件丢弃；`settings` 的补丁里格式不对的项被忽略。
+
+输入框空着(没有文字、没有在拼的输入串、没有听写中的字)时按退格或方向键，在输入框里无事可做，输入法组件往总线频道 `yanuo.ime/idle-key` 发 `{ key, repeat }`(`IdleKeyNotice`，`key` 是 `Backspace`、`ArrowLeft`、`ArrowRight`、`ArrowUp`、`ArrowDown` 之一)。主进程组件用 `ctx.bus.on('yanuo.ime/idle-key', data => …)` 收，据此在自己那边删字、移动；总线是公共的，收到的数据要自己收窄。从有字按住删到空的那一次不发，松开再按才发。
 
 ## 例子
 

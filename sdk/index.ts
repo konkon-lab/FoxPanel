@@ -13,7 +13,7 @@ import type { Caller, ComponentRow, Locale, LogEntry, LogLevel, PanelInfo, Statu
 import type { AppInfo, OutputPayload, PanelInput, PanelMode, PanelPageState } from '../src/shared/host-protocol.ts';
 
 export type {
-  CandidateItem, ImeDef, ImePack, KbEvents, KbService, KeyboardAction, KeyboardCalls, KeyboardSettings, KeyboardState, KeyCode, Labels, PackMode, UiLang,
+  CandidateItem, IdleKey, IdleKeyNotice, ImeDef, ImePack, KbEvents, KbService, KeyboardAction, KeyboardCalls, KeyboardSettings, KeyboardState, KeyCode, Labels, PackMode, UiLang,
 } from './keyboard.ts';
 export type { Text } from '../src/shared/manifest.ts';
 export type { AppInfo, OutputPayload, PanelInput, PanelMode, PanelPageState } from '../src/shared/host-protocol.ts';

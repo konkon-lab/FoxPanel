@@ -169,6 +169,7 @@ Tab 在哪种语言下都一样：输入中的内容先上屏，再插入四个�
 | 键 | 作用 |
 |---|---|
 | Backspace / Delete | 有选区时删选区，否则删前 / 后一个字素 |
+| 输入框空着时的 Backspace、←、→、↑、↓ | 往总线发 `yanuo.ime/idle-key`，别的组件据此在它那边删字、移动。按住退格从有字删到空就不再发，松开再按才发。是不是按住连发的看操作的 `repeat`：页面部分在同一次按下里再来的退格、方向键上标 `repeat: true` |
 | Enter | 发送 |
 | ← / → | 移动一个字素；有选区时收到选区对应的一端 |
 | ↑、Home / ↓ | 光标到开头 / 末尾 |
@@ -277,6 +278,7 @@ Tab 在哪种语言下都一样：输入中的内容先上屏，再插入四个�
 | `yanuo.ime/mode` | 主窗口 → 组件进程 | `{ id: 语言组件 id, mode: 模式 id }` |
 | `yanuo.ime/sogou` | 主窗口 → 组件进程 | 导入搜狗词库 |
 | `yanuo.ime/sogou-done` | 组件进程 → 主窗口 | `{ ok: true, count }` 或 `{ ok: false, error }` |
+| `yanuo.ime/idle-key` | 组件进程 → 别的组件 | `{ key, repeat }`(SDK 的 `IdleKeyNotice`)：输入框空着时按了 `Backspace`、`ArrowLeft`、`ArrowRight`、`ArrowUp`、`ArrowDown`，`repeat` = 按住连发的。频道名和数据的收窄(`IDLE_KEY`、`parseIdleKey`)在 `components/_shared/keyboard.ts` |
 
 ### 搜狗词库导入
 

@@ -297,4 +297,4 @@ VR 里没有原生的下拉框和右键菜单：离屏页面只交页面本身�
 | `src/main/senders.ts`、`src/main/ipc.ts` | 各窗口是哪种页面的登记、权限和页面限制；页面 IPC 的注册和每个通道谁能调 |
 | `sdk/keyboard.ts` | 输入状态、操作、语言、键盘设置、页面 `kb` 服务的类型(输入法组件的约定) |
 | `components/ime/src/page.ts`、`veil.ts`、`empty.ts` | 输入法组件的页面部分(`kb` 服务)、部署提示、空状态 |
-| `components/_shared/` | 预装页面组件共用的代码(Vue 挂载、图标、侧栏按钮、键位判断) |
+| `components/_shared/` | 预装页面组件共用的代码(Vue 挂载、图标、侧栏按钮、键位判断、输入框空着时按键的通知) |

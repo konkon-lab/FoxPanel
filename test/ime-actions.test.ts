@@ -19,6 +19,9 @@ test('操作：格式对的原样通过，多余的字段丢掉', () => {
   ];
   for (const a of ok) assert.deepEqual(parseAction(a), a);
   assert.deepEqual(parseAction({ kind: 'send', extra: 1 }), { kind: 'send' });
+  // 按键的 repeat(按住连发的)只有为真时留着
+  assert.deepEqual(parseAction({ kind: 'key', code: 'Backspace', shift: false, repeat: true }), { kind: 'key', code: 'Backspace', shift: false, repeat: true });
+  for (const repeat of [false, 'yes', 1, null]) assert.deepEqual(parseAction({ kind: 'key', code: 'Backspace', shift: false, repeat }), { kind: 'key', code: 'Backspace', shift: false });
   assert.deepEqual(parseAction({ kind: 'text', text: 'a', code: 'KeyA' }), { kind: 'text', text: 'a' });
 });
 

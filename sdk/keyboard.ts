@@ -83,7 +83,7 @@ export type KeyCode =
 
 // 键盘面板里的部件和别的组件发给输入法组件的操作
 export type KeyboardAction =
-  | { kind: 'key'; code: KeyCode; shift: boolean }   // shift：字母已按大写锁定换算
+  | { kind: 'key'; code: KeyCode; shift: boolean; repeat?: boolean }   // shift：字母已按大写锁定换算；repeat：按住连发的(页面里的 kb.act 自己给退格、方向键标上)
   | { kind: 'text'; text: string }                    // 小键盘、特殊符号：直接插入
   | { kind: 'select'; index: number }                 // 选候选
   | { kind: 'caret'; position: number }
@@ -104,6 +104,16 @@ export interface KeyboardCalls {
   insert(text: string): void;                     // 在光标处插入
   dictated(text: string, final: boolean): void;   // 听写结果：final = false 只显示，true 插入；只收接了听写的输入源组件发的
   dictationEnded(): void;                         // 听写在别处停了；只收接了听写的输入源组件发的
+}
+
+// 输入框空着时在框里无事可做的键：退格和四个方向键
+export type IdleKey = 'Backspace' | 'ArrowLeft' | 'ArrowRight' | 'ArrowUp' | 'ArrowDown';
+
+// 输入法组件往总线频道 yanuo.ime/idle-key 发的通知：输入框空着(没有文字、没有在拼的输入串、没有听写中的字)时按了这些键，
+// 别的组件据此在自己那边删字、移动。repeat = 按住连发的；从有字按住删到空的那一次不发，松开再按才发
+export interface IdleKeyNotice {
+  key: IdleKey;
+  repeat: boolean;
 }
 
 // 页面里的输入状态和操作(输入法组件的页面部分提供，要 inject；清单里写 requires: ["keyboard"])

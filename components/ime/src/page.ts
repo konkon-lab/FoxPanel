@@ -2,7 +2,8 @@
 // 输入法没部署好(或它的进程没起来)时盖住整页。
 
 import { reactive, toRaw } from 'vue';
-import type { KbService, KeyboardState, PageContext } from '@konkon-lab/foxpanel-sdk';
+import type { KbService, KeyboardAction, KeyboardState, PageContext } from '@konkon-lab/foxpanel-sdk';
+import { isIdleKey } from '../../_shared/keyboard.ts';
 import { EMPTY_KEYBOARD } from './empty.ts';
 import { deployingVeil } from './veil.ts';
 
@@ -27,12 +28,28 @@ export default {
       ctx.emit('kb/change', state);
     }));
 
+    // 一次按下只有第一个退格、方向键 是新按的，同一次按下里再来的是按住连发的
+    let presses = 0;
+    let marked = -1;
+    if (typeof document !== 'undefined') {
+      const down = (): void => { presses++; };
+      ctx.effect(() => {
+        document.addEventListener('mousedown', down, true);
+        return () => document.removeEventListener('mousedown', down, true);
+      });
+    }
+    const mark = (a: KeyboardAction): KeyboardAction => {
+      if (a.kind !== 'key' || !isIdleKey(a.code) || presses === 0) return a;
+      const repeat = marked === presses;
+      marked = presses;
+      return { ...a, repeat };
+    };
     const kb: KbService = {
       get state() { return state; },
       get pack() { return state.pack; },
       get mode() { return state.mode; },
       // 交给宿主就返回，不等输入法处理完；同一页发的操作按先后送到
-      act: a => remote.tell('act', a),
+      act: a => remote.tell('act', mark(a)),
       page: dir => { ctx.emit('kb/page', dir); },
       setOutput: (id, on) => remote.tell('act', { kind: 'output', id, on }),
     };
