@@ -4,7 +4,7 @@
 // 预装组件 components/<名字> → dist/components/<id>/：src/page.ts 打成 page.js、src/panel.ts 打成 panel.js、src/window.ts 打成 window.js(Vite 库模式，样式由脚本注入)，
 // src/main.ts 打成 main.js、src/worker.ts 打成 worker.js(esbuild，Node ESM)，其余文件原样复制；
 // 开发用的组件 dev/<名字> → dist/dev/<名字>/，打法和预装组件一样(不进预装列表，安装包不带)；
-// 程序图标由 resources/icon.svg 渲染到 dist/icons(scripts/icons.ts，icon-gen)；
+// 程序图标由 resources/icon.png 缩到 dist/icons(scripts/icons.ts，icon-gen)；
 // 打进产物的 npm 包的许可证全文收成 dist/THIRD_PARTY_LICENSES.txt(scripts/licenses.ts)。
 // 各部分写的目录互不相交，同时进行；import map 和许可证等全部打完后写。
 

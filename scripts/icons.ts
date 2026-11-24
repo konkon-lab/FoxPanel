@@ -1,4 +1,4 @@
-// 程序图标：icon-gen 由 resources/icon.svg(矢量)渲染到 dist/icons/：
+// 程序图标：icon-gen 把 resources/icon.png(1024 像素)缩到 dist/icons/：
 // icon.ico(窗口、任务栏、安装包，16–256 像素多尺寸)、tray-<像素>.png(托盘，按显示缩放各一张)、icon.png(512 像素)。
 
 import fs from 'node:fs';
@@ -13,7 +13,7 @@ export async function buildIcons(root: string, dist: string): Promise<void> {
   const out = path.join(dist, 'icons');
   fs.mkdirSync(out, { recursive: true });
   // favicon 只要它的 PNG(tray-<像素>.png)，顺带生成的 favicon.ico 删掉
-  await icongen(path.join(root, 'resources', 'icon.svg'), out, {
+  await icongen(path.join(root, 'resources', 'icon.png'), out, {
     report: false,
     ico: { name: 'icon', sizes: ICO_SIZES },
     favicon: { name: 'tray-', pngSizes: [...TRAY_SIZES, PNG_SIZE], icoSizes: [] },

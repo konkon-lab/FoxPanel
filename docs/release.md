@@ -36,7 +36,7 @@
 | `dist/host/lib/` | 共享库 | 见下 |
 | `dist/components/<id>/` | `components/<名字>/` | 见下 |
 | `dist/dev/<名字>/` | `dev/<名字>/` | 开发用的组件(显示方 `display-desktop`)，打法和预装组件一样；不进预装列表，安装包不带 |
-| `dist/icons/` | `resources/icon.svg` | `scripts/icons.ts`(icon-gen) |
+| `dist/icons/` | `resources/icon.png` | `scripts/icons.ts`(icon-gen) |
 | `dist/THIRD_PARTY_LICENSES.txt` | 打进 `dist/` 的 npm 包各自文件夹里的许可证文件 | `scripts/licenses.ts`，见「随程序分发的第三方文件」 |
 
 `dist/host/` 是 `fox://host/` 和每块面板的 `fox://<面板 id>.panel/` 的根目录，面板页面、媒体页面、主窗口都从它加载。
@@ -72,7 +72,7 @@
 
 ### 图标
 
-`resources/icon.svg` 渲染到 `dist/icons/`：
+`resources/icon.png`(1024 像素，圆外透明)缩到 `dist/icons/`：
 
 | 文件 | 用处 | 尺寸(像素) |
 |---|---|---|
@@ -89,6 +89,7 @@
 | `gen-openvr.ts` | `vendor/openvr/openvr_capi.h` | `components/steamvr/src/fntables.ts`：各接口函数表里的方法顺序和接口版本。换头文件后重新生成，`test/vr-abi.test.ts` 拿头文件核对它和 `openvr.ts` 里手写的函数原型、结构体、常量 |
 | `gen-d3d.ts` | Windows SDK 头文件(参数可以指定 SDK 的 Include 版本目录，不写用装着的最新版) | `components/steamvr/src/d3d-vtables.ts`：用到的 COM 接口方法在虚表里的顺序 |
 | `gen-pointer.ts` | | `resources/vr/pointer.png`：VR 指针圆点，128 像素 |
+| `gen-logo.ts` | `resources/icon.png` | `components/window-shell/src/logo.png`：主窗口侧栏的标志，192 像素 |
 
 ## 许可证
 

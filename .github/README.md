@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="200" src="../resources/icon.svg" alt="FoxPanel">
+  <img width="200" src="../resources/icon.png" alt="FoxPanel">
 
 **FoxPanel - 一个基于 Cordis の组件化框架**
 

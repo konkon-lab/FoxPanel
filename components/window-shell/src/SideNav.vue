@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { ChevronLeft, ChevronRight } from '@lucide/vue';
 import { fox, locale, nav, store, textOf, windows } from '@konkon-lab/foxpanel-window';
-import logo from '../../../resources/icon.svg';
+import logo from './logo.png';
 import { collapsed } from './collapsed.ts';
 import { t } from './i18n.ts';
 

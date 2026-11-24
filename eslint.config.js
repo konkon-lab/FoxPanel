@@ -44,7 +44,7 @@ export default tseslint.config(
       'vue/multi-word-component-names': 'off',
       // 相对导入写完整的扩展名(Node 直接跑 .ts 时不会补)
       'no-restricted-imports': ['error', {
-        patterns: [{ regex: '^\\.{1,2}/.*(?<!\\.(ts|vue|css|json|svg))$', message: '相对导入要写完整的扩展名(.ts / .vue)' }],
+        patterns: [{ regex: '^\\.{1,2}/.*(?<!\\.(ts|vue|css|json|svg|png))$', message: '相对导入要写完整的扩展名(.ts / .vue)' }],
       }],
       // promise 必须 await、.catch() 或用 void 标明不关心结果
       // node:test 的 test() 由测试运行器等待，不算浮空
