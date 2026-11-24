@@ -2,7 +2,7 @@
 // (扳机点击、握把抓住移动、双手缩放、总开关键、两个快捷位键)；提供远程服务 panels。状态栏上报「STEAMVR」和显示着的面板数。
 // 远程服务 panels 的登记生效着才连 SteamVR；等着时(别的显示方排在前面)不连、不开面板页面，状态栏上是没连上。
 // 布局(每块面板打开没有、常显、锁定、宽度、附着在哪、抬手才显示、位置，加全局锁)存在组件数据的 layout 键里；显示方的选项、
-// 同时显示的上限、两个快捷位指向哪块面板、求交的两条退路、纹理怎么交、附着的面板怎么跟着设备是组件的设置。
+// 同时显示的上限、两个快捷位指向哪块面板、面板跟不跟着游玩空间、求交的两条退路、纹理怎么交、附着的面板怎么跟着设备是组件的设置。
 // openvr_api.dll 在程序目录的 vendor/openvr；SteamVR 应用清单(按源码目录写的和按安装目录写的各一份)、按键绑定、指针贴图在程序目录的 resources/vr。
 // 带环境变量 FOXPANEL_VR_SIM 启动时不连 SteamVR，跑模拟脚本(见 sim.ts)。
 
@@ -39,6 +39,9 @@ export const readEveryFrame = (raw: unknown): boolean => !(isObject(raw) && raw[
 
 // 组件的设置里附着的面板怎么跟着设备：attach 是 native(交给 SteamVR 带着走，默认)或 js(每帧自己算位置)；返回是不是交给 SteamVR
 export const readAttach = (raw: unknown): boolean => !(isObject(raw) && raw['attach'] === 'js');
+
+// 组件的设置里留在空间里的面板跟不跟着游玩空间：followSpace 是布尔，默认跟着，只有写了 false 才不跟
+export const readFollow = (raw: unknown): boolean => !(isObject(raw) && raw['followSpace'] === false);
 
 // SteamVR 应用清单的文件名(在程序目录的 resources/vr 里)。清单里的启动命令是相对清单文件写的：
 // 程序的可执行文件在程序目录里面(源码运行，Electron 在 node_modules 里)用 manifest.vrmanifest，
@@ -93,6 +96,7 @@ export function mount(ctx: MainContext, options: MountOptions = {}): void {
     const live: Session = new Session({
       log, stage, board,
       hit: readHit(ctx.config),
+      follow: readFollow(ctx.config),
       changed: () => board.link(),
       actionManifest: path.join(res, 'actions.json'),
       appManifest: path.join(res, appManifestName(ctx.appDir, options.exe ?? process.execPath)),

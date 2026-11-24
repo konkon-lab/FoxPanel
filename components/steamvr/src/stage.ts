@@ -2,7 +2,7 @@
 // 页面留着停画，再连上时该显示的面板重新建悬浮窗口。每帧照布局对一遍：建或销毁悬浮窗口(一帧最多一个)、显示和隐藏、宽度、位置；
 // 执行交互算出的指令；逐块把纹理交给 SteamVR。一块面板出错只动它自己，显卡设备丢了才往外抛(由会话断开重连)。
 // 附着在头显或手上的面板：布局里记的是相对那个设备的变换(没摆过的用那个设备的默认位置，不记进布局)，
-// 每帧接上设备的姿态算出站立空间里的姿态(求交、圆点用)；被抓着挪的那几帧以上一帧给它的站立空间里的姿态为准，设备动了不带着它走；
+// 每帧接上设备的姿态算出面板空间里的姿态(求交、圆点用)；被抓着挪的那几帧以上一帧给它的面板空间里的姿态为准，设备动了不带着它走；
 // 设备不在、抬手才显示的没朝向眼睛时悬浮窗口隐藏着待命(页面照常画)，这块面板不在这一帧显示着的面板里。
 
 import type { LogLevel, PanelAnchor, PanelFeed, PanelInfo } from '@konkon-lab/foxpanel-sdk';
@@ -27,7 +27,7 @@ export type PanelCommand = Extract<Command, { id: string }>;
 // 面板能附着的设备
 type Mount = Exclude<PanelAnchor, 'world'>;
 
-// 能附着的设备这一帧的情况：设备序号和它在站立空间里的姿态；设备不在、姿态无效时为 null
+// 能附着的设备这一帧的情况：设备序号和它在面板空间里的姿态；设备不在、姿态无效时为 null
 export type Mounts = Readonly<Record<Mount, { device: number; pose: Mat34 } | null>>;
 
 // 一个设备都不在
@@ -59,7 +59,7 @@ interface Slot {
   sized: number;                   // 布局里已经用到悬浮窗口上的宽度(米)
   anchor: PanelAnchor;             // 布局里已经用到悬浮窗口上的附着对象
   relative: Mat34 | null;          // 附着的面板这一刻相对设备的变换(抓着挪时和布局里记的不一样)；留在空间里的、还没算过时为 null
-  carried: Mat34 | null;           // 附着的面板被抓着挪：上一帧给它的站立空间里的姿态；没被抓着时为 null
+  carried: Mat34 | null;           // 附着的面板被抓着挪：上一帧给它的面板空间里的姿态；没被抓着时为 null
   standby: boolean;                // 附着的面板该显示着：悬浮窗口待命，设备不在、没抬手时隐藏，页面照常画
   raised: boolean;                 // 抬手才显示最近一次算出的结果(设备不在、头显姿态无效的那几帧不动它)；不用抬手的面板为真
   away: boolean;                   // 该显示而这一刻没在显示(设备不在、没抬手)
@@ -254,7 +254,7 @@ export class Stage {
     return shapes;
   }
 
-  // 附着的面板这一帧在站立空间里的姿态：设备的姿态接上相对它的变换。布局里没记相对变换时用那个设备的默认位置(不记进布局)；
+  // 附着的面板这一帧在面板空间里的姿态：设备的姿态接上相对它的变换。布局里没记相对变换时用那个设备的默认位置(不记进布局)；
   // 没显示着时、布局里记的变了时相对变换照布局里记的。被抓着挪时是上一帧给它的那份姿态(设备动了不带着它走，
   // 相对变换等这一帧的指令给)。
   // 设备不在、抬手才显示的正面没朝向眼睛时为 null；抬手才显示在头显姿态无效时照最近一次的结果
@@ -289,7 +289,7 @@ export class Stage {
   }
 
   // 一块该显示的附着的面板：宽度跟上布局(没显示着时也照布局的宽度，缩放到一半被隐藏的不留着半截的宽度)，
-  // 悬浮窗口待命、页面画着；world 是它这一帧在站立空间里的姿态，
+  // 悬浮窗口待命、页面画着；world 是它这一帧在面板空间里的姿态，
   // 为 null(设备不在、没抬手)时隐藏，否则跟上设备并显示出来。返回它这一帧的形状，没在显示时为 null
   private showOn(slot: Slot, surface: Surface, info: PanelInfo, anchor: Mount, world: Mat34 | null): StageShape | null {
     const meters = metersOf(this.deps.board.layout, info);
@@ -350,7 +350,7 @@ export class Stage {
     return this.shape(surface, info, 'world');
   }
 
-  // 抓着的面板挪到站立空间里的 pose：附着的面板换算成相对设备的变换，设备不在时不动。
+  // 抓着的面板挪到面板空间里的 pose：附着的面板换算成相对设备的变换，设备不在时不动。
   // held = 还抓着：附着的面板记下这份姿态，下一帧以它为准
   private move(slot: Slot, pose: Mat34, held: boolean): void {
     if (slot.anchor === 'world') return void slot.surface?.setPose(pose);

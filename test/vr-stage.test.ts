@@ -935,7 +935,7 @@ test('到面前、显示时的摆放只管留在空间里的面板：附着的�
   rig.tap('toggle');
   rig.frame(2);
   const hud = rig.panel('a.hud');
-  // 头显上的面板相对头显的变换，数值上正好是时钟在站立空间里出现的位置：它不是站立空间里的位置，时钟照样放在那，不用错开
+  // 头显上的面板相对头显的变换，数值上正好是时钟在面板空间里出现的位置：它不是面板空间里的位置，时钟照样放在那，不用错开
   near(rig.panel('a.clock').pose, arrange(HEAD, 'front', []));
   near(position(rig.panel('a.clock').pose), [0, 1.55, -0.65]);
   void rig.remote.summon(WHO);
@@ -1011,7 +1011,7 @@ test('布局里只换了附着对象、位置还是同一份：悬浮窗口照�
   rig.frame();
   const o = rig.panel('a.hud');
   assert.deepEqual([o.device, o.pose], [0, at(0, -0.2, -0.6)]);
-  // 记录里的位置原样留着，只把附着对象换成留在空间里：那份矩阵当成站立空间里的姿态
+  // 记录里的位置原样留着，只把附着对象换成留在空间里：那份矩阵当成面板空间里的姿态
   rig.control.change(layout => {
     const kept = layout.panels['a.hud'] ?? assert.fail('没有记录');
     return { ...layout, panels: { ...layout.panels, 'a.hud': { ...kept, anchor: 'world' } } };
@@ -1102,7 +1102,7 @@ test('抬手才显示的结果在设备不在、头显姿态无效的那几帧�
 test('连上时头显就没有姿态：抬手才显示的面板不显示(不拿无效的头显矩阵当眼睛的位置)，头显有了姿态后按角度算', t => {
   const rig = new Rig(t, { list: [WRIST], layout: layoutOf({ 'a.wrist': record({ anchor: 'left', glance: true, locked: true, pose: at(0, 0.1, 0) }) }) });
   rig.prepare = vr => vr.setPose(0, null);
-  // 面板在 (0, 0.4, -1)、正面朝 +Z：离站立空间的原点的方向 22° 上下
+  // 面板在 (0, 0.4, -1)、正面朝 +Z：离面板空间的原点的方向 22° 上下
   rig.hand('left', at(0, 0.3, -1));
   rig.session.start();
   rig.frame(3);

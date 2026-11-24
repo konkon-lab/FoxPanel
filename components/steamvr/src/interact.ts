@@ -19,7 +19,7 @@ const otherHand = (h: HandIndex): HandIndex => (h === 0 ? 1 : 0);
 // 这一帧显示着的一块面板
 export interface PanelShape {
   id: string;
-  pose: Mat34;          // 在站立空间里的姿态
+  pose: Mat34;          // 在面板空间里的姿态
   meters: number;       // 这一刻的宽度(米)
   minMeters: number;    // 能缩放到的宽度范围(米)
   maxMeters: number;
@@ -32,7 +32,7 @@ export interface PanelShape {
 // 哪只手够得着这块面板：附着在一只手上的面板，这只手的射线不算打在它上面
 export const reaches = (hand: HandIndex, panel: Pick<PanelShape, 'anchor'>): boolean => panel.anchor !== (hand === 0 ? 'left' : 'right');
 
-// 一只手这一帧指着哪：tip 是指尖在站立空间里的姿态(没有设备或姿态无效时为 null)，hits 是和 panels 一一对应的求交结果
+// 一只手这一帧指着哪：tip 是指尖在面板空间里的姿态(没有设备或姿态无效时为 null)，hits 是和 panels 一一对应的求交结果
 export interface HandAim {
   tip: Mat34 | null;
   hits: readonly (QuadHit | null)[];
@@ -89,7 +89,7 @@ export type Command =
   | { kind: 'dot'; hand: HandIndex; pose: Mat34 | null }    // 一只手的圆点放在哪；null = 不显示
   | { kind: 'pose'; id: string; pose: Mat34 }               // 抓着的面板这一帧的姿态
   | { kind: 'meters'; id: string; meters: number }          // 缩放中的面板这一帧的宽度
-  | { kind: 'drop'; id: string; pose: Mat34 }               // 松手：面板留在这(站立空间里的姿态)，记进布局
+  | { kind: 'drop'; id: string; pose: Mat34 }               // 松手：面板留在这(面板空间里的姿态)，记进布局
   | { kind: 'resize'; id: string; meters: number }          // 缩放结束：宽度(取整到厘米)记进布局
   | { kind: 'toggleAll' }                                   // 总开关键
   | { kind: 'quick'; slot: 1 | 2 };                         // 快捷位键

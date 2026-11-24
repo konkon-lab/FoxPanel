@@ -5,7 +5,8 @@ import path from 'node:path';
 import type { Caller, MainContext, PanelInfo, PanelsCalls, PanelsState, Served } from '@konkon-lab/foxpanel-sdk';
 import { FakeGpu, FakeVr, type Call, type FakeOverlay } from '../components/steamvr/src/fake.ts';
 import { arrange, IDENTITY } from '../components/steamvr/src/geometry.ts';
-import { appManifestName, mount, readAttach, readEveryFrame, readHit, type Carry } from '../components/steamvr/src/main.ts';
+import { appManifestName, mount, readAttach, readEveryFrame, readFollow, readHit, type Carry } from '../components/steamvr/src/main.ts';
+import type { ConnectOptions } from '../components/steamvr/src/api.ts';
 import { EVENT_QUIT } from '../components/steamvr/src/openvr.ts';
 import { aimPose, squareHit } from '../components/steamvr/src/sim.ts';
 import { overlayKey } from '../components/steamvr/src/surface.ts';
@@ -36,6 +37,8 @@ class Rig {
   readError: string | null = null;         // 读组件数据时的错误
   running = true;                          // SteamVR 在不在运行
   connects = 0;
+  readonly follows: boolean[] = [];        // 每次连接时给的「面板空间跟着游玩空间」
+  readonly links: ConnectOptions['log'][] = [];   // 每次连接时给的日志函数
   active = true;                           // 远程服务 panels 的登记生效着没有(宿主告诉组件的)
   private impl: Served<PanelsCalls> | null = null;
   private readonly activeWatchers = new Set<(active: boolean) => void>();
@@ -114,8 +117,10 @@ class Rig {
       exe: this.exe,
       backend: {
         running: () => this.running,
-        connect: () => {
+        connect: options => {
           this.connects++;
+          this.follows.push(options.follow);
+          this.links.push(options.log);
           const vr = new FakeVr(this.calls);
           vr.hz = 100;
           vr.setPose(0, HEAD);
@@ -783,4 +788,22 @@ test('设置里附着的面板怎么跟着设备：attach 是 js 时每帧自己
   assert.deepEqual([plain.args('placeOn').length, plain.panel('a.hud').device], [0, null]);
   near(plain.panel('a.hud').pose, at(0, 1.4, -0.6));
   plain.unmount();
+});
+
+// ---------- 跟着游玩空间 ----------
+
+test('设置里面板跟不跟着游玩空间：followSpace 只有写了 false 才不跟；连接时交给连接方式，日志也接过去', async t => {
+  assert.deepEqual([readFollow({ followSpace: false }), readFollow({ followSpace: true }), readFollow({ followSpace: 'no' }), readFollow({ followSpace: 0 }), readFollow({}), readFollow(null)],
+    [false, true, true, true, true, true]);
+  const rig = await mounted(t);
+  assert.deepEqual([rig.connects, rig.follows], [1, [true]]);
+  rig.links[0]?.('vr: space', 'warn');
+  assert.equal(rig.logs.at(-1), 'warn: vr: space');
+  rig.unmount();
+  t.mock.restoreAll();
+  t.mock.timers.reset();
+
+  const off = await mounted(t, r => { r.config = { ...CONFIG, followSpace: false }; });
+  assert.deepEqual([off.connects, off.follows], [1, [false]]);
+  off.unmount();
 });

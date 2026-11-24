@@ -1,7 +1,7 @@
 // 一块面板的悬浮窗口：宿主离屏渲染这块面板的页面，每一帧把共享纹理的句柄交过来；复制到常驻纹理后交给 SteamVR。
 // 姿态、宽度、显示着没有都记在这里，变了才告诉 SteamVR；不显示时不留帧、不交纹理。
 // 纹理每个显示帧都交一次，或者(everyFrame 为假)只在纹理里的内容变了、悬浮窗口刚显示出来时交。
-// 位置有两种：站立空间里的绝对位置，或者跟着一个设备(交给 SteamVR 带着走，这里另外记着算出来的站立空间里的姿态)。
+// 位置有两种：面板空间里的绝对位置，或者跟着一个设备(交给 SteamVR 带着走，这里另外记着算出来的面板空间里的姿态)。
 // 待命(standby)的悬浮窗口不显示也照常收帧、复制，画面变了就交给 SteamVR：显示出来时已经是最新的画面。
 
 import { createHash } from 'node:crypto';
@@ -51,7 +51,7 @@ export class Surface {
   private shown = false;            // 悬浮窗口显示着
   private waiting = false;          // 待命：不显示也收帧、复制、交纹理
   private width: number;            // 宽度(米)
-  private placed: Mat34 | null = null;   // 在站立空间里的姿态；还没放过时为 null
+  private placed: Mat34 | null = null;   // 在面板空间里的姿态；还没放过时为 null
   // 交给 SteamVR 带着走时跟着的设备(设备序号)和相对它的变换；位置是绝对的、还没放过时为 null
   private riding: { device: number; relative: Mat34 } | null = null;
 
@@ -205,12 +205,12 @@ export class Surface {
     if (!on && !this.shown) this.returnFrames();
   }
 
-  // 在站立空间里的姿态；还没放过时为 null
+  // 在面板空间里的姿态；还没放过时为 null
   get pose(): Mat34 | null {
     return this.placed;
   }
 
-  // 放在站立空间里的 m；和上一次给 SteamVR 的绝对位置一样时不说
+  // 放在面板空间里的 m；和上一次给 SteamVR 的绝对位置一样时不说
   setPose(m: Mat34): void {
     if (!this.riding && this.placed && samePose(this.placed, m)) return;
     this.vr.place(this.handle, m);
@@ -218,7 +218,7 @@ export class Surface {
     this.riding = null;
   }
 
-  // 跟着一个设备：relative 是相对设备 device 的变换，world 是这一刻算出的站立空间里的姿态(求交、圆点用)。
+  // 跟着一个设备：relative 是相对设备 device 的变换，world 是这一刻算出的面板空间里的姿态(求交、圆点用)。
   // native 为真时交给 SteamVR 带着走，设备或相对变换变了才说；为假时每次把 world 设成绝对位置
   setRiding(device: number, relative: Mat34, world: Mat34, native: boolean): void {
     if (!native) return this.setPose(world);

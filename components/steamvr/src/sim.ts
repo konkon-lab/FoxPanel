@@ -11,7 +11,7 @@ import { errorText, isObject } from '../../_shared/util.ts';
 import type { Gpu, Handle, Hit, VrBackend } from './api.ts';
 import { D3D } from './d3d.ts';
 import { FakeVr, type FakeOverlay } from './fake.ts';
-import { IDENTITY, invert, mul, type Mat34, type Vec3 } from './geometry.ts';
+import { applyDir, applyPoint, IDENTITY, invert, mul, type Mat34, type Vec3 } from './geometry.ts';
 import { ROLE_LEFT, ROLE_RIGHT } from './openvr.ts';
 import { overlayKey } from './surface.ts';
 
@@ -51,7 +51,7 @@ export type SimStep =
   // 一只手指着一块面板纹理上的 (x, y)：0–1，左上角为原点；panel 是面板 id，null = 显示着的悬浮窗口里建得最早的那块。
   // 跟着设备的悬浮窗口按那个设备这一刻的姿态算在哪；脚本给过这只手的指尖时，手柄摆成让指尖在落点正前方
   | { at: number; kind: 'aim'; hand: Side; panel: string | null; x: number; y: number }
-  | { at: number; kind: 'move'; hand: Side; by: Vec3 }                             // 一只手从这时的位置平移(米，站立空间)
+  | { at: number; kind: 'move'; hand: Side; by: Vec3 }                             // 一只手从这时的位置平移(米，面板空间)
   | { at: number; kind: 'press'; hand: Side; action: ActionName; down: boolean }   // 按下或松开一个键
   // 往一块面板的页面发一次滚轮(不经手柄)：落在纹理上的 (x, y)(0–1，左上角为原点)，滚动量 dx、dy(像素，dy 为正往下滚)
   | { at: number; kind: 'wheel'; panel: string; x: number; y: number; dx: number; dy: number };
@@ -120,18 +120,12 @@ export function parseScript(raw: unknown, dir: string): SimScript {
 
 const el = (v: readonly number[], i: number): number => v[i] ?? 0;
 
-// 变换作用在点上(w = 1)或方向上(w = 0)
-function transform(m: Mat34, v: readonly number[], w: 0 | 1): Vec3 {
-  const row = (r: number): number => el(m, r * 4) * el(v, 0) + el(m, r * 4 + 1) * el(v, 1) + el(m, r * 4 + 2) * el(v, 2) + w * el(m, r * 4 + 3);
-  return [row(0), row(1), row(2)];
-}
-
 // 射线(起点 source、方向 dir)和悬浮窗口求交，结果和 SteamVR 给的一样：命中区域是以悬浮窗口的原点为中心、边长等于宽度的正方形，
 // 不分正反面；u 从左到右、v 从下到上。没打中时为 null
 export function squareHit(source: readonly number[], dir: readonly number[], pose: Mat34, meters: number): Hit | null {
   const local = invert(pose);
-  const o = transform(local, source, 1);
-  const d = transform(local, dir, 0);
+  const o = applyPoint(local, source);
+  const d = applyDir(local, dir);
   if (Math.abs(d[2]) < PARALLEL_EPSILON) return null;
   const t = -o[2] / d[2];
   if (t < 0) return null;
@@ -144,7 +138,7 @@ export function squareHit(source: readonly number[], dir: readonly number[], pos
 // 一只手指着面板上一点时的姿态：(x, y) 是纹理上的位置(0–1，左上角为原点)，aspect = 纹理的高 / 宽。
 // 手在这一点正前方 AIM_DISTANCE 米，朝向和面板相同(手的前方 -Z 正对着面板的正面)
 export function aimPose(panel: Mat34, meters: number, aspect: number, x: number, y: number): Mat34 {
-  const p = transform(panel, [(x - 0.5) * meters, (0.5 - y) * meters * aspect, AIM_DISTANCE], 1);
+  const p = applyPoint(panel, [(x - 0.5) * meters, (0.5 - y) * meters * aspect, AIM_DISTANCE]);
   const m: Mat34 = [...panel];
   m[3] = p[0];
   m[7] = p[1];
@@ -186,7 +180,7 @@ export function encodePng(width: number, height: number, bgra: Buffer): Buffer {
 // 记下来的一个指点事件；at = 连上之后多少毫秒发的
 export type SimInput = PanelInput & { at: number };
 
-// 一块面板的悬浮窗口跑完时的样子：pose 是最后一次放它时给的矩阵，device 是那一次相对哪个设备(设备序号)，null = 站立空间里的绝对位置
+// 一块面板的悬浮窗口跑完时的样子：pose 是最后一次放它时给的矩阵，device 是那一次相对哪个设备(设备序号)，null = 面板空间里的绝对位置
 export interface SimOverlay {
   visible: boolean;
   meters: number;

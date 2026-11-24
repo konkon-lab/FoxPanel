@@ -28,6 +28,7 @@ test('探测 SteamVR：一直连不上时同一个错误只记一次，状态不
     log: (text, level) => { logs.push({ text, level }); },
     stage, board,
     hit: { check: false, native: false },
+    follow: true,
     changed: () => { changed++; },
     actionManifest: '',
     appManifest: '',

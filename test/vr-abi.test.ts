@@ -7,10 +7,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import koffi, { type TypeObject } from 'koffi';
 import {
-  APP_BACKGROUND, APP_OVERLAY, ENTRY_PROTOS, EVENT_QUIT, HMD_DEVICE, MAX_DEVICES, OpenVR, ORIGIN_STANDING, OVERLAY_KEY_IN_USE, PROP_DISPLAY_FREQUENCY, PROP_RENDER_MODEL,
-  PROTOS, ROLE_LEFT, ROLE_RIGHT, TEXTURE_DIRECTX, type VrTables,
+  APP_BACKGROUND, APP_OVERLAY, ENTRY_PROTOS, EVENT_QUIT, HMD_DEVICE, MAX_DEVICES, OpenVR, ORIGIN_RAW, ORIGIN_STANDING, OVERLAY_KEY_IN_USE, PROP_DISPLAY_FREQUENCY, PROP_RENDER_MODEL,
+  PROP_UNIVERSE_ID, PROTOS, ROLE_LEFT, ROLE_RIGHT, TEXTURE_DIRECTX, type SpaceMemory, type VrTables,
 } from '../components/steamvr/src/openvr.ts';
-import type { Mat34 } from '../components/steamvr/src/geometry.ts';
+import { invert, mul, type Mat34 } from '../components/steamvr/src/geometry.ts';
 import {
   IVRApplications_METHODS, IVRApplications_VERSION, IVRInput_METHODS, IVRInput_VERSION, IVROverlay_METHODS, IVROverlay_VERSION,
   IVRRenderModels_METHODS, IVRRenderModels_VERSION, IVRSystem_METHODS, IVRSystem_VERSION,
@@ -283,7 +283,7 @@ test('函数表：fntables.ts 的接口版本和方法顺序和头文件一样',
   }
 });
 
-test('常量：设备数上限、头显的设备序号、左右手、退出事件、应用类型、站立空间、设备属性号、纹理类型、键已占用的错误码和头文件一样', () => {
+test('常量：设备数上限、头显的设备序号、左右手、退出事件、应用类型、站立空间和原始空间、设备属性号、纹理类型、键已占用的错误码和头文件一样', () => {
   assert.equal(Number(/k_unMaxTrackedDeviceCount = (\d+);/.exec(code)?.[1]), MAX_DEVICES);
   assert.equal(Number(/k_unTrackedDeviceIndex_Hmd = (\d+);/.exec(code)?.[1]), HMD_DEVICE);
   assert.equal(enumValues.get('ETrackedControllerRole_TrackedControllerRole_LeftHand'), ROLE_LEFT);
@@ -292,6 +292,8 @@ test('常量：设备数上限、头显的设备序号、左右手、退出事�
   assert.equal(enumValues.get('EVRApplicationType_VRApplication_Overlay'), APP_OVERLAY);
   assert.equal(enumValues.get('EVRApplicationType_VRApplication_Background'), APP_BACKGROUND);
   assert.equal(enumValues.get('ETrackingUniverseOrigin_TrackingUniverseStanding'), ORIGIN_STANDING);
+  assert.equal(enumValues.get('ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated'), ORIGIN_RAW);
+  assert.equal(enumValues.get('ETrackedDeviceProperty_Prop_CurrentUniverseId_Uint64'), PROP_UNIVERSE_ID);
   assert.equal(enumValues.get('ETrackedDeviceProperty_Prop_RenderModelName_String'), PROP_RENDER_MODEL);
   assert.equal(enumValues.get('ETrackedDeviceProperty_Prop_DisplayFrequency_Float'), PROP_DISPLAY_FREQUENCY);
   assert.equal(enumValues.get('ETextureType_TextureType_DirectX'), TEXTURE_DIRECTX);
@@ -299,9 +301,15 @@ test('常量：设备数上限、头显的设备序号、左右手、退出事�
 });
 
 test('常量：连接时以悬浮窗口应用的类型初始化，探测时以后台应用的类型初始化', () => {
-  assert.match(source, /static connect\(\): OpenVR \{[\s\S]{0,160}?\binit\(err, APP_OVERLAY, null\);/);
+  assert.match(source, /static connect\(options: ConnectOptions\): OpenVR \{[\s\S]{0,160}?\binit\(err, APP_OVERLAY, null\);/);
   assert.match(source, /export function steamVrRunning\(\): boolean \{[\s\S]{0,160}?\binit\(err, APP_BACKGROUND, null\);/);
   assert.equal(source.match(/\binit\(err, /g)?.length, 2);
+});
+
+test('接线：连接时的选项交给 OpenVR 的构造函数，会话把连接方式收到的选项原样给 OpenVR.connect；探测到 SteamVR 没在运行时忘掉留着的基准', () => {
+  assert.match(source, /static connect\(options: ConnectOptions\): OpenVR \{[\s\S]*?\n      \}, options\);\n/);
+  assert.match(read('../components/steamvr/src/session.ts'), /\n  connect: options => OpenVR\.connect\(options\),\n/);
+  assert.match(source, /export function steamVrRunning\(\): boolean \{[\s\S]{0,260}?if \(err\[0\] !== 0\) \{\n    forget\(SPACE\);\n    return false;\n  \}/);
 });
 
 // openvr.ts 里用 struct('名字', …) 定义的全部结构体
@@ -359,9 +367,11 @@ for (const [name, decl] of Object.entries<string>(ENTRY_PROTOS)) {
 type Fake = (...args: unknown[]) => unknown;
 
 // 记录调用的假函数表：fn(方法名) 给出的函数把「接口.方法名」和参数记下来，返回 answers 里给这个方法定的值
-// (定的是函数就调用它，可以往输出参数里写)；没定的返回 0
-function wrapped(): { vr: OpenVR; answers: Map<string, unknown>; taken(): unknown[][] } {
+// (定的是函数就调用它，可以往输出参数里写)；没定的返回 0。follow：面板空间跟着游玩空间；kept：基准记在哪，
+// 'module' = 不给，记在 openvr.ts 模块里的那一份；logs 是记下的日志
+function wrapped(follow = false, kept: SpaceMemory | 'module' = { id: 0n, base: null }): { vr: OpenVR; answers: Map<string, unknown>; taken(): unknown[][]; logs: string[] } {
   const calls: { name: string; args: unknown[] }[] = [];
+  const logs: string[] = [];
   const answers = new Map<string, unknown>();
   const table = (iface: string): { fn<A extends unknown[], R>(method: string): (...args: A) => R } => ({
     fn: <A extends unknown[], R>(method: string) => (...args: A): R => {
@@ -377,7 +387,9 @@ function wrapped(): { vr: OpenVR; answers: Map<string, unknown>; taken(): unknow
   };
   // 取走到这时为止的调用，写成 [名字, ...参数]
   const taken = (): unknown[][] => calls.splice(0).map(c => [c.name, ...c.args]);
-  return { vr: new OpenVR(tables), answers, taken };
+  const log = (text: string, level?: string): void => { logs.push(level ? `${level}: ${text}` : text); };
+  const vr = new OpenVR(tables, kept === 'module' ? { follow, log } : { follow, kept, log });
+  return { vr, answers, taken, logs };
 }
 
 const size = (name: string): number => layout(name).size;
@@ -597,4 +609,396 @@ test('包装：应用没登记过时登记清单并设为随 SteamVR 启动；�
   answers.set('IVRApplications.IsApplicationInstalled', true);
   vr.register('C:/app.vrmanifest', 'yanuo.app');
   assert.deepEqual(taken().map(c => c[0]), ['IVRApplications.IsApplicationInstalled']);
+});
+
+// ---------- 跟着游玩空间 ----------
+
+const RAW = enumValues.get('ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated');
+const UNIVERSE = enumValues.get('ETrackedDeviceProperty_Prop_CurrentUniverseId_Uint64');
+// 原始空间 → 站立空间：绕 Y 轴转 90°，再平移
+const SHIFT: Mat34 = [0, 0, 1, 1, 0, 1, 0, 0.5, -1, 0, 0, -2];
+const HEAD_RAW: Mat34 = [1, 0, 0, 0.2, 0, 1, 0, 1.6, 0, 0, 1, 0.3];
+const HAND_RAW: Mat34 = [0, 0, -1, -0.3, 0, 1, 0, 1.1, 1, 0, 0, -0.4];
+const SPOT: Mat34 = [1, 0, 0, 0.1, 0, 1, 0, 1.2, 0, 0, 1, -0.7];
+
+// 假的追踪：各设备在原始空间里的姿态，原始空间到站立空间的变换，头显的追踪空间编号
+interface Scene {
+  devices: Record<number, Mat34>;      // 设备序号 → 原始空间里的姿态
+  lost: Set<number>;                   // 姿态无效(矩阵留着)的设备
+  gone: Set<number>;                   // 姿态有效但没连着的设备
+  blind: Set<number | undefined>;      // 按这些原点取时所有设备的姿态都无效
+  shift: Mat34;                        // 原始空间 → 站立空间
+  given: unknown;                      // SteamVR 给的原始空间到站立空间的变换
+  universe: number | bigint;           // 头显的追踪空间编号
+  universeError: number;               // 读编号的错误码
+}
+
+function scene(answers: Map<string, unknown>): Scene {
+  const sc: Scene = { devices: { 0: HEAD_RAW, 3: HAND_RAW, 5: HAND_RAW }, lost: new Set([5]), gone: new Set(), blind: new Set(), shift: SHIFT, given: { m: new Float32Array(SHIFT) }, universe: 7, universeError: 0 };
+  const step = size('TrackedDevicePose_t');
+  answers.set('IVRSystem.GetDeviceToAbsoluteTrackingPose', (origin: unknown, _predict: unknown, buf: unknown, count: unknown) => {
+    for (const [key, raw] of Object.entries(sc.devices)) {
+      const index = Number(key);
+      if (index >= Number(count)) continue;
+      koffi.encode(buf, index * step, 'TrackedDevicePose_t', {
+        mDeviceToAbsoluteTracking: { m: origin === STANDING ? mul(sc.shift, raw) : raw }, vVelocity: { v: [0, 0, 0] }, vAngularVelocity: { v: [0, 0, 0] }, eTrackingResult: 200,
+        bPoseIsValid: !sc.lost.has(index) && !sc.blind.has(origin as number), bDeviceIsConnected: !sc.gone.has(index),
+      });
+    }
+  });
+  answers.set('IVRSystem.GetRawZeroPoseToStandingAbsoluteTrackingPose', () => sc.given);
+  answers.set('IVRSystem.GetUint64TrackedDeviceProperty', (_dev: unknown, _prop: unknown, err: unknown[]) => {
+    err[0] = sc.universeError;
+    return sc.universe;
+  });
+  return sc;
+}
+
+// 调用写成短的一行：取姿态「poses 原点 个数」，放悬浮窗口「place 句柄 原点」，读属性「prop 设备 属性号」，别的只留方法名
+const brief = (calls: unknown[][]): string[] => calls.map(c => {
+  if (c[0] === 'IVRSystem.GetDeviceToAbsoluteTrackingPose') return `poses ${String(c[1])} ${String(c[4])}`;
+  if (c[0] === 'IVROverlay.SetOverlayTransformAbsolute') return `place ${String(c[1])} ${String(c[2])}`;
+  if (c[0] === 'IVRSystem.GetUint64TrackedDeviceProperty') return `prop ${String(c[1])} ${String(c[2])}`;
+  return String(c[0]).split('.')[1] ?? '';
+});
+
+// 两个矩阵(或向量)各项相差不到 1e-5
+function near(actual: ArrayLike<number>, expected: ArrayLike<number>): void {
+  assert.equal(actual.length, expected.length);
+  for (let i = 0; i < expected.length; i++) assert.ok(Math.abs((actual[i] ?? NaN) - (expected[i] ?? NaN)) < 1e-5, `第 ${i} 项：${String(actual[i])} 和 ${String(expected[i])}`);
+}
+
+// 最近一次放悬浮窗口 h 时交给 SteamVR 的原点和矩阵
+function sent(calls: unknown[][], h: number): { origin: unknown; m: Mat34 } {
+  const call = calls.findLast(c => c[0] === 'IVROverlay.SetOverlayTransformAbsolute' && c[1] === h);
+  assert.ok(call, `没有放过 ${h}`);
+  return { origin: call[2], m: (call[3] as { m: Mat34 }).m };
+}
+
+// PollNextEvent 的假答案：只给一个 type 类型的事件
+function once(type: number): (ev: Record<string, unknown>) => boolean {
+  let left = 1;
+  return ev => {
+    if (left-- <= 0) return false;
+    ev['eventType'] = type;
+    return true;
+  };
+}
+
+test('跟着游玩空间关着：姿态、位置、求交都按站立空间，不读原始空间到站立空间的变换和追踪空间编号', () => {
+  const { vr, answers, taken, logs } = wrapped(false);
+  scene(answers);
+  const pose = vr.poses();
+  near(pose(3).mat, mul(SHIFT, HAND_RAW));
+  vr.place(77, SPOT);
+  vr.intersect(77, [0, 1, 0], [0, 0, -1]);
+  vr.events();
+  vr.poses();
+  assert.deepEqual(brief(taken()), [`poses ${STANDING} 64`, `place 77 ${STANDING}`, 'ComputeOverlayIntersection', 'PollNextEvent', `poses ${STANDING} 64`]);
+  assert.deepEqual(logs, []);
+});
+
+test('跟着游玩空间：头显的姿态无效时还按站立空间；有效的那一帧定下基准，之后按原始空间取姿态、乘上基准，放过的悬浮窗口按原始空间重新放', () => {
+  const { vr, answers, taken, logs } = wrapped(true);
+  const sc = scene(answers);
+  sc.lost.add(0);
+  let pose = vr.poses();
+  near(pose(3).mat, mul(SHIFT, HAND_RAW));
+  vr.place(77, UNIT);
+  vr.place(77, SPOT);
+  vr.place(78, SPOT);
+  vr.placeOn(78, 3, SPOT);
+  vr.place(79, SPOT);
+  vr.destroy(79);
+  vr.place(80, UNIT);
+  assert.deepEqual(brief(taken()), [
+    `poses ${STANDING} 64`, `place 77 ${STANDING}`, `place 77 ${STANDING}`, `place 78 ${STANDING}`, 'SetOverlayTransformTrackedDeviceRelative',
+    `place 79 ${STANDING}`, 'DestroyOverlay', `place 80 ${STANDING}`,
+  ]);
+  // 头显的姿态有效但没连着：不算，还不定
+  sc.lost.delete(0);
+  sc.gone.add(0);
+  vr.poses();
+  assert.deepEqual(brief(taken()), [`poses ${STANDING} 64`]);
+
+  sc.gone.delete(0);
+  pose = vr.poses();
+  const calls = taken();
+  // 取站立空间的姿态 → 追踪空间编号 → 头显在原始空间里的姿态 → SteamVR 给的变换 →
+  // 记着的悬浮窗口各照最近一次的位置重新放(跟着设备的 78、销毁了的 79 不在里面) → 取原始空间的姿态
+  assert.deepEqual(brief(calls), [
+    `poses ${STANDING} 64`, `prop 0 ${UNIVERSE}`, `poses ${RAW} 1`, 'GetRawZeroPoseToStandingAbsoluteTrackingPose', `place 77 ${RAW}`, `place 80 ${RAW}`, `poses ${RAW} 64`,
+  ]);
+  near(sent(calls, 77).m, mul(invert(SHIFT), SPOT));
+  near(sent(calls, 80).m, invert(SHIFT));
+  near(pose(0).mat, mul(SHIFT, HEAD_RAW));
+  near(pose(3).mat, mul(SHIFT, HAND_RAW));
+  assert.deepEqual([pose(0).valid, pose(3).valid, pose(5).valid], [true, true, false]);
+  near(pose(5).mat, mul(SHIFT, HAND_RAW));                                    // 姿态无效的设备留着的矩阵也换到面板空间里
+  assert.deepEqual([pose(-1), pose(MAX_DEVICES)], [{ valid: false, mat: UNIT }, { valid: false, mat: UNIT }]);
+  assert.deepEqual(logs, ['vr: play space origin from chaperone, universe 7, shifted 0.00 m']);
+
+  // 游玩空间被挪动(原始空间到站立空间的变换变了)：不再读那个变换，面板空间里的姿态不变，悬浮窗口不用重新放
+  sc.shift = [0, 0, 1, 1, 0, 1, 0, -0.5, -1, 0, 0, -2];
+  sc.given = { m: new Float32Array(sc.shift) };
+  pose = vr.poses();
+  near(pose(3).mat, mul(SHIFT, HAND_RAW));
+  assert.deepEqual(brief(taken()), [`poses ${RAW} 64`, `prop 0 ${UNIVERSE}`]);
+  // 面板放在一个设备的姿态上：交给 SteamVR 的是那个设备在原始空间里的姿态
+  vr.place(77, pose(3).mat);
+  const placed = sent(taken(), 77);
+  assert.equal(placed.origin, RAW);
+  near(placed.m, HAND_RAW);
+});
+
+test('跟着游玩空间：SteamVR 给的变换不是刚体变换时，用头显在两个空间里的姿态算基准；两样都没有时不定基准、只记一次日志', () => {
+  const zero = new Float32Array(12);
+  const scaled = SHIFT.map((v, i) => (i % 4 === 3 ? v : v * 2));
+  const mirrored = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0];
+  for (const given of [0, null, {}, { m: zero }, { m: scaled }, { m: mirrored }, { m: [1, 0, 0, 0] }, { m: SHIFT.map((v, i) => (i === 3 ? NaN : v)) }]) {
+    const { vr, answers, taken, logs } = wrapped(true);
+    const sc = scene(answers);
+    sc.given = given;
+    const pose = vr.poses();
+    near(pose(3).mat, mul(SHIFT, HAND_RAW));
+    vr.place(77, SPOT);
+    near(sent(taken(), 77).m, mul(invert(SHIFT), SPOT));
+    assert.deepEqual(logs, ['vr: play space origin from head pose, universe 7, shifted 0.00 m']);
+  }
+
+  const { vr, answers, taken, logs } = wrapped(true);
+  const sc = scene(answers);
+  sc.given = 0;
+  sc.blind.add(RAW);
+  for (let i = 0; i < 3; i++) near(vr.poses()(3).mat, mul(SHIFT, HAND_RAW));
+  vr.place(77, SPOT);
+  assert.deepEqual(sent(taken(), 77), { origin: STANDING, m: SPOT });
+  assert.deepEqual(logs, ['warn: vr: cannot read the play space origin, panels stay in the standing space']);
+  // 之后取得到了：定下基准，放过的重新放
+  sc.blind.clear();
+  vr.poses();
+  near(sent(taken(), 77).m, mul(invert(SHIFT), SPOT));
+  assert.equal(logs.length, 2);
+});
+
+test('跟着游玩空间：定基准时游玩空间正被挪着、SteamVR 给的变换里没有这一份时，日志里写头显差了多少', () => {
+  const { vr, answers, logs } = wrapped(true);
+  const sc = scene(answers);
+  sc.shift = [0, 0, 1, 1, 0, 1, 0, 1.25, -1, 0, 0, -2];   // 比给的变换高 0.75 米
+  near(vr.poses()(3).mat, mul(SHIFT, HAND_RAW));
+  assert.deepEqual(logs, ['vr: play space origin from chaperone, universe 7, shifted 0.75 m']);
+});
+
+test('跟着游玩空间：求交时射线换到原始空间里问，交点用射线和距离算；基准没定时照站立空间问', () => {
+  const { vr, answers, taken } = wrapped(true);
+  const sc = scene(answers);
+  sc.lost.add(0);
+  vr.poses();
+  taken();
+  assert.equal(vr.intersect(77, [0, 1, 0], [0, 0, -1]), null);
+  assert.deepEqual(taken(), [['IVROverlay.ComputeOverlayIntersection', 77, { vSource: { v: [0, 1, 0] }, vDirection: { v: [0, 0, -1] }, eOrigin: STANDING }, {}]]);
+
+  sc.lost.delete(0);
+  vr.poses();
+  taken();
+  assert.equal(vr.intersect(77, [0, 1, 0], [0, 0, -1]), null);
+  answers.set('IVROverlay.ComputeOverlayIntersection', (_h: unknown, _params: unknown, r: Record<string, unknown>) => {
+    r['vUVs'] = { v: [0.25, 0.75] };
+    r['vPoint'] = { v: [9, 9, 9] };
+    r['fDistance'] = 0.7;
+    return true;
+  });
+  // 斜着的单位长射线，距离 0.7 米
+  const hit = vr.intersect(77, [0.5, 1, 0.25], [2 / 7, 3 / 7, -6 / 7]);
+  assert.deepEqual([hit?.u, hit?.v], [0.25, 0.75]);
+  near(hit?.point ?? [], [0.7, 1.3, -0.35]);
+  const asked = taken().map(c => c[2] as { vSource: { v: number[] }; vDirection: { v: number[] }; eOrigin: unknown });
+  assert.deepEqual(asked.map(p => p.eOrigin), [RAW, RAW]);
+  // SHIFT 的逆：转动部分是 [0,0,-1; 0,1,0; 1,0,0]，平移是 (-2, -0.5, -1)。方向只转不移，还是单位长
+  near(asked[0]?.vSource.v ?? [], [-2, 0.5, -1]);
+  near(asked[0]?.vDirection.v ?? [], [1, 0, 0]);
+  near(asked[1]?.vSource.v ?? [], [-2.25, 0.5, -0.5]);
+  near(asked[1]?.vDirection.v ?? [], [6 / 7, 3 / 7, 2 / 7]);
+});
+
+test('跟着游玩空间：追踪空间编号换了重新定基准、重新放；编号没变、读到 0、读不到时不动；定基准时没有编号的，之后读到只记下', () => {
+  const { vr, answers, taken, logs } = wrapped(true);
+  const sc = scene(answers);
+  vr.poses();
+  vr.place(77, UNIT);
+  vr.place(77, SPOT);
+  vr.place(78, SPOT);
+  vr.destroy(78);
+  vr.place(80, UNIT);
+  // 基准定了以后改成跟着设备：相对设备的变换原样给，这个悬浮窗口不再记着
+  vr.place(79, SPOT);
+  taken();
+  vr.placeOn(79, 3, SPOT);
+  assert.deepEqual(taken(), [['IVROverlay.SetOverlayTransformTrackedDeviceRelative', 79, 3, { m: SPOT }]]);
+  const idle = [`poses ${RAW} 64`, `prop 0 ${UNIVERSE}`];
+  vr.poses();
+  assert.deepEqual(brief(taken()), idle);
+  for (const [universe, error] of [[0, 0], [9, 1], [0.5, 0], [-3, 0]] as const) {
+    sc.universe = universe;
+    sc.universeError = error;
+    vr.poses();
+    assert.deepEqual(brief(taken()), idle);
+  }
+
+  // 换了一个追踪空间，原始空间到站立空间的变换也是新的；头显的姿态无效的那一帧等着
+  const next: Mat34 = [1, 0, 0, -1, 0, 1, 0, 0, 0, 0, 1, 3];
+  sc.universe = 0x1_0000_0000_0000n;
+  sc.universeError = 0;
+  sc.shift = next;
+  sc.given = { m: new Float32Array(next) };
+  sc.lost.add(0);
+  let pose = vr.poses();
+  near(pose(3).mat, mul(SHIFT, HAND_RAW));
+  assert.deepEqual(brief(taken()), idle);
+  sc.lost.delete(0);
+  pose = vr.poses();
+  const calls = taken();
+  // 销毁了的 78、跟着设备的 79 不重新放；77 照最近一次的位置
+  const refix = [...idle, `poses ${STANDING} 1`, 'GetRawZeroPoseToStandingAbsoluteTrackingPose'];
+  assert.deepEqual(brief(calls), [...refix, `place 77 ${RAW}`, `place 80 ${RAW}`]);
+  near(sent(calls, 77).m, mul(invert(next), SPOT));
+  near(sent(calls, 80).m, invert(next));
+  near(pose(3).mat, mul(next, HAND_RAW));
+  assert.equal(logs.at(-1), `vr: play space origin from chaperone, universe ${0x1_0000_0000_0000n}, shifted 0.00 m`);
+  vr.poses();
+  assert.deepEqual(brief(taken()), idle);
+
+  // 又换了一个，SteamVR 给的变换不能用：用头显在两个空间里的姿态算
+  const third: Mat34 = [0, 0, -1, 2, 0, 1, 0, 0.25, 1, 0, 0, 1];
+  sc.universe = 11;
+  sc.shift = third;
+  sc.given = 0;
+  pose = vr.poses();
+  const derived = taken();
+  assert.deepEqual(brief(derived), [...refix, `place 77 ${RAW}`, `place 80 ${RAW}`]);
+  near(sent(derived, 77).m, mul(invert(third), SPOT));
+  near(pose(3).mat, mul(third, HAND_RAW));
+  assert.equal(logs.at(-1), 'vr: play space origin from head pose, universe 11, shifted 0.00 m');
+
+  // 再换一个，这回什么都取不到：已有的基准留着，每帧再试，警告只记一次；取得到了就重新定
+  sc.universe = 12;
+  sc.shift = next;
+  sc.blind.add(STANDING);
+  const before = logs.length;
+  for (let i = 0; i < 3; i++) {
+    near(vr.poses()(3).mat, mul(third, HAND_RAW));
+    assert.deepEqual(brief(taken()), refix);
+  }
+  vr.place(77, SPOT);
+  near(sent(taken(), 77).m, mul(invert(third), SPOT));
+  assert.deepEqual(logs.slice(before), ['warn: vr: cannot read the play space origin, panels stay in the previous play space']);
+  sc.blind.clear();
+  near(vr.poses()(3).mat, mul(next, HAND_RAW));
+  assert.equal(logs.at(-1), 'vr: play space origin from head pose, universe 12, shifted 0.00 m');
+  taken();
+  // 定成了以后再取不到：警告再记一次
+  sc.universe = 13;
+  sc.blind.add(STANDING);
+  vr.poses();
+  vr.poses();
+  assert.deepEqual(logs.slice(-2), ['vr: play space origin from head pose, universe 12, shifted 0.00 m', 'warn: vr: cannot read the play space origin, panels stay in the previous play space']);
+
+  // 定基准时读不到编号：之后读到的第一个只记下(留给下一次连接的那一份也记上)，再换才重新定
+  const kept: SpaceMemory = { id: 0n, base: null };
+  const late = wrapped(true, kept);
+  const ls = scene(late.answers);
+  ls.universe = 0;
+  late.vr.poses();
+  assert.deepEqual({ ...kept }, { id: 0n, base: [...new Float32Array(SHIFT)] });
+  ls.universe = 4;
+  ls.shift = next;
+  ls.given = { m: new Float32Array(next) };
+  late.taken();
+  near(late.vr.poses()(3).mat, mul(SHIFT, HAND_RAW));
+  assert.deepEqual(brief(late.taken()), idle);
+  assert.deepEqual({ ...kept }, { id: 4n, base: [...new Float32Array(SHIFT)] });
+  ls.universe = 5;
+  near(late.vr.poses()(3).mat, mul(next, HAND_RAW));
+});
+
+test('跟着游玩空间：同一个追踪空间里再连上时接着用上一次的基准；追踪空间不同、没有编号时重新取；收到退出事件、关着跟随连上时忘掉', () => {
+  const kept: SpaceMemory = { id: 0n, base: null };
+  const first = wrapped(true, kept);
+  scene(first.answers);
+  first.vr.poses();
+  assert.deepEqual({ ...kept }, { id: 7n, base: [...new Float32Array(SHIFT)] });
+
+  // 游玩空间挪了以后再连上：SteamVR 给的变换里带着挪动，接着用的还是上一次的基准
+  const moved: Mat34 = [0, 0, 1, 1, 0, 1, 0, -0.5, -1, 0, 0, -2];
+  const again = wrapped(true, kept);
+  const sc = scene(again.answers);
+  sc.shift = moved;
+  sc.given = { m: new Float32Array(moved) };
+  near(again.vr.poses()(3).mat, mul(SHIFT, HAND_RAW));
+  assert.deepEqual(brief(again.taken()), [`poses ${STANDING} 64`, `prop 0 ${UNIVERSE}`, `poses ${RAW} 1`, `poses ${RAW} 64`]);
+  assert.deepEqual(again.logs, ['vr: play space origin from last connection, universe 7, shifted 1.00 m']);
+
+  // 追踪空间不同：重新取
+  const other = wrapped(true, kept);
+  const os = scene(other.answers);
+  os.universe = 8;
+  os.shift = moved;
+  os.given = { m: new Float32Array(moved) };
+  near(other.vr.poses()(3).mat, mul(moved, HAND_RAW));
+  assert.equal(kept.id, 8n);
+
+  // 没有编号：不接着用
+  kept.id = 0n;
+  const blank = wrapped(true, kept);
+  const bs = scene(blank.answers);
+  bs.universe = 0;
+  near(blank.vr.poses()(3).mat, mul(SHIFT, HAND_RAW));
+  assert.ok(blank.logs[0]?.includes('from chaperone'));
+
+  // 别的事件不动它；收到退出事件清掉
+  kept.id = 7n;
+  first.answers.set('IVRSystem.PollNextEvent', once(1700));
+  first.vr.events();
+  assert.equal(kept.id, 7n);
+  first.answers.set('IVRSystem.PollNextEvent', once(EVENT_QUIT));
+  assert.deepEqual(first.vr.events(), [EVENT_QUIT]);
+  assert.deepEqual({ ...kept }, { id: 0n, base: null });
+  // 关着跟随的连接：一连上就清掉，它收到退出事件也清
+  kept.id = 7n;
+  kept.base = SHIFT;
+  const off = wrapped(false, kept);
+  assert.deepEqual({ ...kept }, { id: 0n, base: null });
+  kept.id = 7n;
+  kept.base = SHIFT;
+  off.answers.set('IVRSystem.PollNextEvent', once(EVENT_QUIT));
+  off.vr.events();
+  assert.deepEqual({ ...kept }, { id: 0n, base: null });
+});
+
+test('跟着游玩空间：不给基准记在哪时记在模块里，同一个进程里下一次连接接着用', () => {
+  const moved: Mat34 = [0, 0, 1, 1, 0, 1, 0, -0.5, -1, 0, 0, -2];
+  const quit = (w: ReturnType<typeof wrapped>): void => {
+    w.answers.set('IVRSystem.PollNextEvent', once(EVENT_QUIT));
+    w.vr.events();
+  };
+  const first = wrapped(true, 'module');
+  quit(first);                                   // 别的测试留下的先清掉
+  scene(first.answers);
+  first.vr.poses();
+  assert.deepEqual(first.logs, ['vr: play space origin from chaperone, universe 7, shifted 0.00 m']);
+  const again = wrapped(true, 'module');
+  const sc = scene(again.answers);
+  sc.shift = moved;
+  sc.given = { m: new Float32Array(moved) };
+  near(again.vr.poses()(3).mat, mul(SHIFT, HAND_RAW));
+  assert.deepEqual(again.logs, ['vr: play space origin from last connection, universe 7, shifted 1.00 m']);
+  // 关着跟随连上一次：模块里的那一份清掉，再开着连上时重新取
+  wrapped(false, 'module');
+  const fresh = wrapped(true, 'module');
+  const fs = scene(fresh.answers);
+  fs.shift = moved;
+  fs.given = { m: new Float32Array(moved) };
+  near(fresh.vr.poses()(3).mat, mul(moved, HAND_RAW));
+  assert.deepEqual(fresh.logs, ['vr: play space origin from chaperone, universe 7, shifted 0.00 m']);
+  quit(fresh);
 });

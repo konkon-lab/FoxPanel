@@ -15,7 +15,7 @@
     "en": "Shows panels as overlays in SteamVR: point and click with controllers, grip to move, both hands to scale, a button to stow and restore",
     "ko": "SteamVR에서 패널을 오버레이로 표시: 컨트롤러로 가리켜 클릭, 잡아서 이동, 양손으로 크기 조절, 버튼으로 넣기와 복원"
   },
-  "version": "1.0.13",
+  "version": "1.0.14",
   "author": "yanuo",
   "license": "MIT",
   "provides": [
@@ -152,6 +152,26 @@
               },
               "role": "radio",
               "default": "away"
+            }
+          },
+          "followSpace": {
+            "type": "boolean",
+            "meta": {
+              "description": {
+                "zh-Hans": "面板跟随游玩空间",
+                "zh-Hant": "面板跟隨遊玩空間",
+                "ja": "プレイスペースに追従",
+                "en": "Follow the play space",
+                "ko": "플레이 공간 따라가기"
+              },
+              "hint": {
+                "zh-Hans": "使用其他工具调整视角高度、移动或旋转游玩空间时，空间中的面板随之移动，与使用者的相对位置保持不变。关闭后，面板固定在游戏世界中",
+                "zh-Hant": "使用其他工具調整視角高度、移動或旋轉遊玩空間時，空間中的面板隨之移動，與使用者的相對位置保持不變。關閉後，面板固定在遊戲世界中",
+                "ja": "他のツールで視点の高さを変更したり、プレイスペースを移動・回転したりしたとき、空間に配置したパネルも一緒に移動し、利用者との相対位置を保ちます。オフにすると、パネルはゲームワールド内に固定されます",
+                "en": "When another tool changes the view height or moves or rotates the play space, panels placed in space move with it and keep their position relative to you. When off, panels stay fixed in the game world",
+                "ko": "다른 도구로 시점 높이를 조정하거나 플레이 공간을 이동·회전할 때, 공간에 배치한 패널도 함께 이동하여 사용자와의 상대 위치를 유지합니다. 끄면 패널이 게임 월드에 고정됩니다"
+              },
+              "default": true
             }
           }
         }

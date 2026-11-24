@@ -1,4 +1,10 @@
 // OpenVR C 接口绑定(koffi 调 vendor/openvr/openvr_api.dll)。只封装组件用到的方法。
+// 面板空间(姿态、悬浮窗口的位置、射线共用的坐标系)有两种：
+// 不跟着游玩空间时就是站立空间，姿态、位置、射线原样交给 SteamVR。
+// 跟着游玩空间时是定下基准那一刻的站立空间：基准 = 那一刻原始空间到站立空间的变换；之后设备的姿态按原始空间取、乘上基准，
+// 悬浮窗口的位置和射线乘上基准的逆、按原始空间交给 SteamVR。别的程序挪动游玩空间改的是原始空间到站立空间的变换，
+// 原始空间里的设备姿态不变，悬浮窗口和射线又是按原始空间给的，所以面板空间留在真实房间里，悬浮窗口不每帧重新放。
+// 基准在头显的姿态有效的那一帧定下；头显的追踪空间编号换了(原始空间换了一个)时重新定。
 
 import koffi from 'koffi';
 import {
@@ -6,8 +12,9 @@ import {
   IVRRenderModels_METHODS, IVRRenderModels_VERSION, IVRSystem_METHODS, IVRSystem_VERSION,
 } from './fntables.ts';
 import { loadLib, proto, PTR_SIZE, struct } from './ffi.ts';
-import { IDENTITY, type Mat34, type Vec3 } from './geometry.ts';
-import type { Handle, Pose, Vr } from './api.ts';
+import { isObject } from '../../_shared/util.ts';
+import { applyDir, applyPoint, distance, IDENTITY, invert, isRigid, levelBetween, mul, position, type Mat34, type Vec3 } from './geometry.ts';
+import type { ConnectOptions, Handle, Pose, Vr } from './api.ts';
 
 // ---------- 结构体(按 openvr_capi.h，Windows 下自然对齐)；函数原型里按名字引用 ----------
 
@@ -38,6 +45,7 @@ const SIZE = { digital: koffi.sizeof(DigitalActionData), actionSet: koffi.sizeof
 export const APP_OVERLAY = 2;                // EVRApplicationType：悬浮窗口应用
 export const APP_BACKGROUND = 3;             // EVRApplicationType：后台应用，不会启动 SteamVR，未运行时初始化失败
 export const ORIGIN_STANDING = 1;            // ETrackingUniverseOrigin：站立空间
+export const ORIGIN_RAW = 2;                 // ETrackingUniverseOrigin：驱动的原始空间，不跟着游玩空间的挪动走
 export const MAX_DEVICES = 64;               // k_unMaxTrackedDeviceCount：设备序号的上限
 export const HMD_DEVICE = 0;                 // k_unTrackedDeviceIndex_Hmd：头显的设备序号
 export const ROLE_LEFT = 1;                  // ETrackedControllerRole：左手
@@ -45,6 +53,7 @@ export const ROLE_RIGHT = 2;                 // ETrackedControllerRole：右手
 export const EVENT_QUIT = 700;               // EVREventType：SteamVR 正在退出
 export const PROP_RENDER_MODEL = 1003;       // ETrackedDeviceProperty：设备模型名(字符串)
 export const PROP_DISPLAY_FREQUENCY = 2002;  // ETrackedDeviceProperty：头显刷新率(Hz)
+export const PROP_UNIVERSE_ID = 2004;        // ETrackedDeviceProperty：头显当前的追踪空间编号(uint64)，0 = 没有
 export const TEXTURE_DIRECTX = 0;            // ETextureType：D3D11 纹理
 export const OVERLAY_KEY_IN_USE = 17;        // EVROverlayError：悬浮窗口的键已经有了
 
@@ -58,9 +67,11 @@ interface RawPose { mDeviceToAbsoluteTracking: { m: number[] }; bPoseIsValid: bo
 export const PROTOS = {
   IVRSystem: {
     GetDeviceToAbsoluteTrackingPose: 'void __stdcall vrGetPoses(int origin, float predict, void *poses, uint32 count)',
+    GetRawZeroPoseToStandingAbsoluteTrackingPose: 'HmdMatrix34_t __stdcall vrRawToStanding()',
     GetTrackedDeviceIndexForControllerRole: 'uint32 __stdcall vrRoleIndex(int role)',
     GetStringTrackedDeviceProperty: 'uint32 __stdcall vrStringProp(uint32 dev, int prop, void *buf, uint32 size, _Out_ int *err)',
     GetFloatTrackedDeviceProperty: 'float __stdcall vrFloatProp(uint32 dev, int prop, _Out_ int *err)',
+    GetUint64TrackedDeviceProperty: 'uint64 __stdcall vrUint64Prop(uint32 dev, int prop, _Out_ int *err)',
     GetOutputDevice: 'void __stdcall vrOutputDevice(_Out_ uint64 *dev, int type, void *vk)',
     PollNextEvent: 'bool __stdcall vrPollEvent(_Out_ VREvent_t *ev, uint32 size)',
   },
@@ -166,13 +177,31 @@ function api(): Entry {
   return entry;
 }
 
-// 装了 SteamVR 且 vrserver 正在运行(以后台应用类型尝试初始化，不会启动 SteamVR)
+// 跟着游玩空间时的基准：头显在哪个追踪空间(编号，0 = 不知道)里定下的、原始空间到面板空间的变换
+export interface SpaceMemory {
+  id: bigint;
+  base: Mat34 | null;
+}
+// 这个进程里最近一次连接定下的基准：再连上(组件重新加载、断开重连)、追踪空间没换时接着用，面板不跳。
+// 收到 SteamVR 的退出事件、探测到 SteamVR 没在运行、以不跟着游玩空间的方式连上时清掉
+const SPACE: SpaceMemory = { id: 0n, base: null };
+
+// 忘掉留给下一次连接的基准
+function forget(kept: SpaceMemory): void {
+  kept.id = 0n;
+  kept.base = null;
+}
+
+// 装了 SteamVR 且 vrserver 正在运行(以后台应用类型尝试初始化，不会启动 SteamVR)；没在运行时忘掉留着的基准
 export function steamVrRunning(): boolean {
   const { installed, init, shutdown } = api();
-  if (!installed()) return false;
   const err = [0];
-  init(err, APP_BACKGROUND, null);
-  if (err[0] !== 0) return false;
+  if (installed()) init(err, APP_BACKGROUND, null);
+  else err[0] = -1;
+  if (err[0] !== 0) {
+    forget(SPACE);
+    return false;
+  }
   shutdown();
   return true;
 }
@@ -180,9 +209,11 @@ export function steamVrRunning(): boolean {
 function makeSystem(t: VrTables['system']) {
   return {
     poses: t.fn<[number, number, unknown, number], void>('GetDeviceToAbsoluteTrackingPose'),
+    rawToStanding: t.fn<[], unknown>('GetRawZeroPoseToStandingAbsoluteTrackingPose'),
     roleIndex: t.fn<[number], number>('GetTrackedDeviceIndexForControllerRole'),
     stringProp: t.fn<[number, number, Buffer, number, number[]], number>('GetStringTrackedDeviceProperty'),
     floatProp: t.fn<[number, number, number[]], number>('GetFloatTrackedDeviceProperty'),
+    uint64Prop: t.fn<[number, number, number[]], unknown>('GetUint64TrackedDeviceProperty'),
     outputDevice: t.fn<[bigint[], number, null], void>('GetOutputDevice'),
     pollEvent: t.fn<[Record<string, unknown>, number], boolean>('PollNextEvent'),
   };
@@ -216,9 +247,21 @@ function makeInput(t: VrTables['input']) {
   };
 }
 
+export interface OpenVrOptions extends ConnectOptions {
+  kept?: SpaceMemory;   // 基准记在哪，不给时记在这个模块里
+}
+
+// 结构体里的 3×4 矩阵(koffi 读出的是 { m: 12 个 float })收窄成刚体变换；不是的时候为 null
+function matrixOf(raw: unknown): Mat34 | null {
+  const m = isObject(raw) ? raw['m'] : null;
+  if (!Array.isArray(m) && !(m instanceof Float32Array)) return null;
+  const list = Array.from(m as ArrayLike<unknown>, Number);
+  return isRigid(list) ? list : null;
+}
+
 export class OpenVR implements Vr {
   // 以悬浮窗口应用身份连接 SteamVR；失败抛出带错误码的 Error，取函数表失败时结束已经做完的初始化
-  static connect(): OpenVR {
+  static connect(options: ConnectOptions): OpenVR {
     const { init, shutdown, getInterface } = api();
     const err = [0];
     init(err, APP_OVERLAY, null);
@@ -236,7 +279,7 @@ export class OpenVR implements Vr {
         input: new FnTable(table(IVRInput_VERSION), IVRInput_METHODS, PROTOS.IVRInput),
         applications: new FnTable(table(IVRApplications_VERSION), IVRApplications_METHODS, PROTOS.IVRApplications),
         renderModels: new FnTable(table(IVRRenderModels_VERSION), IVRRenderModels_METHODS, PROTOS.IVRRenderModels),
-      });
+      }, options);
     } catch (e) {
       shutdown();
       throw e;
@@ -244,7 +287,16 @@ export class OpenVR implements Vr {
   }
 
   private readonly poseBuf: unknown = koffi.alloc(TrackedDevicePose, MAX_DEVICES);
+  private readonly probeBuf: unknown = koffi.alloc(TrackedDevicePose, 1);   // 定基准时另取一次头显的姿态用
   private readonly owned = new Map<string, Handle>();   // 这次连接里自己建的、还没销毁成的悬浮窗口：键 → 句柄
+  private readonly follow: boolean;                      // 面板空间跟着游玩空间
+  private readonly log: ConnectOptions['log'];
+  private readonly kept: SpaceMemory;
+  private base: Mat34 | null = null;                     // 基准：原始空间 → 面板空间；还没定时为 null，这期间面板空间是站立空间
+  private toRaw: Mat34 | null = null;                    // 基准的逆：面板空间 → 原始空间
+  private universe = 0n;                                 // 基准是在哪个追踪空间里定的(编号)，0 = 不知道
+  private baseFailed = false;                            // 定不出基准的日志记过了
+  private readonly spots = new Map<Handle, Mat34>();     // 跟着游玩空间时，各个悬浮窗口最近一次放在面板空间里的哪(跟着设备的不在里面)
   private readonly sys: ReturnType<typeof makeSystem>;
   private readonly ov: ReturnType<typeof makeOverlay>;
   private readonly inp: ReturnType<typeof makeInput>;
@@ -252,7 +304,12 @@ export class OpenVR implements Vr {
   private readonly component: (model: string, comp: string, device: Handle, mode: object, out: Record<string, unknown>) => boolean;
 
   // 从各接口的函数表里取出用到的函数；连接 SteamVR 用 OpenVR.connect()
-  constructor(tables: VrTables) {
+  constructor(tables: VrTables, options: OpenVrOptions) {
+    this.follow = options.follow;
+    this.log = options.log;
+    this.kept = options.kept ?? SPACE;
+    // 不跟着游玩空间的连接按站立空间放面板，留着的基准对不上布局里的位置
+    if (!this.follow) forget(this.kept);
     this.sys = makeSystem(tables.system);
     this.ov = makeOverlay(tables.overlay);
     this.inp = makeInput(tables.input);
@@ -267,6 +324,7 @@ export class OpenVR implements Vr {
 
   shutdown(): void {
     this.owned.clear();
+    this.spots.clear();
     api().shutdown();
   }
 
@@ -290,14 +348,75 @@ export class OpenVR implements Vr {
     return this.sys.roleIndex(role);
   }
 
-  // 当前所有设备的姿态，按设备序号取
+  // 当前所有设备在面板空间里的姿态，按设备序号取。跟着游玩空间时：基准还没定的，头显的姿态有效就定下来；
+  // 定了的按原始空间取、乘上基准(姿态无效的设备留着的旧矩阵也乘)，头显的追踪空间编号换了就重新定
   poses(): (index: number) => Pose {
-    this.sys.poses(ORIGIN_STANDING, 0, this.poseBuf, MAX_DEVICES);
+    if (this.follow && this.base) {
+      this.sys.poses(ORIGIN_RAW, 0, this.poseBuf, MAX_DEVICES);
+      const id = this.universeId();
+      if (id !== 0n && id !== this.universe) {
+        if (this.universe === 0n) this.kept.id = this.universe = id;
+        else if (this.head(this.poseBuf)) this.rebase(ORIGIN_RAW, id, false);
+      }
+    } else {
+      this.sys.poses(ORIGIN_STANDING, 0, this.poseBuf, MAX_DEVICES);
+      if (this.follow && this.head(this.poseBuf) && this.rebase(ORIGIN_STANDING, this.universeId(), true)) {
+        this.sys.poses(ORIGIN_RAW, 0, this.poseBuf, MAX_DEVICES);
+      }
+    }
+    const { base } = this;
     return index => {
       if (index < 0 || index >= MAX_DEVICES) return { valid: false, mat: IDENTITY };
       const p = koffi.decode(this.poseBuf, index * SIZE.pose, TrackedDevicePose) as RawPose;
-      return { valid: p.bPoseIsValid && p.bDeviceIsConnected, mat: p.mDeviceToAbsoluteTracking.m as Mat34 };
+      const mat = p.mDeviceToAbsoluteTracking.m as Mat34;
+      return { valid: p.bPoseIsValid && p.bDeviceIsConnected, mat: base ? mul(base, mat) : mat };
     };
+  }
+
+  // 头显当前的追踪空间编号；读不到、没有时为 0
+  private universeId(): bigint {
+    const err = [0];
+    const v = this.sys.uint64Prop(HMD_DEVICE, PROP_UNIVERSE_ID, err);
+    if (err[0] !== 0) return 0n;
+    if (typeof v === 'bigint') return v;
+    return typeof v === 'number' && Number.isSafeInteger(v) && v > 0 ? BigInt(v) : 0n;
+  }
+
+  // 姿态缓冲里头显的姿态；无效时为 null
+  private head(buf: unknown): Mat34 | null {
+    const p = koffi.decode(buf, HMD_DEVICE * SIZE.pose, TrackedDevicePose) as RawPose;
+    return p.bPoseIsValid && p.bDeviceIsConnected ? Array.from(p.mDeviceToAbsoluteTracking.m) as Mat34 : null;
+  }
+
+  // 定基准。held 是姿态缓冲里的姿态取自哪个空间(头显在里面有效)，id 是头显这一刻的追踪空间编号。
+  // 基准按次序取：first(这次连接头一回定)且这个进程里上一次连接在同一个追踪空间里定过的，接着用那一份；
+  // SteamVR 给的原始空间到站立空间的变换(是刚体变换才用)；头显在站立空间和原始空间里的两个姿态之间的变换。
+  // 定下以后把记着的悬浮窗口按原始空间重新放一遍。都取不到时不定(日志只记一次)，已经定了的基准留着，返回 false
+  private rebase(held: number, id: bigint, first: boolean): boolean {
+    this.sys.poses(held === ORIGIN_RAW ? ORIGIN_STANDING : ORIGIN_RAW, 0, this.probeBuf, 1);
+    const here = this.head(this.poseBuf);
+    const there = this.head(this.probeBuf);
+    const standing = held === ORIGIN_RAW ? there : here;
+    const raw = held === ORIGIN_RAW ? here : there;
+    const reuse = first && id !== 0n && id === this.kept.id ? this.kept.base : null;
+    const given = reuse ? null : matrixOf(this.sys.rawToStanding());
+    const base = reuse ?? given ?? (standing && raw ? levelBetween(standing, raw) : null);
+    if (!base) {
+      if (!this.baseFailed) this.log(`vr: cannot read the play space origin, panels stay in the ${this.base ? 'previous play space' : 'standing space'}`, 'warn');
+      this.baseFailed = true;
+      return false;
+    }
+    this.baseFailed = false;
+    this.base = base;
+    this.toRaw = invert(base);
+    this.universe = id;
+    this.kept.id = id;
+    this.kept.base = base;
+    for (const [h, mat] of this.spots) this.ov.setTransform(h, ORIGIN_RAW, { m: mul(this.toRaw, mat) });
+    // 头显按基准算出的位置和它在站立空间里的位置差多少(米)：定基准时游玩空间正被挪着就不是 0
+    const shift = standing && raw ? distance(position(mul(base, raw)), position(standing)) : null;
+    this.log(`vr: play space origin from ${reuse ? 'last connection' : given ? 'chaperone' : 'head pose'}, universe ${id}${shift === null ? '' : `, shifted ${shift.toFixed(2)} m`}`);
+    return true;
   }
 
   // 设备的模型名；读不到时为空串
@@ -307,7 +426,7 @@ export class OpenVR implements Vr {
     return n > 1 ? buf.toString('utf8', 0, n - 1) : '';
   }
 
-  // 取出所有待处理事件的类型
+  // 取出所有待处理事件的类型；SteamVR 正在退出时忘掉留给下一次连接的基准
   events(): number[] {
     const types: number[] = [];
     for (let k = 0; k < EVENTS_MAX; k++) {
@@ -315,6 +434,7 @@ export class OpenVR implements Vr {
       if (!this.sys.pollEvent(ev, SIZE.event)) break;
       types.push(Number(ev['eventType'] ?? 0));
     }
+    if (types.includes(EVENT_QUIT)) forget(this.kept);
     return types;
   }
 
@@ -340,6 +460,7 @@ export class OpenVR implements Vr {
   // 销毁一个悬浮窗口；销毁成了才从自己占着的键里拿掉
   destroy(h: Handle): void {
     if (this.ov.destroy(h) !== 0) return;
+    this.spots.delete(h);
     for (const [key, handle] of this.owned) if (handle === h) this.owned.delete(key);
   }
   show(h: Handle): boolean { return this.ov.show(h) === 0; }
@@ -350,21 +471,36 @@ export class OpenVR implements Vr {
   setImage(h: Handle, file: string): number { return this.ov.fromFile(h, file); }
   setTexture(h: Handle, d3dTexture: unknown): void { this.ov.texture(h, { handle: d3dTexture, eType: TEXTURE_DIRECTX, eColorSpace: 0 }); }
 
+  // 悬浮窗口放在面板空间里的 mat；跟着游玩空间时记下来，基准定了、换了时照它重新放
   place(h: Handle, mat: Mat34): void {
-    this.ov.setTransform(h, ORIGIN_STANDING, { m: mat });
+    if (this.follow) this.spots.set(h, mat);
+    if (this.toRaw) this.ov.setTransform(h, ORIGIN_RAW, { m: mul(this.toRaw, mat) });
+    else this.ov.setTransform(h, ORIGIN_STANDING, { m: mat });
   }
 
   placeOn(h: Handle, device: number, mat: Mat34): void {
+    this.spots.delete(h);
     this.ov.setTransformRelative(h, device, { m: mat });
   }
 
-  // 射线和悬浮窗口求交；命中返回原始 UV(OpenVR：v=0 在下)和交点
+  // 射线和悬浮窗口求交；命中返回原始 UV(OpenVR：v=0 在下)和交点。基准定了时射线换到原始空间里问，
+  // 交点用射线和 SteamVR 给的距离算(dir 要是单位向量)
   intersect(h: Handle, source: readonly number[], dir: readonly number[]): { u: number; v: number; point: Vec3 } | null {
     const r: Record<string, unknown> = {};
-    if (!this.ov.intersect(h, { vSource: { v: source }, vDirection: { v: dir }, eOrigin: ORIGIN_STANDING }, r)) return null;
+    const { toRaw } = this;
+    const params = toRaw
+      ? { vSource: { v: applyPoint(toRaw, source) }, vDirection: { v: applyDir(toRaw, dir) }, eOrigin: ORIGIN_RAW }
+      : { vSource: { v: source }, vDirection: { v: dir }, eOrigin: ORIGIN_STANDING };
+    if (!this.ov.intersect(h, params, r)) return null;
     const uv = (r['vUVs'] as { v: number[] }).v;
+    const u = uv[0] ?? -1;
+    const v = uv[1] ?? -1;
+    if (toRaw) {
+      const far = Number(r['fDistance'] ?? 0);
+      return { u, v, point: [(source[0] ?? 0) + (dir[0] ?? 0) * far, (source[1] ?? 0) + (dir[1] ?? 0) * far, (source[2] ?? 0) + (dir[2] ?? 0) * far] };
+    }
     const p = (r['vPoint'] as { v: number[] }).v;
-    return { u: uv[0] ?? -1, v: uv[1] ?? -1, point: [p[0] ?? 0, p[1] ?? 0, p[2] ?? 0] };
+    return { u, v, point: [p[0] ?? 0, p[1] ?? 0, p[2] ?? 0] };
   }
 
   // ---------- 输入 ----------

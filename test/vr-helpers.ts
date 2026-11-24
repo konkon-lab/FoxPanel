@@ -174,6 +174,7 @@ export interface RigOptions {
   hit?: HitSettings;            // 求交的两条退路，默认都关
   everyFrame?: boolean;         // 纹理每个显示帧都交给 SteamVR，默认是
   native?: boolean;             // 附着的面板交给 SteamVR 带着设备走，默认是
+  follow?: boolean;             // 面板空间跟着游玩空间，默认是
   layout?: Layout;              // 一开始的布局，默认是空的、总开关收起着
   backend?: VrBackend;          // 探测和建连接的方式，默认是这里的假 SteamVR 和假显卡
   tap?: (feed: PanelFeed) => PanelFeed;   // 开出来的页面过它一遍再给面板表
@@ -246,6 +247,7 @@ export class Rig {
     this.session = new Session({
       log, stage: this.stage, board: this.control,
       hit: options.hit ?? { check: false, native: false },
+      follow: options.follow ?? true,
       changed: () => {
         this.changed++;
         this.control.link();
@@ -354,7 +356,7 @@ export class Rig {
     this.vrs.at(-1)?.setPose(DEVICE[side], mat);
   }
 
-  // 一块面板的悬浮窗口这一刻在站立空间里的姿态(跟着设备的按那个设备这一刻的姿态算)
+  // 一块面板的悬浮窗口这一刻在面板空间里的姿态(跟着设备的按那个设备这一刻的姿态算)
   where(id: string): Mat34 {
     const pose = this.vr.where(this.panel(id));
     assert.ok(pose, `${id} 跟着的设备不在`);

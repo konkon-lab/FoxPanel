@@ -989,7 +989,7 @@ test('附着在左手上的面板不吃左手的射线：射线正打在它上�
   rig.frame();
   assert.equal(page.events.at(-1), 'leave');
 
-  // 同一个位置上的面板附着到头显上(相对头显的变换算成同一个站立空间里的位置)：左手的射线算数
+  // 同一个位置上的面板附着到头显上(相对头显的变换算成同一个面板空间里的位置)：左手的射线算数
   page.events.length = 0;
   rig.control.change(layout => ({ ...layout, panels: { ...layout.panels, 'a.wrist': { open: true, pinned: true, locked: true, meters: null, anchor: 'head', glance: false, pose: at(-0.2, -0.3, -0.4) } } }));
   rig.frame();

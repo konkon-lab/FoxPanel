@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  anchorDefault, anchorPose, arrange, clampToQuad, glanceShown, IDENTITY, nearestHit, needsArrange, rayQuad, relativeTo, settlePose, type Mat34, type QuadHit, type Vec3,
+  anchorDefault, anchorPose, applyDir, applyPoint, arrange, clampToQuad, glanceShown, IDENTITY, isRigid, levelBetween, nearestHit, needsArrange, rayQuad, relativeTo, settlePose,
+  type Mat34, type QuadHit, type Vec3,
 } from '../components/steamvr/src/geometry.ts';
 
 // 这里的期望值都用下面几个直接写出来的旋转矩阵和手算的数得到，不经过被测的函数
@@ -337,7 +338,7 @@ test('恢复时的摆放：不动、只拉回不在面前的、每次重排；�
   assert.deepEqual(rules(low, pose(rx(-60), [0, 1.6, 0])), [false, false, true]);
 });
 
-test('附着：相对附着对象的变换和站立空间里的姿态互相换算；留在空间里的面板附着对象是原点', () => {
+test('附着：相对附着对象的变换和面板空间里的姿态互相换算；留在空间里的面板附着对象是原点', () => {
   // 附着对象在 (1, 2, 3)、绕 Y 转了 90°；面板在它自己的右边 0.1 米、前方 0.2 米，不转
   const device = pose(ry(90), [1, 2, 3]);
   const offset = pose(NONE, [0.1, 0, -0.2]);
@@ -450,4 +451,56 @@ test('抬手才显示：面板正面的法线和面板到眼睛的方向夹角�
   assert.deepEqual([glanceShown(beside(0), side, false), glanceShown(beside(0), side, true)], [false, false]);
   // 眼睛就在面板的原点上：照上一次的结果
   assert.deepEqual(both(pose(NONE, at)), [false, true]);
+});
+
+// ---------- 换坐标系 ----------
+
+test('变换作用在点上带平移，作用在方向上只转不移', () => {
+  const m: Mat34 = [0, 0, 1, 1, 0, 1, 0, 0.5, -1, 0, 0, -2];   // 绕 Y 轴转 90°，再平移 (1, 0.5, -2)
+  assert.deepEqual(applyPoint(m, [1, 2, 3]), [4, 2.5, -3]);
+  assert.deepEqual(applyDir(m, [1, 2, 3]), [3, 2, -1]);
+  assert.deepEqual(applyPoint(IDENTITY, [1, 2, 3]), [1, 2, 3]);
+});
+
+test('刚体变换的判断：单位阵、任意转动加平移是；项数不对、有非有限的数、全零、带缩放、歪斜、镜像都不是', () => {
+  const turned: Mat34 = [...times(ry(30), rx(20)).flatMap((v, i) => (i % 3 === 2 ? [v, [0.5, -1, 2][(i - 2) / 3] ?? 0] : [v]))] as Mat34;
+  assert.deepEqual([isRigid(IDENTITY), isRigid(turned), isRigid(Array.from(new Float32Array(turned)))], [true, true, true]);
+  assert.equal(isRigid([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]), false);
+  assert.equal(isRigid([...IDENTITY, 0]), false);
+  assert.equal(isRigid(IDENTITY.map((v, i) => (i === 7 ? NaN : v))), false);
+  assert.equal(isRigid(IDENTITY.map((v, i) => (i === 3 ? Infinity : v))), false);
+  assert.equal(isRigid(new Array<number>(12).fill(0)), false);
+  assert.equal(isRigid([2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0]), false);
+  assert.equal(isRigid([1.01, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0]), false);
+  assert.equal(isRigid([1, 0.01, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0]), false);
+  assert.equal(isRigid([1, 0, 0, 0, 0, 1, 0.01, 0, 0, 0, 1, 0]), false);
+  assert.equal(isRigid([1, 0, 0, 0, 0, 1, 0, 0, 0.01, 0, 1, 0]), false);
+  // 容差：行的长度差 0.0005 算是，差 0.002 不算
+  assert.equal(isRigid([1.0005, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0]), true);
+  assert.equal(isRigid([1.002, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0]), false);
+  assert.equal(isRigid([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0]), false);
+});
+
+test('两个 Y 朝上的坐标系之间的变换：只有绕 Y 轴的转动和平移，把一个姿态在前一个坐标系里的位置正好送到后一个里的位置', () => {
+  const shift: Mat34 = [0, 0, 1, 1, 0, 1, 0, 0.5, -1, 0, 0, -2];
+  // 头在前一个坐标系里：抬头 20°、歪头 10°，在 (0.2, 1.6, 0.3)
+  const tilt = times(rx(20), rz(10));
+  const from: Mat34 = [tilt[0], tilt[1], tilt[2], 0.2, tilt[3], tilt[4], tilt[5], 1.6, tilt[6], tilt[7], tilt[8], 0.3];
+  // 同一个头在后一个坐标系里：shift 作用在它上面
+  const turn = times(ry(90), tilt);
+  const to: Mat34 = [turn[0], turn[1], turn[2], 1.3, turn[3], turn[4], turn[5], 2.1, turn[6], turn[7], turn[8], -2.2];
+  near(levelBetween(to, from), shift);
+  near(levelBetween(from, from), IDENTITY);
+  // 两个姿态的俯仰和侧倾不一样(读数有误差)：结果还是只绕 Y 轴转，位置照样对上
+  const nod = times(ry(90), times(rx(23), rz(14)));
+  const off: Mat34 = [nod[0], nod[1], nod[2], 1.3, nod[3], nod[4], nod[5], 2.1, nod[6], nod[7], nod[8], -2.2];
+  const level = levelBetween(off, from);
+  assert.deepEqual([level[1], level[4], level[5], level[6], level[9]], [0, 0, 1, 0, 0]);
+  assert.ok(isRigid(level));
+  near(applyPoint(level, [0.2, 1.6, 0.3]), [1.3, 2.1, -2.2]);
+  // 转角：两个姿态之间的转动 Ry(90°)·Rx(23°)·Rz(14°)·(Rx(20°)·Rz(10°))ᵀ 里绕 Y 轴的那一份，离 90° 不到 3°，又不正好是 90°
+  const yaw = Math.atan2(level[2], level[0]) * 180 / Math.PI;
+  const between = times(nod, [tilt[0], tilt[3], tilt[6], tilt[1], tilt[4], tilt[7], tilt[2], tilt[5], tilt[8]]);
+  near([yaw], [Math.atan2(between[2] - between[6], between[0] + between[8]) * 180 / Math.PI]);
+  assert.ok(Math.abs(yaw - 90) < 3 && Math.abs(yaw - 90) > 1e-3, String(yaw));
 });

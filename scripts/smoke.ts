@@ -110,10 +110,10 @@ const SIM_WRIST_MS = SIM_AIM_MS + 9000;       // 模拟脚本：连上之后多�
 const SIM_WRIST_AIM_MS = SIM_WRIST_MS + 1000; // 模拟脚本：连上之后多久右手指上手腕时钟(毫秒)；这之前只有左手的射线打在它上面
 const SIM_WRIST_DOWN_MS = SIM_WRIST_MS + 3500;   // 模拟脚本：连上之后多久放下左手(毫秒)
 const SIM_END_MS = SIM_WRIST_MS + 5000;       // 模拟脚本：连上之后多久算跑完(毫秒)
-const SIM_EYE: Vec3 = [0, 1.6, 0];            // 模拟脚本里眼睛的位置(站立空间，米)；头朝 -Z 看
+const SIM_EYE: Vec3 = [0, 1.6, 0];            // 模拟脚本里眼睛的位置(面板空间，米)；头朝 -Z 看
 const SIM_LEFT_DEVICE = 1;                    // 模拟模式里左手手柄的设备序号
-const SIM_WRIST_AT: Vec3 = [-0.1, 1.45, -0.35];   // 左手抬到眼前时手腕时钟的位置(站立空间，米)
-const SIM_REST_AT: Vec3 = [-0.25, 1, -0.1];   // 左手放下时手腕时钟的位置(站立空间，米)；正面朝下
+const SIM_WRIST_AT: Vec3 = [-0.1, 1.45, -0.35];   // 左手抬到眼前时手腕时钟的位置(面板空间，米)
+const SIM_REST_AT: Vec3 = [-0.25, 1, -0.1];   // 左手放下时手腕时钟的位置(面板空间，米)；正面朝下
 const SIM_TIP_TILT = 70 * Math.PI / 180;      // 左手指尖的射线和手腕时钟的法线的夹角(弧度)：斜着从正面打在它的正中
 const SIM_TIP_REACH = 0.3;                    // 左手的指尖离手腕时钟的正中多远(米)
 const SIM_MOVE = 0.3;                         // 模拟脚本：抓住时钟往右挪多少(米)
@@ -476,7 +476,7 @@ export function simWheels(record: unknown, id: string): number[] {
   return events.flatMap(e => (e['kind'] === 'wheel' && typeof e['dy'] === 'number' ? [e['dy']] : []));
 }
 
-// 记录里一块面板的悬浮窗口比另一块偏右多少米(站立空间的 x)；有一块没有悬浮窗口时为 null
+// 记录里一块面板的悬浮窗口比另一块偏右多少米(面板空间的 x)；有一块没有悬浮窗口时为 null
 export function simOffset(record: unknown, id: string, from: string): number | null {
   const x = (panel: string): number | null => {
     const overlay = simPanel(record, panel)?.['overlay'];

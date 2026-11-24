@@ -35,6 +35,7 @@ export interface SessionDeps {
   stage: Stage;
   board: Board;
   hit: HitSettings;
+  follow: boolean;                 // 面板空间跟着游玩空间(见 api.ts 的 ConnectOptions)
   changed(): void;                 // 连接状态变了
   actionManifest: string;          // 动作清单(actions.json)的路径
   appManifest: string;             // SteamVR 应用清单的路径
@@ -51,7 +52,7 @@ interface Hand {
   dotShown: boolean;                 // 圆点正显示着
 }
 
-// 一只手这一帧在哪：tip 是指尖在站立空间里的姿态(取不到时为 null)，mount 是手柄的设备序号和姿态(没有设备、姿态无效时为 null)
+// 一只手这一帧在哪：tip 是指尖在面板空间里的姿态(取不到时为 null)，mount 是手柄的设备序号和姿态(没有设备、姿态无效时为 null)
 interface Located {
   tip: Mat34 | null;
   mount: Mounts['left'];
@@ -62,7 +63,7 @@ interface Actions { set: Handle; toggle: Handle; click: Handle; grab: Handle; qu
 // 原生的连接方式：openvr_api.dll 和 D3D11
 const NATIVE: VrBackend = {
   running: () => steamVrRunning(),
-  connect: () => OpenVR.connect(),
+  connect: options => OpenVR.connect(options),
   gpu: luid => new D3D(luid),
 };
 
@@ -130,7 +131,7 @@ export class Session {
   }
 
   private connect(): void {
-    const vr = this.backend.connect();
+    const vr = this.backend.connect({ follow: this.deps.follow, log: this.deps.log });
     this.vr = vr;
     this.gpu = this.backend.gpu(vr.outputLuid());
     try { vr.register(this.deps.appManifest, APP_KEY); } catch (e) { this.deps.log(`cannot register steamvr app: ${errorText(e)}`, 'warn'); }
@@ -222,7 +223,7 @@ export class Session {
     }
   }
 
-  // 一只手这一帧在站立空间里的姿态：手柄的和指尖的；没有设备、姿态无效时都为 null，取不到指尖时指尖为 null
+  // 一只手这一帧在面板空间里的姿态：手柄的和指尖的；没有设备、姿态无效时都为 null，取不到指尖时指尖为 null
   private locate(vr: Vr, h: Hand, pose: (i: number) => Pose, now: number): Located {
     const device = vr.roleIndex(h.role);
     const valid = device >= 1 && device < MAX_DEVICES;

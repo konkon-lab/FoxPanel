@@ -52,8 +52,8 @@ export interface FakeOverlay {
   visible: boolean;
   meters: number;       // 宽度(米)
   sort: number;         // 排序
-  pose: Mat34;          // 最近一次放它时给的矩阵：站立空间里的姿态，跟着设备时是相对那个设备的变换
-  device: number | null;   // 跟着哪个设备(设备序号)；null = 位置是站立空间里的
+  pose: Mat34;          // 最近一次放它时给的矩阵：面板空间里的姿态，跟着设备时是相对那个设备的变换
+  device: number | null;   // 跟着哪个设备(设备序号)；null = 位置是面板空间里的
   image: string;        // 贴的图片的路径，没贴过是空串
   texture: unknown;     // 贴的纹理，没贴过是 null
   destroyed: boolean;
@@ -135,7 +135,7 @@ export class FakeVr extends Recorder<Vr> implements Vr {
     return this.overlays.findLast(o => o.key === key);
   }
 
-  // 悬浮窗口这一刻在站立空间里的姿态：跟着设备的按那个设备这一刻的姿态算，设备的姿态无效时为 null
+  // 悬浮窗口这一刻在面板空间里的姿态：跟着设备的按那个设备这一刻的姿态算，设备的姿态无效时为 null
   where(o: FakeOverlay): Mat34 | null {
     if (o.device === null) return o.pose;
     const mat = this.stale.has(o.device) ? undefined : this.devices.get(o.device);

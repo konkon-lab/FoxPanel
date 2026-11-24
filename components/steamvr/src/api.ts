@@ -1,6 +1,8 @@
 // SteamVR 组件用到的两组原生能力的接口：Vr(悬浮窗口、姿态、输入、应用登记)和 Gpu(共享纹理复制到常驻纹理)。
 // 只列组件用到的方法。原生实现是 openvr.ts 的 OpenVR 和 d3d.ts 的 D3D，不碰原生库的实现在 fake.ts。
+// 面板空间：这里的姿态、位置、射线共用的坐标系，Y 朝上，单位米；原点和朝向由各个实现定(OpenVR 的见 openvr.ts)。
 
+import type { LogLevel } from '@konkon-lab/foxpanel-sdk';
 import type { Mat34, Vec3 } from './geometry.ts';
 
 // 悬浮窗口、动作、动作集、输入源的句柄(uint64；小的数是 number，大的是 bigint)
@@ -12,7 +14,7 @@ export interface Pose {
   mat: Mat34;       // 行主序 3×4
 }
 
-// 射线和悬浮窗口的交点：u 从左到右、v 从下到上(v 按边长等于面板宽度的正方形算)，point 是世界里的位置
+// 射线和悬浮窗口的交点：u 从左到右、v 从下到上(v 按边长等于面板宽度的正方形算)，point 是交点在面板空间里的位置
 export interface Hit {
   u: number;
   v: number;
@@ -37,7 +39,7 @@ export interface Vr {
   refreshRate(): number;
   // 一只手(ROLE_LEFT / ROLE_RIGHT)的设备序号；没有设备时是 1–63 以外的数
   roleIndex(role: number): number;
-  // 取一次全部设备的姿态(站立空间)，返回按设备序号读的函数；0 号是头显
+  // 取一次全部设备的姿态(面板空间)，返回按设备序号读的函数；0 号是头显
   poses(): (index: number) => Pose;
   // 取出所有待处理事件的类型
   events(): number[];
@@ -59,11 +61,11 @@ export interface Vr {
   setImage(h: Handle, file: string): number;
   // 贴一张 Gpu 的纹理
   setTexture(h: Handle, texture: unknown): void;
-  // 悬浮窗口在站立空间里的位置
+  // 悬浮窗口在面板空间里的位置
   place(h: Handle, mat: Mat34): void;
   // 悬浮窗口跟着一个设备：mat 是它相对设备 device(设备序号，0 号是头显)的变换，之后由 SteamVR 带着它走
   placeOn(h: Handle, device: number, mat: Mat34): void;
-  // 射线(起点 source、方向 dir，站立空间)和悬浮窗口求交；没打中时为 null
+  // 射线(起点 source、方向 dir，面板空间)和悬浮窗口求交；没打中时为 null
   intersect(h: Handle, source: readonly number[], dir: readonly number[]): Hit | null;
 
   // ---------- 输入 ----------
@@ -106,12 +108,20 @@ export interface Gpu {
   dispose(): void;
 }
 
+// 连接时给的选项
+export interface ConnectOptions {
+  // 面板空间跟着游玩空间：别的程序挪动游玩空间(调高视角、拖动、转向)时，面板空间留在真实房间里不动，
+  // 留在空间里的面板相对人的位置不变；为假时面板空间就是站立空间，面板留在游戏世界里
+  follow: boolean;
+  log(text: string, level?: LogLevel): void;
+}
+
 // 建一次连接用到的三样
 export interface VrBackend {
   // SteamVR 装了且正在运行
   running(): boolean;
   // 以悬浮窗口应用身份连接；连不上时抛出
-  connect(): Vr;
+  connect(options: ConnectOptions): Vr;
   // 在 luid 这块显卡上建设备(0 = 默认显卡)；建不出来时抛出
   gpu(luid: bigint): Gpu;
 }

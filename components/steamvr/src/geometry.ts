@@ -63,6 +63,43 @@ export function invert(m: Mat34): Mat34 {
   return r as Mat34;
 }
 
+// 变换作用在点上
+export function applyPoint(m: Mat34, p: readonly number[]): Vec3 {
+  const d = applyDir(m, p);
+  return [d[0] + m[3], d[1] + m[7], d[2] + m[11]];
+}
+
+// 变换作用在方向上：只转不移
+export function applyDir(m: Mat34, d: readonly number[]): Vec3 {
+  const row = (r: number): number => el(m, r * 4) * el(d, 0) + el(m, r * 4 + 1) * el(d, 1) + el(m, r * 4 + 2) * el(d, 2);
+  return [row(0), row(1), row(2)];
+}
+
+const RIGID_EPSILON = 1e-3;   // 刚体变换的旋转部分：各行的长度离 1、两行的点积离 0 不超过这么多
+
+// 是不是刚体变换：12 个有限的数，旋转部分的三行都是单位长、两两垂直、右手系(没有缩放和镜像)
+export function isRigid(m: readonly number[]): m is Mat34 {
+  if (m.length !== 12 || !m.every(Number.isFinite)) return false;
+  const rows: Vec3[] = [0, 4, 8].map(i => [el(m, i), el(m, i + 1), el(m, i + 2)]);
+  const [x, y, z] = rows;
+  if (!x || !y || !z) return false;
+  if (rows.some(r => Math.abs(length(r) - 1) > RIGID_EPSILON)) return false;
+  if (Math.abs(dot(x, y)) > RIGID_EPSILON || Math.abs(dot(y, z)) > RIGID_EPSILON || Math.abs(dot(z, x)) > RIGID_EPSILON) return false;
+  return dot(cross(x, y), z) > 0;
+}
+
+// 两个 Y 朝上的坐标系之间的变换(只有绕 Y 轴的转动和平移)：同一个姿态在一个坐标系里是 from、在另一个里是 to，
+// 给出把前一个坐标系里的东西换到后一个里的变换。转角取 to·from⁻¹ 里绕 Y 轴的那一份，平移让 from 的位置正好落在 to 的位置上
+export function levelBetween(to: Mat34, from: Mat34): Mat34 {
+  const m = mul(to, invert(from));
+  const yaw = Math.atan2(m[2] - m[8], m[0] + m[10]);
+  const c = Math.cos(yaw);
+  const s = Math.sin(yaw);
+  const turn: Mat34 = [c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0];
+  const p = sub(position(to), applyDir(turn, position(from)));
+  return [c, 0, s, p[0], 0, 1, 0, p[1], -s, 0, c, p[2]];
+}
+
 export const position = (m: Mat34): Vec3 => [m[3], m[7], m[11]];
 export const axis = (m: Mat34, c: 0 | 1 | 2): Vec3 => [el(m, c), el(m, 4 + c), el(m, 8 + c)];
 // 设备的前方是 -Z
@@ -85,7 +122,7 @@ export function facing(pos: Vec3, target: Vec3): Mat34 {
 // pose 相对附着对象的变换：anchor 是附着对象的姿态，留在空间里的面板是 IDENTITY
 export const relativeTo = (pose: Mat34, anchor: Mat34): Mat34 => mul(invert(anchor), pose);
 
-// 相对附着对象的变换 → 站立空间里的姿态
+// 相对附着对象的变换 → 面板空间里的姿态
 export const anchorPose = (anchor: Mat34, relative: Mat34): Mat34 => mul(anchor, relative);
 
 // 附着的面板还没摆过时相对设备的变换(设备自己的坐标)。
@@ -100,7 +137,7 @@ export function anchorDefault(anchor: Exclude<PanelAnchor, 'world'>): Mat34 {
 }
 
 // 抬手才显示的面板这一刻显示不显示：面板正面的法线和面板到眼睛的方向夹角小于 GLANCE_ENTER 时显示，大于 GLANCE_LEAVE 时隐藏，
-// 两者之间照上一次的结果 was。panel 是面板在站立空间里的姿态；眼睛就在面板的原点上时照 was
+// 两者之间照上一次的结果 was。panel 是面板在面板空间里的姿态；眼睛就在面板的原点上时照 was
 export function glanceShown(head: Mat34, panel: Mat34, was: boolean): boolean {
   const to = sub(position(head), position(panel));
   if (length(to) <= UNIT_EPSILON) return was;

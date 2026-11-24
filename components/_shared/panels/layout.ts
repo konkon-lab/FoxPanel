@@ -94,7 +94,7 @@ export interface PanelRecord {
   meters: number | null;  // 宽度(米)；null = 清单的默认宽度
   anchor: PanelAnchor;    // 附着在哪
   glance: boolean;        // 抬手才显示：附着在手上时只在正面朝向眼睛时显示；附着在别处时不起作用
-  // anchor 是 world 时是站立空间里的姿态，否则是相对附着的设备的变换；
+  // anchor 是 world 时是显示方的面板空间里的姿态，否则是相对附着的设备的变换；
   // null = 还没摆过：world 的显示时按清单的 spawn 放到面前，附着的放在那个设备的默认位置
   pose: Pose | null;
 }
@@ -397,7 +397,7 @@ export function reset(layout: Layout, list: readonly PanelInfo[], id: string): L
   return withRecord(layout, id, { ...record, pose: null, meters: null, locked, anchor: info.anchor, glance: info.glance });
 }
 
-// 记下一块面板摆在哪(显示方在摆好、松手时调)：留在空间里的记站立空间里的姿态，附着的记相对附着的设备的变换；没有记录的面板不变
+// 记下一块面板摆在哪(显示方在摆好、松手时调)：留在空间里的记显示方的面板空间里的姿态，附着的记相对附着的设备的变换；没有记录的面板不变
 export function place(layout: Layout, id: string, pose: Pose): Layout {
   const record = recordOf(layout, id);
   if (!record || (record.pose && record.pose.every((v, i) => v === pose[i]))) return layout;

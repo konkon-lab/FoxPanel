@@ -539,7 +539,7 @@ test('没有页面时不收帧，纹理的像素是 0；页面后到就收它的
 
 // ---------- 跟着设备、待命 ----------
 
-test('假 Vr：跟着设备的悬浮窗口记着设备序号和相对变换；站立空间里的姿态按那个设备这一刻的姿态算，设备的姿态无效时没有', () => {
+test('假 Vr：跟着设备的悬浮窗口记着设备序号和相对变换；面板空间里的姿态按那个设备这一刻的姿态算，设备的姿态无效时没有', () => {
   const vr = new FakeVr();
   const h = vr.overlay('a:b', 'Name');
   const o = vr.find('a:b');
@@ -554,12 +554,12 @@ test('假 Vr：跟着设备的悬浮窗口记着设备序号和相对变换；�
   assert.deepEqual(vr.where(o), [-1, 0, 0, 1, 0, 1, 0, 1.1, 0, 0, -1, 1]);
   vr.losePose(4);
   assert.equal(vr.where(o), null);
-  vr.place(h, at(1, 2, 3));                                                      // 放回站立空间：不跟设备了
+  vr.place(h, at(1, 2, 3));                                                      // 放回面板空间：不跟设备了
   assert.deepEqual([o.device, vr.where(o)], [null, at(1, 2, 3)]);
   assert.deepEqual(vr.args('placeOn'), [[h, 4, at(0, 0.1, 0)]]);
 });
 
-test('跟着设备(交给 SteamVR)：设备或相对变换变了才告诉 SteamVR，站立空间里的姿态每次都记；放回绝对位置、再跟设备各说一次', t => {
+test('跟着设备(交给 SteamVR)：设备或相对变换变了才告诉 SteamVR，面板空间里的姿态每次都记；放回绝对位置、再跟设备各说一次', t => {
   const { calls, vr, surface, overlay } = surfaceRig(t, false);
   const from = calls.length;
   const names = (): string[] => calls.slice(from).map(c => c.name);
@@ -572,7 +572,7 @@ test('跟着设备(交给 SteamVR)：设备或相对变换变了才告诉 SteamV
   surface.setRiding(2, at(0, 0.2, 0), at(0.5, 1.5, -0.2), true);      // 换了设备
   assert.deepEqual(names(), ['placeOn', 'placeOn', 'placeOn']);
   assert.deepEqual(vr.args('placeOn').slice(1), [[overlay.handle, 1, at(0, 0.2, 0)], [overlay.handle, 2, at(0, 0.2, 0)]]);
-  // 放回站立空间里：就算和记着的姿态一样也要说(SteamVR 那边还跟着设备)
+  // 放回面板空间里：就算和记着的姿态一样也要说(SteamVR 那边还跟着设备)
   surface.setPose(at(0.5, 1.5, -0.2));
   surface.setPose(at(0.5, 1.5, -0.2));
   assert.deepEqual([names().slice(3), overlay.device, overlay.pose], [['place'], null, at(0.5, 1.5, -0.2)]);
