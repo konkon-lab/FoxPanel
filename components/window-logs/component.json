@@ -15,7 +15,7 @@
     "en": "Runtime logs of the host and components",
     "ko": "호스트와 컴포넌트 실행 로그"
   },
-  "version": "1.5.10",
+  "version": "1.5.11",
   "author": "yanuo",
   "license": "MIT",
   "page": "page.js",
@@ -57,11 +57,11 @@
             "ko": "기록 수준"
           },
           "hint": {
-            "zh-Hans": "输出日志的最低等级。",
-            "zh-Hant": "輸出日誌的最低等級。",
-            "ja": "出力するログの最低レベル。",
-            "en": "Lowest level of logs to output.",
-            "ko": "출력할 로그의 최저 수준."
+            "zh-Hans": "输出日志的最低等级",
+            "zh-Hant": "輸出日誌的最低等級",
+            "ja": "出力するログの最低レベル",
+            "en": "Lowest level of logs to output",
+            "ko": "출력할 로그의 최저 수준"
           },
           "default": "info"
         }
@@ -77,11 +77,11 @@
             "ko": "로그 폴더"
           },
           "hint": {
-            "zh-Hans": "存放输出日志的本地目录。",
-            "zh-Hant": "存放輸出日誌的本機目錄。",
-            "ja": "ログを保存するローカルフォルダー。",
-            "en": "Local folder for log output.",
-            "ko": "로그를 저장할 로컬 폴더."
+            "zh-Hans": "存放输出日志的本地目录",
+            "zh-Hant": "存放輸出日誌的本機目錄",
+            "ja": "ログを保存するローカルフォルダー",
+            "en": "Local folder for log output",
+            "ko": "로그를 저장할 로컬 폴더"
           },
           "role": "directory",
           "default": "logs"
@@ -98,11 +98,11 @@
             "ko": "보관 일수"
           },
           "hint": {
-            "zh-Hans": "日志文件保存的最大天数。",
-            "zh-Hant": "日誌檔案保存的最大天數。",
-            "ja": "ログファイルを保存する最大日数。",
-            "en": "Maximum days to keep log files.",
-            "ko": "로그 파일을 보관할 최대 일수."
+            "zh-Hans": "日志文件的最长保存天数",
+            "zh-Hant": "日誌檔案的最長保存天數",
+            "ja": "ログファイルを保存する最大日数",
+            "en": "Maximum days to keep log files",
+            "ko": "로그 파일을 보관할 최대 일수"
           },
           "default": 14,
           "min": 1,
@@ -121,11 +121,11 @@
             "ko": "파일 크기"
           },
           "hint": {
-            "zh-Hans": "单个日志文件的最大大小(KB)。",
-            "zh-Hant": "單個日誌檔案的最大大小(KB)。",
-            "ja": "ログファイル 1 つの最大サイズ(KB)。",
-            "en": "Maximum size of one log file (KB).",
-            "ko": "로그 파일 하나의 최대 크기(KB)."
+            "zh-Hans": "单个日志文件的大小上限(KB)",
+            "zh-Hant": "單個日誌檔案的大小上限(KB)",
+            "ja": "ログファイル 1 つの最大サイズ(KB)",
+            "en": "Maximum size of one log file (KB)",
+            "ko": "로그 파일 하나의 최대 크기(KB)"
           },
           "default": 10240,
           "min": 1,

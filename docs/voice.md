@@ -53,7 +53,7 @@
 |---|---|---|---|
 | `model` | 下拉，可直接输入 | `cosyvoice-v3-flash` | 选项：`cosyvoice-v3-flash`、`cosyvoice-v3-plus`、`cosyvoice-v3.5-flash`、`cosyvoice-v3.5-plus` |
 | `voice` | 下拉，可直接输入 | `longhua_v3` | 系统音色 20 个(名字 · 描述)，后面接自定义音色 |
-| `customVoices` | 多行表格 | 空 | 每行 `name`(名字)、`id`(音色 ID)、`model`(模型，可空)；填好的列进音色下拉 |
+| `customVoices` | 多行表格 | 空 | 每行 `name`(名称)、`id`(音色 ID)、`model`(模型，可选)；填好的列进音色下拉 |
 | `outputDevice` | 音频输出设备 | 系统默认 | 播放到哪个设备 |
 | `monitor` | 开关 | 开 | 本地监听：同时在监听设备上播放一份 |
 | `monitorDevice` | 音频输出设备 | 系统默认 | 监听设备 |
@@ -83,7 +83,7 @@
 | `language` | 下拉 | `zh` | 识别语言：`zh` 中文、`en` 英语、`ja` 日语 |
 | `micDevice` | 音频输入设备 | 系统默认 | 麦克风 |
 | `followMute` | 开关 | 开 | 跟随 VRChat 静音键，见下 |
-| `sendEach` | 开关 | 关 | 说完一句直接发送 |
+| `sendEach` | 开关 | 关 | 每句结束后自动发送 |
 
 ### 音频格式
 

@@ -15,7 +15,7 @@
     "en": "Alibaba Cloud Bailian Fun-ASR real-time recognition",
     "ko": "Alibaba Cloud Bailian Fun-ASR 실시간 인식"
   },
-  "version": "1.6.5",
+  "version": "1.6.6",
   "author": "yanuo",
   "license": "MIT",
   "main": "main.js",
@@ -118,8 +118,8 @@
         "type": "boolean",
         "meta": {
           "description": {
-            "zh-Hans": "说完一句直接发送",
-            "zh-Hant": "說完一句直接傳送",
+            "zh-Hans": "每句结束后自动发送",
+            "zh-Hant": "每句結束後自動傳送",
             "ja": "一文ごとに送信",
             "en": "Send each sentence",
             "ko": "문장마다 바로 전송"

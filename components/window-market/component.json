@@ -15,7 +15,7 @@
     "en": "Search, install and update components from npm",
     "ko": "npm에서 컴포넌트를 검색·설치·업데이트"
   },
-  "version": "1.0.9",
+  "version": "1.0.10",
   "author": "yanuo",
   "license": "MIT",
   "page": "page.js",
@@ -61,8 +61,8 @@
             "ko": "컴포넌트 출처"
           },
           "hint": {
-            "zh-Hans": "npm 仓库下载组件",
-            "zh-Hant": "npm 倉庫下載元件",
+            "zh-Hans": "下载组件所用的 npm 仓库",
+            "zh-Hant": "下載元件所用的 npm 套件庫",
             "ja": "コンポーネントをダウンロードする npm レジストリ",
             "en": "npm registry to download components from",
             "ko": "컴포넌트를 내려받을 npm 저장소"
@@ -82,10 +82,10 @@
             "ko": "설치 스크립트 허용"
           },
           "hint": {
-            "zh-Hans": "装组件时执行包里的 postinstall 等脚本；关着时要编译原生模块的组件装不上",
-            "zh-Hant": "裝元件時執行套件裡的 postinstall 等指令碼；關著時要編譯原生模組的元件裝不上",
-            "ja": "インストール時にパッケージの postinstall などを実行します。オフだとネイティブモジュールのビルドが必要なコンポーネントは入りません",
-            "en": "Run postinstall and other package scripts when installing; when off, components that compile native modules cannot be installed",
+            "zh-Hans": "安装组件时执行包内的 postinstall 等脚本；关闭后，需要编译原生模块的组件无法安装",
+            "zh-Hant": "安裝元件時執行套件內的 postinstall 等指令碼；關閉後，需要編譯原生模組的元件無法安裝",
+            "ja": "インストール時にパッケージの postinstall などのスクリプトを実行します。オフにすると、ネイティブモジュールのビルドが必要なコンポーネントはインストールできません",
+            "en": "Runs postinstall and other package scripts when installing. When off, components that compile native modules cannot be installed",
             "ko": "설치할 때 패키지의 postinstall 등 스크립트를 실행합니다. 끄면 네이티브 모듈을 빌드해야 하는 컴포넌트는 설치되지 않습니다"
           },
           "default": false

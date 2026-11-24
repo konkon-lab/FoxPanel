@@ -3,7 +3,7 @@
   "kind": "output",
   "name": "Discord",
   "description": {
-    "zh-Hans": "发送时把文字发到 Discord 频道(webhook)",
+    "zh-Hans": "发送时通过 Webhook 将文字发送到 Discord 频道",
     "en": "Posts sent text to a Discord channel via webhook"
   },
   "version": "1.1.0",
@@ -52,7 +52,7 @@
             "value": "text",
             "meta": {
               "description": {
-                "zh-Hans": "只发原文",
+                "zh-Hans": "仅原文",
                 "en": "Original only"
               }
             }
@@ -62,7 +62,7 @@
             "value": "spoken",
             "meta": {
               "description": {
-                "zh-Hans": "只发译文",
+                "zh-Hans": "仅译文",
                 "en": "Translation only"
               }
             }
@@ -70,8 +70,8 @@
         ],
         "meta": {
           "description": {
-            "zh-Hans": "发什么",
-            "en": "Send"
+            "zh-Hans": "发送内容",
+            "en": "Content to send"
           },
           "default": "both"
         }

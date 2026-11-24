@@ -9,8 +9,8 @@
     "ko": "손목 시계"
   },
   "description": {
-    "zh-Hans": "附着在左手手柄上的小时钟，抬手看表时才显示",
-    "en": "A small clock on the left controller, shown when you raise your wrist to look at it"
+    "zh-Hans": "附着在左手手柄上的小型时钟，仅在抬手查看时显示",
+    "en": "A small clock on the left controller, shown only when you raise your wrist to look at it"
   },
   "version": "1.0.0",
   "author": "yanuo",

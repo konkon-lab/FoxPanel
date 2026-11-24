@@ -9,13 +9,13 @@
     "ko": "설정"
   },
   "description": {
-    "zh-Hans": "设置页：各组件登记的设置分节显示，可以搜索；提供界面语言、关闭窗口时、以管理员身份运行、外观、更新等应用设置",
-    "zh-Hant": "設定頁：各元件登記的設定分節顯示，可以搜尋；提供介面語言、關閉視窗時、以系統管理員身分執行、外觀、更新等應用程式設定",
-    "ja": "設定ページ：各コンポーネントが登録した設定を節ごとに表示、検索できる。表示言語、ウィンドウを閉じるとき、管理者として実行、外観、アップデートなどのアプリ設定を提供",
+    "zh-Hans": "设置页：分节显示各组件登记的设置，支持搜索；提供界面语言、关闭窗口时、以管理员身份运行、外观、更新等应用设置",
+    "zh-Hant": "設定頁：分節顯示各元件登記的設定，支援搜尋；提供介面語言、關閉視窗時、以系統管理員身分執行、外觀、更新等應用程式設定",
+    "ja": "設定ページ：各コンポーネントが登録した設定を節ごとに表示し、検索できます。表示言語、ウィンドウを閉じるとき、管理者として実行、外観、更新などのアプリ設定を提供します",
     "en": "Settings page: shows the settings each component registers, by section, with search; provides app settings such as language, on window close, run as administrator, appearance and updates",
     "ko": "설정 페이지: 각 컴포넌트가 등록한 설정을 섹션별로 표시하고 검색; 표시 언어, 창을 닫을 때, 관리자 권한 실행, 외관, 업데이트 등 앱 설정 제공"
   },
-  "version": "1.1.8",
+  "version": "1.1.9",
   "author": "yanuo",
   "license": "MIT",
   "provides": [
@@ -35,7 +35,7 @@
               "description": {
                 "zh-Hans": "默认(跟随系统)",
                 "zh-Hant": "預設(跟隨系統)",
-                "ja": "既定（システムに従う）",
+                "ja": "既定(システムに従う)",
                 "en": "Default (system)",
                 "ko": "기본값(시스템 설정)"
               }
@@ -147,7 +147,7 @@
             "ko": "창을 닫을 때"
           },
           "hint": {
-            "zh-Hans": "点右上角关闭按钮时的操作",
+            "zh-Hans": "点击右上角关闭按钮时的操作",
             "zh-Hant": "按下右上角關閉按鈕時的動作",
             "ja": "右上の閉じるボタンを押したときの動作",
             "en": "Action when the close button at the top right is clicked",
@@ -167,7 +167,7 @@
             "ko": "관리자 권한으로 실행"
           },
           "hint": {
-            "zh-Hans": "每次启动都请求管理员权限并显示 UAC 确认，下次启动生效",
+            "zh-Hans": "每次启动均请求管理员权限并显示 UAC 确认，下次启动时生效",
             "zh-Hant": "每次啟動皆要求系統管理員權限並顯示 UAC 確認，下次啟動時生效",
             "ja": "起動のたびに管理者権限を要求し、UAC の確認を表示します。次回起動時に反映されます",
             "en": "Requests administrator rights with a UAC prompt on every launch. Takes effect on next launch",
@@ -251,7 +251,7 @@
           "hint": {
             "zh-Hans": "主窗口文字和控件的大小，50%–150%",
             "zh-Hant": "主視窗文字與控制項的大小，50%–150%",
-            "ja": "メインウィンドウの文字とコントロールのサイズ（50%–150%）",
+            "ja": "メインウィンドウの文字とコントロールのサイズ(50%–150%)",
             "en": "Size of text and controls in the main window, 50%–150%",
             "ko": "메인 창의 글자와 컨트롤 크기, 50%–150%"
           },
@@ -276,7 +276,7 @@
             "zh-Hans": "启动时检查新版本",
             "zh-Hant": "啟動時檢查新版本",
             "ja": "起動時に新しいバージョンを確認します",
-            "en": "Check for new versions at startup",
+            "en": "Checks for new versions at startup",
             "ko": "시작할 때 새 버전을 확인합니다"
           },
           "default": true
@@ -296,7 +296,7 @@
             "zh-Hans": "发现新版本时在后台下载，完成后询问是否安装",
             "zh-Hant": "發現新版本時於背景下載，完成後詢問是否安裝",
             "ja": "新しいバージョンが見つかるとバックグラウンドでダウンロードし、完了後にインストールするか確認します",
-            "en": "Download new versions in the background and ask to install when complete",
+            "en": "Downloads new versions in the background and asks to install when complete",
             "ko": "새 버전이 있으면 백그라운드에서 다운로드하고 완료 후 설치 여부를 묻습니다"
           },
           "default": true
@@ -313,10 +313,10 @@
             "ko": "베타 버전 받기"
           },
           "hint": {
-            "zh-Hans": "也检查测试版更新，可能不稳定",
-            "zh-Hant": "一併檢查測試版更新，可能不穩定",
+            "zh-Hans": "同时检查测试版更新，测试版可能不稳定",
+            "zh-Hant": "一併檢查測試版更新，測試版可能不穩定",
             "ja": "ベータ版の更新も確認します。動作が不安定な場合があります",
-            "en": "Also check for beta updates, which may be unstable",
+            "en": "Also checks for beta updates, which may be unstable",
             "ko": "베타 버전 업데이트도 확인합니다. 불안정할 수 있습니다"
           },
           "default": false

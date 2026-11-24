@@ -9,13 +9,13 @@
     "ko": "컴포넌트 관리"
   },
   "description": {
-    "zh-Hans": "分组、开关、设置组件",
-    "zh-Hant": "分組、開關、設定元件",
+    "zh-Hans": "组件的分组、启用停用与设置",
+    "zh-Hant": "元件的分組、啟用停用與設定",
     "ja": "コンポーネントのグループ・オンオフ・設定",
     "en": "Group, toggle and configure components",
-    "ko": "컴포넌트 그룹·켜기·설정"
+    "ko": "컴포넌트 그룹·켜고 끄기·설정"
   },
-  "version": "1.9.16",
+  "version": "1.9.17",
   "author": "yanuo",
   "license": "MIT",
   "provides": [

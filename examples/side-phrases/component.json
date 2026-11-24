@@ -9,7 +9,7 @@
     "ko": "자주 쓰는 말"
   },
   "description": {
-    "zh-Hans": "点一下插入一句常用语；在组件设置里编辑",
+    "zh-Hans": "点击即可插入一条常用语；可在组件设置中编辑",
     "en": "Tap to insert a saved phrase; edit them in the component settings"
   },
   "version": "1.1.1",

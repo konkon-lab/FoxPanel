@@ -9,8 +9,8 @@
     "ko": "SteamVR"
   },
   "description": {
-    "zh-Hans": "在 SteamVR 里把面板显示成悬浮窗口：手柄指着点击、握住移动、双手缩放，手柄键收起和恢复",
-    "zh-Hant": "在 SteamVR 裡把面板顯示成懸浮視窗：手把指著點擊、握住移動、雙手縮放，手把鍵收起和恢復",
+    "zh-Hans": "在 SteamVR 中将面板显示为悬浮窗口：手柄指向并点击、握住移动、双手缩放，手柄按键收起和恢复",
+    "zh-Hant": "在 SteamVR 中將面板顯示為懸浮視窗：手把指向並點擊、握住移動、雙手縮放，手把按鍵收起和恢復",
     "ja": "SteamVR でパネルをオーバーレイとして表示：コントローラーで指してクリック、握って移動、両手で拡大縮小、ボタンで収納と復元",
     "en": "Shows panels as overlays in SteamVR: point and click with controllers, grip to move, both hands to scale, a button to stow and restore",
     "ko": "SteamVR에서 패널을 오버레이로 표시: 컨트롤러로 가리켜 클릭, 잡아서 이동, 양손으로 크기 조절, 버튼으로 넣기와 복원"
@@ -40,10 +40,10 @@
                 "ko": "빠른 패널 1"
               },
               "hint": {
-                "zh-Hans": "写那块面板的组件 id，留空就是不用这个键",
-                "zh-Hant": "填那塊面板的元件 id，留空就是不用這個鍵",
+                "zh-Hans": "填写面板所属组件的 ID；留空则不使用此按键",
+                "zh-Hant": "填寫面板所屬元件的 ID；留空則不使用此按鍵",
                 "ja": "そのパネルのコンポーネント ID を入力します。空欄ならこのボタンは使いません",
-                "en": "Enter the component id of that panel. Leave empty to leave this button unused",
+                "en": "Enter the component ID of that panel. Leave empty to leave this button unused",
                 "ko": "해당 패널의 컴포넌트 ID를 입력합니다. 비워 두면 이 버튼을 쓰지 않습니다"
               },
               "default": "yanuo.shell-classic"
@@ -60,10 +60,10 @@
                 "ko": "빠른 패널 2"
               },
               "hint": {
-                "zh-Hans": "写那块面板的组件 id，留空就是不用这个键",
-                "zh-Hant": "填那塊面板的元件 id，留空就是不用這個鍵",
+                "zh-Hans": "填写面板所属组件的 ID；留空则不使用此按键",
+                "zh-Hant": "填寫面板所屬元件的 ID；留空則不使用此按鍵",
                 "ja": "そのパネルのコンポーネント ID を入力します。空欄ならこのボタンは使いません",
-                "en": "Enter the component id of that panel. Leave empty to leave this button unused",
+                "en": "Enter the component ID of that panel. Leave empty to leave this button unused",
                 "ko": "해당 패널의 컴포넌트 ID를 입력합니다. 비워 두면 이 버튼을 쓰지 않습니다"
               },
               "default": ""
@@ -73,15 +73,15 @@
             "type": "number",
             "meta": {
               "description": {
-                "zh-Hans": "同时显示的面板数",
-                "zh-Hant": "同時顯示的面板數",
+                "zh-Hans": "同时显示的面板数量",
+                "zh-Hant": "同時顯示的面板數量",
                 "ja": "同時に表示するパネル数",
                 "en": "Panels shown at once",
                 "ko": "동시에 표시할 패널 수"
               },
               "hint": {
-                "zh-Hans": "打开着的面板多过这个数时，只显示组件顺序靠前的",
-                "zh-Hant": "開啟著的面板多過這個數時，只顯示元件順序靠前的",
+                "zh-Hans": "打开的面板超过此数量时，仅显示组件顺序靠前的面板",
+                "zh-Hant": "開啟的面板超過此數量時，僅顯示元件順序靠前的面板",
                 "ja": "開いているパネルがこの数を超えると、コンポーネントの順序が前のものだけ表示します",
                 "en": "When more panels are open than this, only the ones earlier in the component order are shown",
                 "ko": "열려 있는 패널이 이 수보다 많으면 컴포넌트 순서가 앞선 것만 표시합니다"
@@ -100,8 +100,8 @@
                 "value": "never",
                 "meta": {
                   "description": {
-                    "zh-Hans": "不动",
-                    "zh-Hant": "不動",
+                    "zh-Hans": "保持原位",
+                    "zh-Hant": "保持原位",
                     "ja": "動かさない",
                     "en": "Leave in place",
                     "ko": "그대로 두기"
@@ -113,8 +113,8 @@
                 "value": "away",
                 "meta": {
                   "description": {
-                    "zh-Hans": "只拉回不在面前的",
-                    "zh-Hant": "只拉回不在面前的",
+                    "zh-Hans": "仅重置不在面前的面板",
+                    "zh-Hant": "僅重置不在面前的面板",
                     "ja": "手前にないものだけ戻す",
                     "en": "Bring back if out of reach",
                     "ko": "앞에 없는 것만 가져오기"
@@ -126,8 +126,8 @@
                 "value": "always",
                 "meta": {
                   "description": {
-                    "zh-Hans": "每次重排",
-                    "zh-Hant": "每次重排",
+                    "zh-Hans": "每次重新放置",
+                    "zh-Hant": "每次重新放置",
                     "ja": "毎回並べ直す",
                     "en": "Rearrange every time",
                     "ko": "매번 다시 배치"
@@ -137,15 +137,15 @@
             ],
             "meta": {
               "description": {
-                "zh-Hans": "显示面板时的摆放",
-                "zh-Hant": "顯示面板時的擺放",
+                "zh-Hans": "面板显示时的位置",
+                "zh-Hant": "面板顯示時的位置",
                 "ja": "パネル表示時の配置",
                 "en": "Placement when a panel appears",
                 "ko": "패널을 표시할 때의 배치"
               },
               "hint": {
-                "zh-Hans": "面板重新显示出来时放在哪：留在上次的位置，或者放回面前",
-                "zh-Hant": "面板重新顯示出來時放在哪：留在上次的位置，或者放回面前",
+                "zh-Hans": "面板重新显示时的位置：保持上次的位置，或重新放置到面前",
+                "zh-Hant": "面板重新顯示時的位置：保持上次的位置，或重新放置到面前",
                 "ja": "パネルを再表示するときの位置：前回の位置のままにするか、手前に戻します",
                 "en": "Where a panel goes when it is shown again: its last position, or back in front of you",
                 "ko": "패널을 다시 표시할 때의 위치: 마지막 위치에 두거나 앞으로 가져옵니다"
@@ -192,15 +192,15 @@
             "type": "boolean",
             "meta": {
               "description": {
-                "zh-Hans": "挡住游戏按键",
-                "zh-Hant": "擋住遊戲按鍵",
+                "zh-Hans": "屏蔽游戏输入",
+                "zh-Hant": "阻擋遊戲輸入",
                 "ja": "ゲームへの入力を遮る",
                 "en": "Block game input",
                 "ko": "게임 입력 막기"
               },
               "hint": {
-                "zh-Hans": "指着或抓着面板时，手柄按键不传给游戏",
-                "zh-Hant": "指著或抓著面板時，手把按鍵不傳給遊戲",
+                "zh-Hans": "指向或抓取面板时，手柄按键不传递给游戏",
+                "zh-Hant": "指向或抓取面板時，手把按鍵不傳遞給遊戲",
                 "ja": "パネルを指している、または掴んでいる間は、コントローラーの入力をゲームに渡しません",
                 "en": "While pointing at or holding a panel, controller buttons are not passed to the game",
                 "ko": "패널을 가리키거나 잡고 있는 동안 컨트롤러 입력을 게임에 전달하지 않습니다"
@@ -260,8 +260,8 @@
                 "ko": "잡기 지연"
               },
               "hint": {
-                "zh-Hans": "握把按住这么久面板才跟手，免得握东西时把面板带走",
-                "zh-Hant": "握把按住這麼久面板才跟手，免得握東西時把面板帶走",
+                "zh-Hans": "按住握把达到此时长后，面板才跟随手柄移动，避免抓握其他物体时误移面板",
+                "zh-Hant": "按住握把達到此時長後，面板才跟隨手把移動，避免抓握其他物體時誤移面板",
                 "ja": "グリップをこの時間押し続けるとパネルが手に付いてきます。物を掴んだときにパネルが動くのを防ぎます",
                 "en": "Hold the grip this long before the panel follows your hand, so gripping things does not drag panels away",
                 "ko": "그립을 이만큼 누르고 있어야 패널이 손을 따라옵니다. 물건을 잡을 때 패널이 딸려 가지 않게 합니다"
@@ -281,8 +281,8 @@
                 "ko": "양손 크기 조절"
               },
               "hint": {
-                "zh-Hans": "两只手抓住同一块面板，拉开或合拢来改大小",
-                "zh-Hant": "兩隻手抓住同一塊面板，拉開或合攏來改大小",
+                "zh-Hans": "双手抓取同一面板后，拉开或合拢以调整大小",
+                "zh-Hant": "雙手抓取同一面板後，拉開或合攏以調整大小",
                 "ja": "同じパネルを両手で掴み、広げたり狭めたりして大きさを変えます",
                 "en": "Grab the same panel with both hands and pull apart or push together to resize it",
                 "ko": "같은 패널을 양손으로 잡고 벌리거나 모아서 크기를 바꿉니다"
@@ -294,15 +294,15 @@
             "type": "boolean",
             "meta": {
               "description": {
-                "zh-Hans": "松手时摆正",
-                "zh-Hant": "放手時擺正",
+                "zh-Hans": "松手时自动摆正",
+                "zh-Hant": "放手時自動擺正",
                 "ja": "離したとき傾きを直す",
                 "en": "Straighten on release",
                 "ko": "놓을 때 바로 세우기"
               },
               "hint": {
-                "zh-Hans": "松手时面板只歪了一点就摆正",
-                "zh-Hant": "放手時面板只歪了一點就擺正",
+                "zh-Hans": "松手时面板仅有轻微倾斜的，自动摆正",
+                "zh-Hant": "放手時面板僅有輕微傾斜的，自動擺正",
                 "ja": "離したときパネルの傾きがわずかなら、まっすぐに直します",
                 "en": "A panel released only slightly tilted is straightened",
                 "ko": "놓을 때 패널이 조금만 기울어 있으면 바로 세웁니다"
@@ -316,9 +316,9 @@
         "type": "object",
         "meta": {
           "description": {
-            "zh-Hans": "排查",
-            "zh-Hant": "排查",
-            "ja": "調査用",
+            "zh-Hans": "故障排查",
+            "zh-Hant": "疑難排解",
+            "ja": "トラブルシューティング",
             "en": "Troubleshooting",
             "ko": "문제 해결"
           }
@@ -332,8 +332,8 @@
                 "value": "js",
                 "meta": {
                   "description": {
-                    "zh-Hans": "自己算",
-                    "zh-Hant": "自己算",
+                    "zh-Hans": "内置计算",
+                    "zh-Hant": "內建計算",
                     "ja": "内部で計算",
                     "en": "Built in",
                     "ko": "직접 계산"
@@ -345,8 +345,8 @@
                 "value": "native",
                 "meta": {
                   "description": {
-                    "zh-Hans": "SteamVR 算",
-                    "zh-Hant": "SteamVR 算",
+                    "zh-Hans": "SteamVR 计算",
+                    "zh-Hant": "SteamVR 計算",
                     "ja": "SteamVR で計算",
                     "en": "SteamVR",
                     "ko": "SteamVR 계산"
@@ -356,15 +356,15 @@
             ],
             "meta": {
               "description": {
-                "zh-Hans": "指针落点的算法",
-                "zh-Hant": "指標落點的演算法",
+                "zh-Hans": "指针落点算法",
+                "zh-Hant": "指標落點演算法",
                 "ja": "ポインター位置の計算",
                 "en": "Pointer hit test",
                 "ko": "포인터 위치 계산"
               },
               "hint": {
-                "zh-Hans": "指针落点不对时换成 SteamVR 算试试；竖长的面板用 SteamVR 算时上下两端点不到",
-                "zh-Hant": "指標落點不對時換成 SteamVR 算試試；豎長的面板用 SteamVR 算時上下兩端點不到",
+                "zh-Hans": "指针落点不准确时可改用 SteamVR 计算；使用 SteamVR 计算时，竖长面板的上下两端无法点击",
+                "zh-Hant": "指標落點不準確時可改用 SteamVR 計算；使用 SteamVR 計算時，豎長面板的上下兩端無法點擊",
                 "ja": "ポインターの位置がずれるときは SteamVR での計算を試してください。縦長のパネルは SteamVR で計算すると上下の端が押せません",
                 "en": "Try SteamVR if the pointer lands in the wrong place. With SteamVR, the top and bottom of tall panels cannot be reached",
                 "ko": "포인터 위치가 어긋나면 SteamVR 계산을 써 보세요. 세로로 긴 패널은 SteamVR 계산에서 위아래 끝을 누를 수 없습니다"
@@ -384,8 +384,8 @@
                 "ko": "포인터 위치 대조"
               },
               "hint": {
-                "zh-Hans": "两种算法各算一次，落点差 2 像素以上时在运行日志里记一行",
-                "zh-Hant": "兩種演算法各算一次，落點差 2 像素以上時在執行記錄裡記一行",
+                "zh-Hans": "两种算法各计算一次，落点相差 2 像素以上时在运行日志中记录一行",
+                "zh-Hant": "兩種演算法各計算一次，落點相差 2 像素以上時在執行日誌中記錄一行",
                 "ja": "両方の方法で計算し、位置が 2 ピクセル以上ずれたら実行ログに 1 行記録します",
                 "en": "Runs both hit tests and writes a log line when they differ by 2 pixels or more",
                 "ko": "두 방법으로 각각 계산해 위치가 2픽셀 이상 다르면 실행 로그에 한 줄 기록합니다"
@@ -404,8 +404,8 @@
                 "value": "always",
                 "meta": {
                   "description": {
-                    "zh-Hans": "每帧都交",
-                    "zh-Hant": "每幀都交",
+                    "zh-Hans": "每帧提交",
+                    "zh-Hant": "每幀提交",
                     "ja": "毎フレーム",
                     "en": "Every frame",
                     "ko": "매 프레임"
@@ -417,8 +417,8 @@
                 "value": "changed",
                 "meta": {
                   "description": {
-                    "zh-Hans": "画面变了才交",
-                    "zh-Hant": "畫面變了才交",
+                    "zh-Hans": "仅画面变化时提交",
+                    "zh-Hant": "僅畫面變化時提交",
                     "ja": "変化したときだけ",
                     "en": "Only when changed",
                     "ko": "바뀔 때만"
@@ -428,15 +428,15 @@
             ],
             "meta": {
               "description": {
-                "zh-Hans": "画面交给 SteamVR 的方式",
-                "zh-Hant": "畫面交給 SteamVR 的方式",
+                "zh-Hans": "画面提交方式",
+                "zh-Hant": "畫面提交方式",
                 "ja": "SteamVR への画面の渡し方",
                 "en": "Texture submission",
                 "ko": "SteamVR에 화면을 넘기는 방식"
               },
               "hint": {
-                "zh-Hans": "画面变了才交可以在面板多时省一些开销；面板停在旧画面上时换回每帧都交",
-                "zh-Hant": "畫面變了才交可以在面板多時省一些開銷；面板停在舊畫面上時換回每幀都交",
+                "zh-Hans": "仅在画面变化时提交，可在面板较多时降低开销；面板停留在旧画面时请改回每帧提交",
+                "zh-Hant": "僅在畫面變化時提交，可在面板較多時降低開銷；面板停留在舊畫面時請改回每幀提交",
                 "ja": "変化したときだけにすると、パネルが多いときの負荷を減らせます。パネルが古い画面のまま止まる場合は毎フレームに戻してください",
                 "en": "Only when changed saves work when many panels are shown. Switch back to every frame if a panel gets stuck on an old image",
                 "ko": "바뀔 때만으로 하면 패널이 많을 때 부하를 줄일 수 있습니다. 패널이 이전 화면에 멈추면 매 프레임으로 되돌리세요"
@@ -453,8 +453,8 @@
                 "value": "native",
                 "meta": {
                   "description": {
-                    "zh-Hans": "SteamVR 带着走",
-                    "zh-Hant": "SteamVR 帶著走",
+                    "zh-Hans": "由 SteamVR 处理",
+                    "zh-Hant": "由 SteamVR 處理",
                     "ja": "SteamVR に任せる",
                     "en": "SteamVR",
                     "ko": "SteamVR에 맡기기"
@@ -466,8 +466,8 @@
                 "value": "js",
                 "meta": {
                   "description": {
-                    "zh-Hans": "自己算",
-                    "zh-Hant": "自己算",
+                    "zh-Hans": "内置计算",
+                    "zh-Hant": "內建計算",
                     "ja": "内部で計算",
                     "en": "Built in",
                     "ko": "직접 계산"
@@ -484,8 +484,8 @@
                 "ko": "부착 패널 따라가기 방식"
               },
               "hint": {
-                "zh-Hans": "附着在头显或手柄上的面板怎么跟着走：交给 SteamVR，或者每帧自己算位置。面板跟不上、位置不对时换一种试试",
-                "zh-Hant": "附著在頭顯或手把上的面板怎麼跟著走：交給 SteamVR，或者每幀自己算位置。面板跟不上、位置不對時換一種試試",
+                "zh-Hans": "附着在头显或手柄上的面板的跟随方式：由 SteamVR 处理，或每帧自行计算位置。面板跟随滞后或位置不正确时可切换为另一种方式",
+                "zh-Hant": "附著在頭顯或手把上的面板的跟隨方式：由 SteamVR 處理，或每幀自行計算位置。面板跟隨延遲或位置不正確時可切換為另一種方式",
                 "ja": "ヘッドセットやコントローラーに付けたパネルの追従方法：SteamVR に任せるか、毎フレーム内部で位置を計算します。パネルが遅れる、位置がずれるときは切り替えてみてください",
                 "en": "How panels attached to the headset or a controller follow it: SteamVR moves them, or their position is computed every frame. Try the other one if a panel lags or sits in the wrong place",
                 "ko": "헤드셋이나 컨트롤러에 붙인 패널이 따라가는 방식: SteamVR에 맡기거나 매 프레임 위치를 직접 계산합니다. 패널이 늦게 따라오거나 위치가 어긋나면 다른 쪽을 써 보세요"

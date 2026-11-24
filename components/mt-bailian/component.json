@@ -9,13 +9,13 @@
     "ko": "번역"
   },
   "description": {
-    "zh-Hans": "阿里云百炼 Qwen-MT：发送前翻译成目标语言",
-    "zh-Hant": "阿里雲百煉 Qwen-MT：傳送前翻譯成目標語言",
+    "zh-Hans": "阿里云百炼 Qwen-MT：发送前翻译为目标语言",
+    "zh-Hant": "阿里雲百煉 Qwen-MT：傳送前翻譯為目標語言",
     "ja": "Alibaba Cloud Bailian Qwen-MT：送信前に翻訳先の言語へ翻訳します",
     "en": "Alibaba Cloud Bailian Qwen-MT: translates into the target language before sending",
     "ko": "Alibaba Cloud Bailian Qwen-MT: 보내기 전에 대상 언어로 번역합니다"
   },
-  "version": "1.6.5",
+  "version": "1.6.6",
   "author": "yanuo",
   "license": "MIT",
   "enabled": false,
@@ -146,8 +146,8 @@
         ],
         "meta": {
           "description": {
-            "zh-Hans": "翻译成",
-            "zh-Hant": "翻譯成",
+            "zh-Hans": "目标语言",
+            "zh-Hant": "目標語言",
             "ja": "翻訳先",
             "en": "Translate to",
             "ko": "번역할 언어"

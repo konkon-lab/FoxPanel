@@ -15,7 +15,7 @@
     "en": "Alibaba Cloud Bailian CosyVoice: reads the translation aloud when sending, played on the selected device",
     "ko": "Alibaba Cloud Bailian CosyVoice: 보낼 때 번역문을 읽어 주고 선택한 장치로 재생합니다"
   },
-  "version": "1.7.6",
+  "version": "1.7.7",
   "author": "yanuo",
   "license": "MIT",
   "enabled": false,
@@ -224,11 +224,11 @@
             "ko": "음색"
           },
           "hint": {
-            "zh-Hans": "朗读时用的声音。",
-            "zh-Hant": "朗讀時用的聲音。",
-            "ja": "読み上げに使う声。",
-            "en": "The voice used for reading aloud.",
-            "ko": "읽을 때 쓰는 목소리."
+            "zh-Hans": "朗读时使用的声音",
+            "zh-Hant": "朗讀時使用的聲音",
+            "ja": "読み上げに使う声",
+            "en": "The voice used for reading aloud",
+            "ko": "읽을 때 쓰는 목소리"
           },
           "default": "longhua_v3",
           "custom": true,
@@ -249,8 +249,8 @@
               "type": "string",
               "meta": {
                 "description": {
-                  "zh-Hans": "名字",
-                  "zh-Hant": "名字",
+                  "zh-Hans": "名称",
+                  "zh-Hant": "名稱",
                   "ja": "名前",
                   "en": "Name",
                   "ko": "이름"
@@ -263,7 +263,7 @@
                 "description": {
                   "zh-Hans": "音色 ID",
                   "zh-Hant": "音色 ID",
-                  "ja": "音声 ID",
+                  "ja": "声の ID",
                   "en": "Voice ID",
                   "ko": "음색 ID"
                 }
@@ -273,8 +273,8 @@
               "type": "string",
               "meta": {
                 "description": {
-                  "zh-Hans": "模型(可空)",
-                  "zh-Hant": "模型(可空)",
+                  "zh-Hans": "模型(可选)",
+                  "zh-Hant": "模型(選填)",
                   "ja": "モデル(任意)",
                   "en": "Model (optional)",
                   "ko": "모델(선택)"
@@ -287,16 +287,16 @@
           "description": {
             "zh-Hans": "自定义音色",
             "zh-Hant": "自訂音色",
-            "ja": "カスタム音声",
+            "ja": "カスタムの声",
             "en": "Custom voices",
             "ko": "사용자 음색"
           },
           "hint": {
-            "zh-Hans": "声音复刻得到的音色 ID，填好后出现在音色下拉里。模型留空按音色自动选。",
-            "zh-Hant": "聲音複刻得到的音色 ID，填好後出現在音色下拉裡。模型留空依音色自動選。",
-            "ja": "ボイスクローンで得た音色 ID。入れると音色の一覧に出ます。モデルを空にすると音色に合わせて選びます。",
-            "en": "Voice IDs from voice cloning. They appear in the voice list. Leave the model empty to pick it from the voice.",
-            "ko": "보이스 클로닝으로 얻은 음색 ID. 입력하면 음색 목록에 나옵니다. 모델을 비우면 음색에 맞춰 고릅니다."
+            "zh-Hans": "通过声音复刻获得的音色 ID，填写后显示在音色下拉列表中；模型留空时使用所选的合成模型",
+            "zh-Hant": "透過聲音複刻取得的音色 ID，填寫後顯示在音色下拉選單中；模型留空時使用所選的合成模型",
+            "ja": "ボイスクローンで取得した声の ID です。入力すると声の一覧に表示されます。モデルが空欄の場合は、設定で選択したモデルを使用します",
+            "en": "Voice IDs obtained from voice cloning. Once entered, they appear in the voice list. If the model is left empty, the model selected in the settings is used",
+            "ko": "보이스 클로닝으로 얻은 음색 ID입니다. 입력하면 음색 목록에 표시됩니다. 모델을 비워 두면 설정에서 선택한 모델을 사용합니다"
           },
           "default": []
         }
@@ -305,10 +305,10 @@
         "type": "string",
         "meta": {
           "description": {
-            "zh-Hans": "播放到",
-            "zh-Hant": "播放到",
+            "zh-Hans": "播放设备",
+            "zh-Hant": "播放裝置",
             "ja": "再生先",
-            "en": "Play to",
+            "en": "Playback device",
             "ko": "재생 장치"
           },
           "hint": {
@@ -332,11 +332,11 @@
             "ko": "로컬 모니터"
           },
           "hint": {
-            "zh-Hans": "同时在自己的设备上播放一份",
-            "zh-Hant": "同時在自己的裝置上播放一份",
-            "ja": "自分のデバイスでも同時に再生します",
-            "en": "Also play it on your own device",
-            "ko": "내 장치에서도 같이 재생합니다"
+            "zh-Hans": "同时在监听设备上播放",
+            "zh-Hant": "同時在監聽裝置上播放",
+            "ja": "モニター先でも同時に再生します",
+            "en": "Also plays on the monitor device",
+            "ko": "모니터 장치에서도 동시에 재생합니다"
           },
           "default": true
         }

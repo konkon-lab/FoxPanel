@@ -9,7 +9,7 @@
     "ko": "데스크톱 표시"
   },
   "description": {
-    "zh-Hans": "开发用：把每块打开的面板显示成一个普通窗口",
+    "zh-Hans": "开发用：将每块打开的面板显示为一个普通窗口",
     "en": "For development: shows every open panel as a normal window"
   },
   "version": "1.0.0",
@@ -30,8 +30,8 @@
             "en": "Quick panel 1"
           },
           "hint": {
-            "zh-Hans": "写那块面板的组件 id，留空就是空位",
-            "en": "The component id of that panel; empty leaves the slot unused"
+            "zh-Hans": "填写面板所属组件的 ID；留空则不使用此快捷位",
+            "en": "Enter the component ID of that panel. Leave empty to leave this slot unused"
           },
           "default": "yanuo.shell-classic"
         }
@@ -44,8 +44,8 @@
             "en": "Quick panel 2"
           },
           "hint": {
-            "zh-Hans": "写那块面板的组件 id，留空就是空位",
-            "en": "The component id of that panel; empty leaves the slot unused"
+            "zh-Hans": "填写面板所属组件的 ID；留空则不使用此快捷位",
+            "en": "Enter the component ID of that panel. Leave empty to leave this slot unused"
           },
           "default": ""
         }
@@ -54,11 +54,11 @@
         "type": "number",
         "meta": {
           "description": {
-            "zh-Hans": "同时显示的面板数",
+            "zh-Hans": "同时显示的面板数量",
             "en": "Panels shown at once"
           },
           "hint": {
-            "zh-Hans": "打开着的面板多过这个数时，只显示组件顺序靠前的",
+            "zh-Hans": "打开的面板超过此数量时，仅显示组件顺序靠前的面板",
             "en": "When more panels are open than this, only the ones earlier in the component order are shown"
           },
           "default": 8,
