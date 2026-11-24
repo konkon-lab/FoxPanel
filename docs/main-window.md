@@ -337,7 +337,7 @@
 |---|---|---|---|
 | 常规 | `general` | 0 | 界面语言、关闭窗口时、以管理员身份运行；组件管理的开发者模式 |
 | 外观 | `look` | 10 | 界面主题(分段按钮)、界面缩放(滑块) |
-| 更新与关于 | `about` | 90 | 版本和更新按钮(`components/window-settings/src/UpdateRow.vue`，更新状态对到文案和按钮在 `update-view.ts`)、自动检查更新、后台下载更新、接收测试版；数据文件夹的路径和「打开文件夹」(`components/window-settings/src/DataDir.vue`) |
+| 更新与关于 | `about` | 90 | 版本和更新按钮(`components/window-settings/src/UpdateRow.vue`，更新状态对到文案和按钮在 `update-view.ts`；检查到新版本时的弹窗是 `UpdateDialog.vue`)、自动检查更新、后台下载更新、接收测试版；数据文件夹的路径和「打开文件夹」(`components/window-settings/src/DataDir.vue`) |
 
 ### 设置组件的配置
 

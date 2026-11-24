@@ -275,11 +275,20 @@ export interface PageLook {
 }
 
 // 更新：dev = 开发版不检查，unconfigured = 没配置更新源
+// 新版本发布说明里的一条：小标题、列表项、段落，只有文字
+export interface UpdateNote {
+  kind: 'heading' | 'item' | 'text';
+  text: string;
+}
+
 export interface UpdateState {
   state: 'idle' | 'dev' | 'unconfigured' | 'checking' | 'latest' | 'available' | 'downloading' | 'downloaded' | 'error';
   version?: string;
   percent?: number;
   message?: string;
+  notes?: UpdateNote[];   // 新版本的发布说明；有新版本、下载中、下好了时带着，更新源没给时没有
+  date?: string;          // 新版本的发布日期(本地的 YYYY-MM-DD)；更新源没给时没有
+  url?: string;           // 新版本的发布页(https 地址)；更新源不是 GitHub 时没有
 }
 
 export interface InitPayload {

@@ -15,7 +15,7 @@
     "en": "Settings page: shows the settings each component registers, by section, with search; provides app settings such as language, on window close, run as administrator, appearance and updates",
     "ko": "설정 페이지: 각 컴포넌트가 등록한 설정을 섹션별로 표시하고 검색; 표시 언어, 창을 닫을 때, 관리자 권한 실행, 외관, 업데이트 등 앱 설정 제공"
   },
-  "version": "1.1.9",
+  "version": "1.1.10",
   "author": "yanuo",
   "license": "MIT",
   "provides": [

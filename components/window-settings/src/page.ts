@@ -1,5 +1,5 @@
 // 设置组件：注册侧栏入口「设置」(排在最后)和设置页，提供 settings 服务(三节、配置项在不在设置页改)；本组件的配置(界面语言、关闭窗口时、以管理员身份运行、主题、缩放、更新)
-// 分别登记到「常规」「外观」「更新与关于」，加载时把值交给宿主；「更新与关于」还放版本和检查更新、数据文件夹；关闭询问对话框放在整个窗口上(插槽 app)。
+// 分别登记到「常规」「外观」「更新与关于」，加载时把值交给宿主；「更新与关于」还放版本和检查更新、数据文件夹；关闭询问对话框和新版本弹窗放在整个窗口上(插槽 app)。
 
 import { Settings } from '@lucide/vue';
 import { fox, store, windows } from '@konkon-lab/foxpanel-window';
@@ -12,6 +12,7 @@ import SettingsPage from './SettingsPage.vue';
 import DataDir from './DataDir.vue';
 import UpdateRow from './UpdateRow.vue';
 import CloseDialog from './CloseDialog.vue';
+import UpdateDialog from './UpdateDialog.vue';
 
 // 本组件几项配置能取的值(和清单 config 里的一致)
 const LANGUAGES: readonly LanguageSetting[] = ['system', 'zh-Hans', 'zh-Hant', 'ja', 'en', 'ko'];
@@ -39,6 +40,7 @@ export default {
     ctx.window.settings({ ...ABOUT, keys: ['autoCheck', 'autoDownload', 'beta'], component: UpdateRow });
     ctx.window.settings({ ...ABOUT, order: ABOUT.order + 1, keys: [], component: DataDir });
     ctx.window.slot({ type: 'app', component: CloseDialog });
+    ctx.window.slot({ type: 'app', component: UpdateDialog });
 
     // 值交给宿主：界面语言(主窗口、托盘、键盘)，其余是应用设置
     const c = ctx.config;
