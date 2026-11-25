@@ -111,7 +111,7 @@ const dictate = (): string[] => logsOf(() => {
 });
 
 // 进程启动时宿主带来的应用信息
-const BOOT_INFO: AppInfo = { locale: 'ja', components: [], outputs: [{ id: 't.out', name: 'Out', on: true, live: false, typing: false }], inputs: [], canDictate: false };
+const BOOT_INFO: AppInfo = { version: '1.2.3', packaged: true, locale: 'ja', components: [], outputs: [{ id: 't.out', name: 'Out', on: true, live: false, typing: false }], inputs: [], canDictate: false };
 
 // 进程启动时宿主带来的面板目录
 const panelInfo = (id: string): PanelInfo => ({

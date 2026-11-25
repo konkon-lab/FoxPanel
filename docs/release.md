@@ -314,6 +314,7 @@ SDK 的版本就是宿主接口的版本：npm 组件包在 `peerDependencies` �
 `node scripts/smoke.ts --exe <可执行文件>` 换成启动打包后的程序(`npm run pack` 之后的 `release/win-unpacked/FoxPanel.exe`)：启动参数里不带仓库根，只跑离屏方式那一次(安装包里没有开发用的显示方)，不能和 `--boundary` 一起用。进安装包的文件对不对(`files` 的筛选、`node_modules` 里的依赖、`vendor/` 的路径)由这一轮查到。
 
 - 用仓库里装的 Electron 启动，`--user-data-dir` 指到系统临时目录下新建的 `foxpanel-smoke-…` 文件夹(每次启动各一个)，不碰平时用的数据文件夹；调试端口由系统分配。
+- 启动时带环境变量 `FOXPANEL_NO_TELEMETRY=1`，检查时启动的程序不发在线记录(见 [在线统计](telemetry.md#不发的情况))。
 - 第一次是窗口方式：环境变量 `FOXPANEL_PANELS=1`，开发用的显示方把每块显示着的面板开成普通窗口，它的同时显示的上限设成 4。数据文件夹里预先放这些组件，都先关着或放在开发文件夹里：时钟面板(`examples/panel-clock`)放进组件目录、先关着；常用语侧栏页(`examples/side-phrases`)放在一个开发文件夹里，开发者模式开着；三块只给检查用的面板(脚本里现写的，先关着)——`smoke.probe`(清单写了 `requires: ["panels"]`，页面里有一块能滚动的区域和一个按钮)和两块凑数的 `zsmoke.fill-a`、`zsmoke.fill-b`(组件顺序排在时钟后面，用来顶到上限)。
 - 第二次是离屏方式：不带 `FOXPANEL_PANELS`，带 `FOXPANEL_VR_SIM=<脚本>`，SteamVR 组件不连 SteamVR、跑模拟脚本(见 [SteamVR 悬浮面板](steamvr.md#模拟模式))，它是生效的显示方；时钟(`examples/panel-clock`)和手腕时钟(`examples/panel-wrist`，附着在左手上、抬手才显示)两个示例的组件一开始就开着，所以有键盘、时钟、手腕时钟三块面板。离屏渲染、句柄复制进组件进程、D3D 复制、指点回页面这一段只有这一次启动走到；要一块能建 D3D11 设备的显卡。
 - 启动时带两个开关(`--disable-backgrounding-occluded-windows`、`--disable-features=CalculateNativeWinOcclusion`)：窗口被别的窗口盖住时页面照常算可见。不带的话面板的窗口被盖住后，调试协议发的鼠标事件要等几秒才到页面，打字那几步会超时。

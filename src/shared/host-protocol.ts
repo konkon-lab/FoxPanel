@@ -32,6 +32,8 @@ export type StorageOp =
 
 // 宿主推给全部组件进程的应用信息
 export interface AppInfo {
+  version: string;                                                                       // 程序版本
+  packaged: boolean;                                                                     // 是安装包里的程序，不是从源码启动的
   locale: Locale;                                                                        // 界面语言
   // 装着的全部组件，按组件顺序；on = 开关开着，active = 正在用(开着、单选类别里排最前、要的服务都有)
   components: { id: string; kind: ComponentKind; name: Text; dir: string; manifest: Manifest; on: boolean; active: boolean }[];

@@ -54,6 +54,8 @@ function rig(over: Partial<AppBridgeDeps> = {}): Rig {
       translate: text => (text === 'boom' ? Promise.reject(new Error('no translator')) : Promise.resolve(`<${text}>`)),
       info: info => { pushed.push(info); },
     }),
+    version: '1.2.3',
+    packaged: true,
     locale: () => state.locale,
     components: () => state.components,
     setOn: (id, on) => { done.push(`setOn ${id} ${on}`); },
@@ -71,9 +73,10 @@ function rig(over: Partial<AppBridgeDeps> = {}): Rig {
   return { bridge, state, pushed, done, clip, replies, ask: m => bridge.message(m, host) };
 }
 
-test('应用信息：界面语言、装着的全部组件、输出组件的开关和登记情况、接了听写的输入源(按组件顺序)', () => {
+test('应用信息：程序版本、是不是安装包里的程序、界面语言、装着的全部组件、输出组件的开关和登记情况、接了听写的输入源(按组件顺序)', () => {
   const r = rig();
   const info = r.bridge.info();
+  assert.deepEqual([info.version, info.packaged], ['1.2.3', true]);
   assert.equal(info.locale, 'zh-Hans');
   assert.deepEqual(info.components, r.state.components);
   assert.deepEqual(info.outputs, [

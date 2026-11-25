@@ -23,7 +23,8 @@
     "yanuo.ime",
     "yanuo.steamvr",
     "yanuo.osc",
-    "yanuo.aliyun"
+    "yanuo.aliyun",
+    "yanuo.telemetry"
   ] },
   { "group": "output", "ids": [
     "yanuo.chatbox",

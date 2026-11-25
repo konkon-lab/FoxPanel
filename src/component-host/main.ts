@@ -18,7 +18,7 @@ import { Owned } from './owned.ts';
 const port = process.parentPort;
 const post = (m: FromProcess): void => port.postMessage(m);
 
-let appInfo: AppInfo = { locale: 'zh-Hans', components: [], outputs: [], inputs: [], canDictate: false };   // 宿主推来的应用信息(load 消息到之前是空的)
+let appInfo: AppInfo = { version: '', packaged: false, locale: 'zh-Hans', components: [], outputs: [], inputs: [], canDictate: false };   // 宿主推来的应用信息(load 消息到之前是空的)
 const appListeners = new Set<{ id: string; fn: (info: AppInfo) => void }>();   // 应用信息变了要叫的回调，id 是登记它的组件
 let panelList: readonly PanelInfo[] = [];   // 宿主推来的面板目录
 const panelListeners = new Set<{ id: string; fn: (list: readonly PanelInfo[]) => void }>();   // 面板目录变了要叫的回调，id 是登记它的组件

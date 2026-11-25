@@ -52,7 +52,7 @@ class Host {
   readonly states: KeyboardState[] = [];      // 经远程服务 keyboard 发布的状态
   readonly servedNames: string[] = [];        // 组件登记成提供方的远程服务名
   readonly done: string[] = [];               // 组件经宿主的通用接口做的事
-  appInfo: AppInfo = { locale: 'zh-Hans', components: [], outputs: [], inputs: [], canDictate: false };   // 组件读到的应用信息
+  appInfo: AppInfo = { version: '1.0.0', packaged: false, locale: 'zh-Hans', components: [], outputs: [], inputs: [], canDictate: false };   // 组件读到的应用信息
   clipboard: () => Promise<string> = () => Promise.resolve('');
   private calls: Served<KeyboardCalls> | null = null;
   private readonly watchers = new Set<(info: AppInfo) => void>();
@@ -145,7 +145,7 @@ class Host {
       const on = active.includes(l.manifest.id);
       return { id: l.manifest.id, kind: 'lang', name: l.manifest.name, dir: l.dir, manifest: l.manifest, on, active: on };
     };
-    return { locale: 'zh-Hans', outputs: [], inputs: [], canDictate: false, ...more, components: [...installed.map(row), ...more.components ?? []] };
+    return { version: '1.0.0', packaged: false, locale: 'zh-Hans', outputs: [], inputs: [], canDictate: false, ...more, components: [...installed.map(row), ...more.components ?? []] };
   }
 
   // 应用信息变了：换成新的一份并通知组件

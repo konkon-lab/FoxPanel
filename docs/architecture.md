@@ -42,7 +42,7 @@ FoxPanel 是可拔插的桌面组件平台，Electron 应用：核心不带具�
 | basic | `shell-classic`、`candidates`、`textfield`、`keys`、`layout-d68` | 键盘面板的根组件(经典外壳)、候选栏、输入框、按键渲染、D68 布局 |
 | sidebar | `side-quick`、`side-numpad`、`side-symbols`、`button-paste`、`button-theme` | 侧栏页(快捷设置、小键盘、特殊符号)和侧栏按钮(粘贴、日夜切换) |
 | lang | `lang-zh`、`lang-en`、`lang-ja`、`lang-ko` | 拼音、英文、日文、韩文 |
-| service | `ime`、`steamvr`、`osc`、`aliyun` | 输入法和键盘流程、显示方(SteamVR 悬浮面板)、OSC 收发、百炼密钥和用量账本 |
+| service | `ime`、`steamvr`、`osc`、`aliyun`、`telemetry` | 输入法和键盘流程、显示方(SteamVR 悬浮面板)、OSC 收发、百炼密钥和用量账本、在线统计(见 [在线统计](telemetry.md)) |
 | output | `chatbox`、`tts-bailian`、`asr-bailian`、`mt-bailian` | VRChat 聊天框、语音合成、听写、翻译 |
 | console | `window-shell`、`window-dashboard`、`window-components`、`window-market`、`window-packages`、`window-deps`、`window-logs`、`window-settings` | 主窗口的外壳和各页 |
 
@@ -150,7 +150,7 @@ FoxPanel 是可拔插的桌面组件平台，Electron 应用：核心不带具�
 
 预装的输入法组件提供 `keyboard`：发布键盘状态(`KeyboardState`)，收按键等操作、插入文字、听写结果。键盘上的部件经输入法组件的页面部分提供的 `kb` 服务用它，听写组件在自己的进程里直接用，见 [输入法](input-method.md)。显示方提供 `panels`：发布每块面板打开没有、显示没有、常显、锁、宽度(`PanelsState`)，收打开、关掉、整组收起、到面前、改宽度和锁等调用(见 [SDK](sdk.md#显示方ctxpanels-和远程服务-panels))；面板页面的 `ctx.panel.hide()` 由核心替它调这个服务。消息的格式和各种失败见 [组件进程](component-process.md#远程服务)。
 
-**应用信息和通用请求**(`ctx.app`，`src/main/app.ts`)。核心把界面语言、装着的全部组件(开关、在不在用、清单)、输出组件的开关和登记情况、接了听写的输入源合成一份 `AppInfo`，变了就推给全部组件进程。主进程组件要核心做的事也经它：发给输出组件、「正在输入」、清除(`ctx.output`)，开关听写(`ctx.input`)，翻译(`ctx.translator`)，开关一个输出组件、读写系统剪贴板(`ctx.app`)。
+**应用信息和通用请求**(`ctx.app`，`src/main/app.ts`)。核心把程序版本、是不是安装包里的程序、界面语言、装着的全部组件(开关、在不在用、清单)、输出组件的开关和登记情况、接了听写的输入源合成一份 `AppInfo`，变了就推给全部组件进程。主进程组件要核心做的事也经它：发给输出组件、「正在输入」、清除(`ctx.output`)，开关听写(`ctx.input`)，翻译(`ctx.translator`)，开关一个输出组件、读写系统剪贴板(`ctx.app`)。
 
 **总线**(`ctx.bus`，`src/shared/component-services.ts`)。`send(频道, 数据)` 先送给本运行环境里的监听，再经主进程转给别的运行环境：全部组件进程和主窗口都收；媒体页面和面板页面只收自己登记了的频道(页面里有监听的频道由宿主自动登记，`src/main/page-bus.ts`)。核心自己只发一个通知：`core/component-removed`，数据是卸载完的组件 id。媒体页面和面板页面发的、登记收的频道都必须以这一页加载的某个组件 id 加 `/` 开头(登记另外放行 `core/` 的频道)，所以它们发不了 `core/` 的频道，也听不到别的组件的频道(听写的麦克风音频、合成的语音都走各自组件的频道)；主窗口和主进程组件不限。页面发的一条消息：频道名最长 200 个字符，数据只能是普通数据、存成 JSON 不超过 256 KB，`core/` 的频道主窗口也发不了。
 
@@ -186,6 +186,7 @@ Cordis 的服务对象只在同一个运行环境里能 `inject`(每个组件进
 | `osc` | `yanuo.osc` | 共用的组件进程 | 聊天框(`requires`)、听写(可选)，见 [OSC 服务](osc.md) |
 | `aliyun` | `yanuo.aliyun` | 没有服务对象：设置和密钥并进使用方的 `ctx.config` | 百炼三个组件(`requires`) |
 | `usage` | `yanuo.aliyun` | 共用的组件进程(记账)、主窗口(账本) | 百炼三个组件记用量(`ctx.get('usage')`，没有提供者时不记)；组件详情的用量一节和仪表盘的费用卡片由阿里云组件自己放进插槽 |
+| `telemetry` | `yanuo.telemetry` | 没有服务对象：组件自己按间隔发在线记录 | 没有 |
 | `components` | `yanuo.window-components` | 主窗口 | 依赖管理、依赖图(`requires`) |
 | `settings` | `yanuo.window-settings` | 主窗口 | 往设置页登记配置的组件 |
 
@@ -209,6 +210,7 @@ Cordis 的服务对象只在同一个运行环境里能 `inject`(每个组件进
 - **外部输入**：IPC 参数、进程消息、组件上报的状态栏项和登记项、配置文件、清单都按 `unknown` 接收再收窄；页面带 CSP，默认只放行自身和 `fox:`。
 - **带代码的组件不加沙箱**：主进程代码有完整的 Node 权限，上面这些是纵深防御，不是对第三方组件的沙箱；它们让「只有页面代码的面板组件」成为权限确实很小的一类。同一块面板里的根组件和部件在同一个 JS 环境里，互相没有隔离。带代码的组件(有 `panel` / `page` / `window` / `main`，或包里有 `.lua`)安装时提示能运行任意程序。
 - **崩溃转储**只存在数据文件夹的 `Crashpad/`，不上传。
+- **在线记录**由预装组件 `yanuo.telemetry` 发，核心里没有上报的代码；一条记录里有什么、怎么关见 [在线统计](telemetry.md)。
 
 其中面板页面和媒体页面的 `window.fox` 上有哪些接口、各块面板的源、面板页面读写别的组件的数据、调组件管理的 IPC(卸载组件)、经键盘操作开关不是输出组件的组件、往别的频道发总线消息、登记别的组件的频道、用组件没声明的远程服务、开麦克风、联网和嵌自己组件包里的网页，主窗口用远程服务，以及面板页面和主窗口跳到外站、开新窗口，由 `npm run smoke -- --boundary` 在跑起来的程序里检查(见 [打包和更新](release.md#冒烟检查))；页面的身份、IPC、组件 id 和总线频道、权限、页面限制各条的单元测试在 `test/senders.test.ts`、`test/ipc.test.ts`、`test/page-bus.test.ts`，面板页面的在 `test/panels.test.ts`、`test/panel-window.test.ts`，`fox://` 的在 `test/fox-url.test.ts`，远程服务的在 `test/relay.test.ts`，核心的源码不带键盘约定的在 `test/core-neutral.test.ts`。
 

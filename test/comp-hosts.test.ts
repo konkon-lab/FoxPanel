@@ -28,7 +28,7 @@ interface Rig {
 }
 
 // 进程启动时带给它的应用信息
-const INFO: AppInfo = { locale: 'ja', components: [], outputs: [], inputs: [], canDictate: false };
+const INFO: AppInfo = { version: '1.2.3', packaged: false, locale: 'ja', components: [], outputs: [], inputs: [], canDictate: false };
 
 // 进程启动时带给它的面板目录
 const CLOCK: PanelInfo = {

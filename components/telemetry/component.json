@@ -1,0 +1,51 @@
+{
+  "id": "yanuo.telemetry",
+  "kind": "service",
+  "name": {
+    "zh-Hans": "在线统计",
+    "zh-Hant": "線上統計",
+    "ja": "オンライン統計",
+    "en": "Online statistics",
+    "ko": "온라인 통계"
+  },
+  "description": {
+    "zh-Hans": "运行期间定期发送在线记录，用于统计在线和活跃用户数",
+    "zh-Hant": "執行期間定期傳送線上記錄，用於統計線上和活躍使用者數",
+    "ja": "実行中にオンライン記録を定期的に送信し、オンライン数とアクティブユーザー数を集計します",
+    "en": "Sends a periodic online record while running, used to count online and active users",
+    "ko": "실행 중 온라인 기록을 주기적으로 전송하여 온라인 및 활성 사용자 수를 집계합니다"
+  },
+  "version": "1.0.0",
+  "author": "yanuo",
+  "license": "MIT",
+  "provides": [
+    "telemetry"
+  ],
+  "window": "window.js",
+  "main": "main.js",
+  "config": {
+    "type": "object",
+    "dict": {
+      "enabled": {
+        "type": "boolean",
+        "meta": {
+          "description": {
+            "zh-Hans": "发送在线统计",
+            "zh-Hant": "傳送線上統計",
+            "ja": "オンライン統計を送信",
+            "en": "Send online statistics",
+            "ko": "온라인 통계 전송"
+          },
+          "hint": {
+            "zh-Hans": "运行期间定期发送设备标识、会话标识和程序版本，用于统计在线和活跃用户数",
+            "zh-Hant": "執行期間定期傳送裝置識別碼、工作階段識別碼和程式版本，用於統計線上和活躍使用者數",
+            "ja": "実行中にデバイス識別子、セッション識別子、アプリのバージョンを定期的に送信し、オンライン数とアクティブユーザー数を集計します",
+            "en": "Periodically sends a device identifier, a session identifier and the app version while running, used to count online and active users",
+            "ko": "실행 중 기기 식별자, 세션 식별자, 프로그램 버전을 주기적으로 전송하여 온라인 및 활성 사용자 수를 집계합니다"
+          },
+          "default": true
+        }
+      }
+    }
+  }
+}

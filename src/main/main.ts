@@ -180,10 +180,12 @@ function newRelay(): ServiceRelay {
   });
 }
 
-// 应用信息：界面语言、装着的组件、输出和听写的登记情况，推给全部组件进程；组件要的发送、听写、翻译、开关输出组件、剪贴板也经它
+// 应用信息：程序版本、界面语言、装着的组件、输出和听写的登记情况，推给全部组件进程；组件要的发送、听写、翻译、开关输出组件、剪贴板也经它
 function newAppBridge(): AppBridge {
   return new AppBridge({
     hosts: () => host,
+    version: app.getVersion(),
+    packaged: app.isPackaged,
     locale: uiLocale,
     components: () => components.store.appComponents(settings.components),
     setOn: (id, on) => {

@@ -1,4 +1,4 @@
-// 应用信息和主进程组件的通用请求：界面语言、装着的组件、输出和听写的登记情况合成 AppInfo，变了就推给全部组件进程；
+// 应用信息和主进程组件的通用请求：程序版本、界面语言、装着的组件、输出和听写的登记情况合成 AppInfo，变了就推给全部组件进程；
 // 组件要的发送、「正在输入」、清除、听写、翻译、开关输出组件、读写系统剪贴板，交给登记了的进程、组件管理或系统去做。
 
 import type { ComponentHost } from './components/host.ts';
@@ -13,6 +13,8 @@ type Asker = Pick<ComponentHost, 'reply'>;
 
 export interface AppBridgeDeps {
   hosts(): Hosts;
+  version: string;                         // 程序版本
+  packaged: boolean;                       // 是安装包里的程序
   locale(): Locale;                        // 界面语言
   components(): AppInfo['components'];     // 装着的全部组件，按组件顺序
   setOn(id: string, on: boolean): void;    // 开关一个组件(和组件页的开关是同一个改动)
@@ -41,6 +43,8 @@ export class AppBridge {
     const caps = new Map(hosts.outputs.map(o => [o.id, o]));
     const inputs = new Set(hosts.inputs);
     return {
+      version: this.deps.version,
+      packaged: this.deps.packaged,
       locale: this.deps.locale(),
       components,
       outputs: components.filter(c => c.kind === 'output').map(c => (

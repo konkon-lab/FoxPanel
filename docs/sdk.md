@@ -214,7 +214,7 @@ if (kb.state?.dictating) kb.tell('act', { kind: 'dictate' });
 
 | 成员 | 说明 |
 |---|---|
-| `info` | 最新的应用信息(`AppInfo`)：`locale` 界面语言；`components` 装着的全部组件(按组件顺序：`id`、`kind`、`name`、`dir`、`manifest`、`on` 开关开着、`active` 在用)；`outputs` 装着的输出组件(`id`、`name`、`on`、`live` 收不收实时内容、`typing` 能不能显示「正在输入」)；`inputs` 接了听写的输入源组件 id；`canDictate` 有没有输入源接了听写 |
+| `info` | 最新的应用信息(`AppInfo`)：`version` 程序版本；`packaged` 是安装包里的程序(从源码启动时为假)；`locale` 界面语言；`components` 装着的全部组件(按组件顺序：`id`、`kind`、`name`、`dir`、`manifest`、`on` 开关开着、`active` 在用)；`outputs` 装着的输出组件(`id`、`name`、`on`、`live` 收不收实时内容、`typing` 能不能显示「正在输入」)；`inputs` 接了听写的输入源组件 id；`canDictate` 有没有输入源接了听写 |
 | `watch(fn)` | 应用信息变了回调(登记时不调)，返回取消函数 |
 | `setOn(id, on)` | 开关一个装着的输出组件(和组件页的开关是同一个改动)；别的组件不归这里开关，传了不处理 |
 | `clipboard.read()` / `clipboard.write(text)` | 系统剪贴板的文字；读不了时得到空串 |

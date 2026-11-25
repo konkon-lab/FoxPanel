@@ -655,6 +655,8 @@ function start(prepare: Prepare, packed = ''): Running {
   const env: NodeJS.ProcessEnv = { ...process.env };
   // 带着 ELECTRON_RUN_AS_NODE 时 Electron 只当 Node 用，不启动程序；显示方式只由这次启动给的变量定
   for (const name of ['ELECTRON_RUN_AS_NODE', 'FOXPANEL_PANELS', SIM_ENV]) delete env[name];
+  // 检查时启动的程序不发在线统计
+  env['FOXPANEL_NO_TELEMETRY'] = '1';
   let child: ChildProcess;
   let devFolder: string;
   try {

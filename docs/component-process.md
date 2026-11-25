@@ -173,6 +173,8 @@
 
 | 字段 | 内容 |
 |---|---|
+| `version` | 程序版本 |
+| `packaged` | 是安装包里的程序；从源码启动时为假 |
 | `locale` | 界面语言 |
 | `components` | 装着的全部组件，按组件顺序：`id`、`kind`、`name`、`dir`(文件夹)、`manifest`(清单)、`on`(开关开着)、`active`(在用) |
 | `outputs` | 装着的输出组件，按顺序：`id`、`name`、`on`、`live`(收不收实时内容)、`typing`(能不能显示「正在输入」) |
